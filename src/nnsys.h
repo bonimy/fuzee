@@ -1,6 +1,8 @@
 #ifndef NNSYS_HEADER_INCLUDED
 #define NNSYS_HEADER_INCLUDED
 
+#include <stdio.h>
+
 #ifndef PI
 #define PI 3.1415926535897932384626433832795
 #endif

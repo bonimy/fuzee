@@ -1,6 +1,8 @@
 #ifndef MYEINPUT_HEADER_INCLUDED
 #define MYEINPUT_HEADER_INCLUDED
 
+#include <Windows.h>
+
 /*
         キーボード・マウス入力情報管理ルーチン。
         各フレームの最後にKeyMoveを呼び、あと、

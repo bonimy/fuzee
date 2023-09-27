@@ -1,6 +1,8 @@
 #ifndef MYTIMER_HEADER_INCLUDED
 #define MYTIMER_HEADER_INCLUDED
 
+#include <Windows.h>
+
 /*
         主にゲーム用のために作ったタイマールーチン。
 
