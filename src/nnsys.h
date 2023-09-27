@@ -96,7 +96,7 @@ extern int GetSinTableSenv();
 //マルチスレッドでは使えない
 extern char* Int2Char(int num,int place=5,bool issignadd=true,int buf=0);
 extern char* Int2CharEX(int num , int buf = 0 );
-extern char* CAC(char* str1 , char* str2 , int buf=-1);
+extern char* FZ_CAC(char* str1 , char* str2 , int buf=-1);
 extern char* CharacterChain(int NOchar , ... );
 extern char* Int2CharE( char* Pbuf , int buflength , int num,int place=5,bool issignadd=true );
 extern char* Int2CharEXE(char* Pbuf , int buflength , int num );

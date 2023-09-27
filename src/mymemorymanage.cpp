@@ -33,7 +33,7 @@ static int ret;
 	-5　一時バッファを拡張できない
 	-6　返すべきバッファが確保できない
 */
-int LoadMemoryFromFile(char *filename , unsigned char **ptrbuf)
+int LoadMemoryFromFile(const char *filename , unsigned char **ptrbuf)
 {
 	//バッファをチェック
 	if(*ptrbuf != NULL)return -1 ;
@@ -134,7 +134,7 @@ ERRMLFF1:
 	-1	ファイルが開けない
 	-2	ファイルに書けない
 */
-int WriteFileFromMemory(char *filename , unsigned char *data , int length )
+int WriteFileFromMemory(const char *filename , unsigned char *data , int length )
 {
 int filehand;
 	filehand = _open(filename , _O_CREAT | _O_BINARY | _O_TRUNC | _O_WRONLY , _S_IREAD | _S_IWRITE );
@@ -221,19 +221,19 @@ int WriteALine( int filehand , char *Pbuffer )
 	return 0;
 }
 
-int MMMOpenForTextInput( char *Pname )
+int MMMOpenForTextInput( const char *Pname )
 {
 	return _open( Pname , _O_TEXT | _O_RDONLY);
 }
-int MMMOpenForTextOutput( char *Pname )
+int MMMOpenForTextOutput( const char *Pname )
 {
 	return _open( Pname , _O_CREAT | _O_TEXT | _O_TRUNC | _O_WRONLY , _S_IREAD | _S_IWRITE );
 }
-int MMMOpenForBinaryInput( char *Pname )
+int MMMOpenForBinaryInput( const char *Pname )
 {
 	return _open( Pname , _O_BINARY | _O_RDONLY);
 }
-int MMMOpenForBinaryOutput( char *Pname )
+int MMMOpenForBinaryOutput( const char *Pname )
 {
 	return _open( Pname , _O_CREAT | _O_BINARY | _O_TRUNC | _O_WRONLY , _S_IREAD | _S_IWRITE );
 }

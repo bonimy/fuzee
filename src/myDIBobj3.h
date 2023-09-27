@@ -144,7 +144,7 @@ public:
 	//ビットマップを読み込む
 	void LoadBitmap(int isfc,LPTSTR filename);
 	//ビットマップに書き出す　２４ビットカラー限定
-	void SaveBitmap( char *filename , int isfc , int x=-1 , int y=-1 , int width=-1 , int height=-1 ) ;
+	void SaveBitmap( const char *filename , int isfc , int x=-1 , int y=-1 , int width=-1 , int height=-1 ) ;
 	//サーフェイスのデバイスコンテキストハンドルを取得
 	HDC GetHDC(int isfc);
 	//カラーキーをセット
@@ -164,8 +164,8 @@ public:
 	//矩形転送
 	void Blt(const MDO3Opt *opt,int isfc,int x,int y,int width,int height,int isrc,int srcx,int srcy);
 	//テキスト描画
-	void Text(int isfc,char* str,int x,int y,int height=12,int width=6,UINT color=0);
-	void TextEX(int isfc,char* str,int x,int y,HFONT hfont,UINT color=0);
+	void Text(int isfc,const char* str,int x,int y,int height=12,int width=6,UINT color=0);
+	void TextEX(int isfc,const char* str,int x,int y,HFONT hfont,UINT color=0);
 
 	//●図形描画
 	//線を描画

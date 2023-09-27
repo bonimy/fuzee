@@ -177,8 +177,8 @@ void TV_mode_area_param( TCB *caller )
 			KAGEMOJI( SFC_BACK , "種別　　 速さ 旋回性能　キー操作" , 12 , WINHEIGHT-16*(4) , 16 , 8 ) ;
 			for( int i=0 ; i<3 ; i++ )
 			{
-				char *Pstr[3] = {"名有り","紫など","緑など",} ;
-				char *Pstr2[3] = {"RT YU IO","FG HJ KL","VB NM ,.",} ;
+				const char *Pstr[3] = {"名有り","紫など","緑など",} ;
+				const char *Pstr2[3] = {"RT YU IO","FG HJ KL","VB NM ,.",} ;
 				char buf[128] ;
 				int  tmp = Pdest->arg[1+i] ;
 				sprintf( buf , "%s：　%d　　　%d　　　%s" , Pstr[i] , tmp&3 , (tmp>>4)&3 , Pstr2[i] ) ;
@@ -187,8 +187,8 @@ void TV_mode_area_param( TCB *caller )
 			}
 			{
 				char buf[128] ;
-				char *onoff[2] = {"ON","OFF"} ;
-				char *offon[2] = {"OFF","ON"} ;
+				const char *onoff[2] = {"ON","OFF"} ;
+				const char *offon[2] = {"OFF","ON"} ;
 				sprintf( buf , "1:マシン毎ずれた位置を走行/%s　2:好成績者がワープ/%s" , 
 					onoff[!!(Pdest->arg[0]&0x40)] , onoff[!!(Pdest->arg[0]&0x80)] ) ;
 				KAGEMOJI( SFC_BACK , buf , 300 , WINHEIGHT-16*3 , 16 , 8 ) ;

@@ -52,7 +52,7 @@ void FZCD :: Clear()
 }
 
 
-char *FZCD :: Write2ROM( BYTE *Prom , int romsize , int *Poffset , int *Poffsete , int *Poffsetcc , int *Pareaadrlist , bool culcmode , int *Psizeofband , int *Psizeofchip )
+const char *FZCD :: Write2ROM( BYTE *Prom , int romsize , int *Poffset , int *Poffsete , int *Poffsetcc , int *Pareaadrlist , bool culcmode , int *Psizeofband , int *Psizeofchip )
 {
 BYTE blbuf[3][FZCD_MAP_SPACE_LIMIT] ;
 BYTE babuf[FZCD_BAND_SPACE_LIMIT*2+256] ;
@@ -165,7 +165,8 @@ BYTE tmptile[FZCD_CHIP_P_BAND*FZCD_SOE_CHIP] ;
 			tmpband[iba*2+0] = comp ;
 			tmpband[iba*2+1] = comp>>8 ;
 		}
-		for( int comp=0 ; comp<bap ; comp+=FZCD_SOA_BLOCK )
+        int comp=0 ;
+		for( ; comp<bap ; comp+=FZCD_SOA_BLOCK )
 		{
 			if( !memcmp( babuf+comp , tmpband , FZCD_SOA_BLOCK ) )
 				break ;
@@ -455,7 +456,7 @@ FILE *fp ;
 	if( !fp )return -2 ;
 
 char buf[128] ;
-char *Pstr ;
+const char *Pstr ;
 #define ERR_RET			{fclose(fp);return -1 ;}
 
 	Pstr = ";風情　コースファイル\n;ソフト起動中は直に変更しないで下さい\n;#から始まる行以外はコメントです\n\n\n" ;
@@ -640,7 +641,8 @@ int tmp[10] ;
 					//そのブロックを補正するか
 					for( int ibl=0 ; ibl<FZCD_BLOCK_P_MAP_W*FZCD_BLOCK_P_MAP_H ; ibl++ )
 					{
-						for( int iba=0 ; iba<FZCD_BAND_P_BLOCK_H ; iba++ )
+                        int iba=0 ;
+						for( ; iba<FZCD_BAND_P_BLOCK_H ; iba++ )
 						{
 							for( int ich=0 ; ich<FZCD_CHIP_P_BAND_W ; ich++ )
 							{

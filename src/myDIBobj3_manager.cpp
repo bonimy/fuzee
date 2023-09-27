@@ -290,7 +290,7 @@ void MyDIBObj3 :: LoadBitmap(int isfc,LPTSTR filename)
 	２４ビットbmpを出力
 	x以降の引数を全て-1にすると、サーフェイス全体を出力する
 */
-void MyDIBObj3 :: SaveBitmap( char *filename , int isfc , int x , int y , int width , int height )
+void MyDIBObj3 :: SaveBitmap( const char *filename , int isfc , int x , int y , int width , int height )
 {
 	if(!SFCCheck(isfc))return;
 	if( x==-1 && y==-1 && width==-1 && height==-1 )
@@ -356,7 +356,7 @@ int  tmp ;
 			fwrite( &g , 1 , 1 , fp ) ;
 			fwrite( &r , 1 , 1 , fp ) ;
 		}
-		for( ; ix<WIDTH ; ix++ )
+		for( int ix=0 ; ix<WIDTH ; ix++ )
 		{
 			BYTE dummy=0x00 ;
 			fwrite( &dummy , 1 , 1 , fp ) ;
@@ -401,7 +401,7 @@ void MyDIBObj3 :: Flip( int fliptype , int* argv )
 	テキスト描画。
 */
 
-void MyDIBObj3 :: Text(int isfc,char* str,int x,int y,int height,int width,UINT color)
+void MyDIBObj3 :: Text(int isfc,const char* str,int x,int y,int height,int width,UINT color)
 {
 	if(!SFCCheck(isfc))return;
 HFONT tmpfont;
@@ -419,7 +419,7 @@ HFONT tmpfont;
 	DeleteObject(tmpfont);
 
 }
-void MyDIBObj3 :: TextEX(int isfc,char* str,int x,int y,HFONT hfont,UINT color)
+void MyDIBObj3 :: TextEX(int isfc,const char* str,int x,int y,HFONT hfont,UINT color)
 {
 	if(!SFCCheck(isfc))return;
 HFONT oldfont ;

@@ -971,7 +971,7 @@ int courseno ;
 							for( int q=0 ; q<64 ; q++ )
 							{
 								BMPD color ;
-								static table[8] = {0x80,0x40,0x20,0x10,0x08,0x04,0x02,0x01,} ;
+								static BYTE table[8] = {0x80,0x40,0x20,0x10,0x08,0x04,0x02,0x01,} ;
 								color = mdo.Pick( SFC_MINIMAP , i%4*8+q%8 , i/4*8+q/8 ) ;
 								color &= 0x739C ;
 								switch( color )
@@ -1018,7 +1018,7 @@ int courseno ;
 				SetWindowText( hWnd , buf ) ;
 				tmpfzcd.Clear() ;
 				tmpfzcd.Load(st) ;
-				char *Perror ;
+				const char *Perror ;
 				Perror = tmpfzcd.Write2ROM( Pexprom , romsize*2 , &wpos , &wpose , &wposcc , arealist+3*st ) ;
 				if( Perror[0] != '\0' )
 				{

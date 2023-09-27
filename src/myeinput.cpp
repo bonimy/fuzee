@@ -26,7 +26,8 @@ static bool IsMouseValid=true ;
 
 bool KeyStart()
 {
-	for(int i=0 ; i<MAXKEY ; i++)
+    int i=0 ;
+	for(; i<MAXKEY ; i++)
 	{
 		LAkey[i] = 0;
 	}
@@ -105,7 +106,8 @@ bool MouseRelease(mousebuttonidentifyindex wb)
 void KeyMove()
 {
 	if(!isinited)KeyStart();
-	for(int i=0 ; i<MAXKEY ; i++)
+    int i=0 ;
+	for(; i<MAXKEY ; i++)
 	{
 		LAkey[i] = ((LAkey[i]<<1)|(LAkey[i]&FMN))&LOGMASK ;
 	}

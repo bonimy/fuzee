@@ -650,7 +650,8 @@ int x0,x1,y0,y1 ;
 //				if( ia-0xCC380==0xBD1 )
 //					ia = ia ;
 #endif
-				for( int il=0 ; il<4 ; il++ )
+                int il=0 ;
+				for( ; il<4 ; il++ )
 				{
 					int tmp ;
 					int ik ;
@@ -778,7 +779,8 @@ bool TF_mm_kui(TCB *caller)
 		if( gmx>=0 && gmx<FZCD_TILE_P_MAP_W &&
 			gmy>=0 && gmy<FZCD_TILE_P_MAP_H )
 		{
-			for( int i=0 ; i<8 ; i++ )
+            int i=0 ;
+			for( ; i<8 ; i++ )
 			{
 				if( lmx==kuipos[i][0] && lmy==kuipos[i][1] )
 				{
@@ -810,7 +812,8 @@ bool TF_mm_kui(TCB *caller)
 				for( int ia=ia0+1 ; ia<ia0+noloop ; ia++ )
 				{
 					int ex = ia % noloop ;
-					for( int it=0 ; it<4 ; it++ )
+                    int it=0 ;
+					for( ; it<4 ; it++ )
 					{
 						if( memcmp( kuidata[cmptile[it]] ,
 							        kuidata[GETROM8(ex+it+0xCC380)] , 4 ) )break ;
@@ -819,7 +822,8 @@ bool TF_mm_kui(TCB *caller)
 					{
 						if( KeyOn( KC_CTRL ) )
 						{
-							for( int ill=0 ; ill<4 ; ill++ )
+                            int ill=0 ;
+							for( ; ill<4 ; ill++ )
 							{
 								int tmp ;
 								tmp = GETROM8(ex+0xCC380+ill) ;

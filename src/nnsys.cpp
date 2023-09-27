@@ -84,7 +84,7 @@ static char numover = '\0';
 #define MAXCHARANDCHARBUFFER		8
 #define	MAXCHARANDCHARLENGTH		100
 
-char* CAC(char* str1,char* str2 , int buf){
+char* FZ_CAC(char* str1,char* str2 , int buf){
 static char buffer[MAXCHARANDCHARBUFFER][MAXCHARANDCHARLENGTH];
 static char nullstr = '\0';
 static int  bufloop=0;
@@ -109,7 +109,7 @@ char *bptr,*eptr;
 		str1++;
 		if(bptr == eptr)
 		{
-			bptr = '\0';
+			*bptr = '\0';
 			return &buffer[buf][0];
 		}
 	}
@@ -124,7 +124,7 @@ char *bptr,*eptr;
 		str2++;
 		if(bptr == eptr)
 		{
-			bptr = '\0';
+			*bptr = '\0';
 			return &buffer[buf][0];
 		}
 	}
@@ -247,7 +247,7 @@ char *bptr,*eptr;
 		str1++;
 		if(bptr == eptr)
 		{
-			bptr = '\0';
+			*bptr = '\0';
 			return Pbuf;
 		}
 	}
@@ -262,7 +262,7 @@ char *bptr,*eptr;
 		str2++;
 		if(bptr == eptr)
 		{
-			bptr = '\0';
+			*bptr = '\0';
 			return Pbuf;
 		}
 	}

@@ -21,7 +21,7 @@
 	-5　一時バッファを拡張できない
 	-6　返すべきバッファが確保できない
 */
-extern int LoadMemoryFromFile(char *filename , unsigned char **ptrbuf);
+extern int LoadMemoryFromFile(const char *filename , unsigned char **ptrbuf);
 
 /*
 	メモリをファイルに書き出す。
@@ -29,7 +29,7 @@ extern int LoadMemoryFromFile(char *filename , unsigned char **ptrbuf);
 	-1	ファイルが開けない
 	-2	ファイルに書けない
 */
-extern int WriteFileFromMemory(char *filename , unsigned char *data , int length);
+extern int WriteFileFromMemory(const char *filename , unsigned char *data , int length);
 
 
 /*
@@ -49,10 +49,10 @@ extern int WriteALine( int filehand , char *Pbuffer );
 　オプショナルヘッダの多さに嫌気がさしただけ
 　Outputは、CREAT,TRUNCである。
 */
-extern int MMMOpenForTextInput( char *Pname );
-extern int MMMOpenForTextOutput( char *Pname );
-extern int MMMOpenForBinaryInput( char *Pname );
-extern int MMMOpenForBinaryOutput( char *Pname );
+extern int MMMOpenForTextInput( const char *Pname );
+extern int MMMOpenForTextOutput( const char *Pname );
+extern int MMMOpenForBinaryInput( const char *Pname );
+extern int MMMOpenForBinaryOutput( const char *Pname );
 extern int MMMClose( int filehand ) ;
 
 

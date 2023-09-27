@@ -19,12 +19,12 @@ static int cliph=1 ;
 
 static void CWT(TCB *caller)
 {
-char *Pstr[NO_SUBMODE]=
+const char *Pstr[NO_SUBMODE]=
 {
 	SUBMODE_TITLE
 };
 char buf[128] ;
-char *Ptmp ;
+const char *Ptmp ;
 	CWT_common( buf ) ;
 	sprintf( &buf[strlen(buf)] , MODE_TITLE ) ;
 	for( int i=0 ; i<NO_SUBMODE ; i++ )

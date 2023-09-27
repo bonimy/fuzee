@@ -85,7 +85,7 @@ public:
 	int area_sub_org ;
 
 	void Clear() ;
-	char *Write2ROM( BYTE *Prom , int romsize , int *Poffset , int *Poffsete , int *Poffsetcc , int *Pareaadrlist , bool culcmode =false , int *Psizeofband = NULL , int *Psizeofchip = NULL ) ;
+	const char *Write2ROM( BYTE *Prom , int romsize , int *Poffset , int *Poffsete , int *Poffsetcc , int *Pareaadrlist , bool culcmode =false , int *Psizeofband = NULL , int *Psizeofchip = NULL ) ;
 
 
 	int Save( int region ) ;
@@ -99,7 +99,8 @@ public:
 		if( areano < 0x1000 )Pdestarea = &area ;
 		areano %= 0x1000 ;
 		(*Pdestarea)[layer][areano].isexist = false ;
-		for( int i=areano ; i<FZCD_MAX_AREA-1 ; i++ )
+        int i=areano ;
+		for( ; i<FZCD_MAX_AREA-1 ; i++ )
 		{
 			(*Pdestarea)[layer][i] = (*Pdestarea)[layer][i+1] ;
 		}
@@ -126,7 +127,8 @@ public:
 		AREA (*Pdestarea)[3][FZCD_MAX_AREA] ;
 		Pdestarea = &area ;
 		if( sub )Pdestarea = &area_sub ;
-		for( int i=0 ; i<FZCD_MAX_AREA ; i++ )
+        int i=0 ;
+		for( ; i<FZCD_MAX_AREA ; i++ )
 		{
 			if( !(*Pdestarea)[layer][i].isexist )break ;
 		}
