@@ -138,7 +138,7 @@ int ti;
 	ti = (READB( Pd , tw + 2 ) << 16) | READW( Pd , tw );
 	return JMP( Pd , ti );
 }
-//PEI ($**)  égÇÌÇ»Ç¢Ç≈ÇµÇÂ
+//PEI ($**)  ‰Ωø„Çè„Å™„ÅÑ„Åß„Åó„Çá
 __forceinline static bool OPD4( DataSet* Pd )
 {
 	return false;
@@ -302,7 +302,7 @@ __forceinline static bool OPE9( DataSet* Pd )
 
 __forceinline static bool OPEA( DataSet* Pd )
 {
-//ëÂçDÇ´Ç»ÅANOP
+//Â§ßÂ•Ω„Åç„Å™„ÄÅNOP
 	return true;
 }
 
@@ -362,7 +362,7 @@ __forceinline static bool OPF3( DataSet* Pd )
 	assert(0);
 	return false;
 }
-//PEA $****          ÇªÇÃÇ‹Ç‹ÉvÉbÉVÉÖÇ∑ÇÈÇæÇØÇÁÇµÇ¢ÇÊ
+//PEA $****          „Åù„ÅÆ„Åæ„Åæ„Éó„ÉÉ„Ç∑„É•„Åô„Çã„Å†„Åë„Çâ„Åó„ÅÑ„Çà
 __forceinline static bool OPF4( DataSet* Pd )
 {
 	Pd->Pstack[Pd->reg.s+1] = Immediate8( Pd ) ;
@@ -422,13 +422,13 @@ __forceinline static bool OPFA( DataSet* Pd )
 }
 
 
-//XCE égÇÌÇ»Ç¢ÇÊÇ»Çü
+//XCE ‰Ωø„Çè„Å™„ÅÑ„Çà„Å™„ÅÅ
 __forceinline static bool OPFB( DataSet* Pd )
 {
 	assert(0);
 	return false;
 }
-//JSR ($******,x)  ÇÊÅ[ÇÌÇ©ÇÁÇÒ
+//JSR ($******,x)  „Çà„Éº„Çè„Åã„Çâ„Çì
 __forceinline static bool OPFC( DataSet* Pd )
 {
 	assert(0);

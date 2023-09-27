@@ -4,17 +4,17 @@
 
 
 /*
-	�X�g���b�`�]���̊֐��B
-	���j�́AmyDIBobj3_Cls.cpp�ɏ����Ă݂��B
+	ストレッチ転送の関数。
+	方針は、myDIBobj3_Cls.cppに書いてみた。
 */
 
-//�Œ菬��ForStretch�炵��
+//固定小数ForStretchらしい
 #define UBITSFS			14
 #define	D2FFS(num)		((INT32)((num)*(1<<UBITSFS)))
 #define F2IFS(num)		((num)>>UBITSFS)
 
-//���񂭂炢�ɂȂ�ƁA���[�v�W�J���ʂ����đ����̂��ǂ����^�킵���B
-//�������A�e�X�g���Ă݂��瑬����������A�����Ȃ��Ă�񂶂�Ȃ����ȁc�c
+//こんくらいになると、ループ展開が果たして速いのかどうか疑わしい。
+//たしか、テストしてみたら速かったから、こうなってるんじゃないかな……
 #define RenderLoopForSBlt(BLTYPE,CKTYPE,SETYPE)	;\
 for( iy=0 ; iy<height ; iy++ )				   \
 {                                              \
@@ -57,56 +57,56 @@ void MyDIBObj3 :: SBlt(const MDO3Opt *opt,int isfc,int x,int y,int width,int hei
 	if( !SFCCheck( isfc ) )return;
 	if( !SFCCheck( isrc ) )return;
 
-//���ƍ����̃X�P�[��
+//幅と高さのスケール
 double scalex,scaley;
 	scalex = (double)  srcwidth /  width ;
 	scaley = (double) srcheight / height ;
-//�N���b�v���ꂽ��́Asrc�̍��W�𕂓�������
+//クリップされた後の、srcの座標を浮動小数で
 double srcxd,srcyd;
-	//�w�����N���b�s���O
+	//Ｘ方向クリッピング
 	srcxd = srcx ;
 	if( x < sfc[isfc].clipx )
-	{//���ɂ͂ݏo�Ă���
+	{//左にはみ出ている
 		width -= (sfc[isfc].clipx-x);
 		srcxd += (sfc[isfc].clipx-x)*scalex ;
 		x = sfc[isfc].clipx ;
 	}
 	if( x+width > sfc[isfc].clipx+sfc[isfc].clipwidth )
-	{//�E�ɂ͂ݏo���Ă���
+	{//右にはみ出している
 		width = sfc[isfc].clipx+sfc[isfc].clipwidth-x ;
 	}
-	//�w�����N���b�s���O
+	//Ｘ方向クリッピング
 	srcyd = srcy ;
 	if( y < sfc[isfc].clipy )
-	{//��ɂ͂ݏo�Ă���
+	{//上にはみ出ている
 		height -= (sfc[isfc].clipy-y);
 		srcyd += (sfc[isfc].clipy-y)*scaley ;
 		y = sfc[isfc].clipy ;
 	}
 	if( y+height > sfc[isfc].clipy+sfc[isfc].clipheight )
-	{//���ɂ͂ݏo���Ă���
+	{//下にはみ出している
 		height = sfc[isfc].clipy+sfc[isfc].clipheight-y ;
 	}
-//src�ʒu�A���ʒu�̋L��
+//src位置、ｘ位置の記憶
 INT32 psx,psy,prepsx;
 	psx = D2FFS(srcxd);
 	psy = D2FFS(srcyd);
 	prepsx = psx ;
-//�x�N�g������Ȃ����ǂ��c�c�ړ���
+//ベクトルじゃないけどさ……移動量
 INT32 vx,vy;
 	vx = D2FFS( scalex ) ;
 	vy = D2FFS( scaley ) ;
-//�����Ȃ�̂��킩��񂪁A��̓ǂݏ����ʒu�擪�̃|�C���^
+//速くなるのかわからんが、列の読み書き位置先頭のポインタ
 BMPD *Pwline,*Prline;
-//���́A�i���l�̑ޔ�
+//その、進歩値の退避
 int prowline,prorline;
-//�J�E���^�c�c�f�p�������H
+//カウンタ……素朴すぎか？
 int ix,iy;
-//�A�����[���Ɏg���A���̌��E�l
+//アンロールに使う、幅の限界値
 int tw=width-7;
 	Pwline = &sfc[isfc].data[x|(y<<sfc[isfc].width_bits)] ;
 	if(opt->flag&MDO3F_Y_MIRROR)
-	{//����Ȓ��x�Ŗ��Ȃ��݂���
+	{//こんな程度で問題ないみたい
 		Prline = &sfc[isrc].data[(srcheight-F2IFS(psy)-1)<<sfc[isrc].width_bits];
 		psy %= D2FFS(1) ;
 		prorline = -sfc[isrc].width ;
@@ -219,7 +219,7 @@ default:return;}
 
 	return;
 #if 0
-//�e�X�g
+//テスト
 	for( iy=0 ; iy<height ; iy++ )
 	{
 		psx = prepsx ;
@@ -251,8 +251,8 @@ default:return;}
 		psy += vy ;
 
 #if 0
-//�ǂ���r������A�l���������瑁�������e�X�g�B
-//���_�͂T�O���P�O�O���B���������āA�����̗p����
+//どう比較したら、値を下げたら早いかをテスト。
+//結論は５０歩１００歩。かっこつけて、＆を採用する
 //*
 		if(psy&D2FFS(1))
 /*/
@@ -269,7 +269,7 @@ default:return;}
 #endif
 		if(psy&((~0)<<UBITSFS))
 		{
-			//�Ō�ɁA���傧�����ƁA�|�C���^�A�̈�̐���w����ł����ǁc�c�b�o�t����O�o���܂���悤�ɁB
+			//最後に、ちょぉぉっと、ポインタ、領域の先を指すんですけど……ＣＰＵが例外出しませんように。
 			Prline += prorline*(F2IFS(psy)) ;
 			psy &= ~((~0)<<UBITSFS);
 		}

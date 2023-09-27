@@ -1,4 +1,4 @@
-//RTI ‚Æ‚è‚ ‚¦‚¸ARTLŒÄ‚ñ‚Å’u‚­
+//RTI ã¨ã‚Šã‚ãˆãšã€RTLå‘¼ã‚“ã§ç½®ã
 __forceinline static bool OP40( DataSet* Pd )
 {
 	RTL( Pd ) ;
@@ -19,14 +19,14 @@ __forceinline static bool OP42( DataSet* Pd )
 	return true;
 }
 
-//EOR ,s  ‚í‚©‚ç‚ñ
+//EOR ,s  ã‚ã‹ã‚‰ã‚“
 __forceinline static bool OP43( DataSet* Pd )
 {
 	assert(0);
 	return false;
 }
 
-//MVP@ƒuƒƒbƒN“]‘—ƒ|ƒWƒeƒBƒu
+//MVPã€€ãƒ–ãƒ­ãƒƒã‚¯è»¢é€ãƒã‚¸ãƒ†ã‚£ãƒ–
 __forceinline static bool OP44( DataSet* Pd )
 {
 BYTE tb=Immediate8( Pd );
@@ -143,14 +143,14 @@ __forceinline static bool OP52( DataSet* Pd )
 	return true;
 }
 
-//EOR (s),y •ú’u
+//EOR (s),y æ”¾ç½®
 __forceinline static bool OP53( DataSet* Pd )
 {
 	assert(0);
 	return false;
 }
 
-//MVN:ƒuƒƒbƒN“]‘—ƒlƒKƒeƒBƒu
+//MVN:ãƒ–ãƒ­ãƒƒã‚¯è»¢é€ãƒã‚¬ãƒ†ã‚£ãƒ–
 __forceinline static bool OP54( DataSet* Pd )
 {
 BYTE dest=Immediate8(Pd);
@@ -265,7 +265,7 @@ __forceinline static bool OP62( DataSet* Pd )
 	return false;
 }
 
-//ADC ,s –³Ž‹
+//ADC ,s ç„¡è¦–
 __forceinline static bool OP63( DataSet* Pd )
 {
 	assert(0);
@@ -327,7 +327,7 @@ __forceinline static bool OP6B( DataSet* Pd )
 	return true;
 }
 
-//JMP ($****)‚í‚©‚ñ‚È‚¢
+//JMP ($****)ã‚ã‹ã‚“ãªã„
 __forceinline static bool OP6C( DataSet* Pd )
 {
 	assert(0);
@@ -375,7 +375,7 @@ __forceinline static bool OP72( DataSet* Pd )
 	ADC( Pd , READA( Pd , DirectIndirect( Pd ) ) ) ;
 	return true;
 }
-//ADC (S),y  ‚µ‚ç‚È‚¢
+//ADC (S),y  ã—ã‚‰ãªã„
 __forceinline static bool OP73( DataSet* Pd )
 {
 	assert(0);
@@ -443,7 +443,7 @@ __forceinline static bool OP7B( DataSet* Pd )
 	Pd->reg.a.w = Pd->reg.d ;
 	return true;
 }
-//JMP ($nn****,x)  •ú’u
+//JMP ($nn****,x)  æ”¾ç½®
 __forceinline static bool OP7C( DataSet* Pd )
 {
 	assert(0);

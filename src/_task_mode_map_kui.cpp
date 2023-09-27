@@ -57,7 +57,7 @@ static char kuidata[256][4] =
 	{0,3,99,99},
 	{4,-1,99,99},
 	{0,-1,99,99},
-	//•¡‡Œ^
+	//è¤‡åˆå‹
 	{4,4,0,-2},
 	{0,4,4,-2},
 	{4,0,0,6},
@@ -87,7 +87,7 @@ static char kuidata[256][4] =
 	{4,0,-2, 6},
 	{0,0, 6, 6},
 
-	//•Ç•t‚«
+	//å£ä»˜ã
 	{4,4,99,99},
 	{0,4,99,99},
 	{4,0,99,99},
@@ -113,7 +113,7 @@ static char kuidata[256][4] =
 	{0,3,99,99},
 	{4,-1,99,99},
 	{0,-1,99,99},
-	//•¡‡Œ^
+	//è¤‡åˆå‹
 	{4,4,0,-2},
 	{0,4,4,-2},
 	{4,0,0,6},
@@ -143,12 +143,12 @@ static char kuidata[256][4] =
 	{4,0,-2, 6},
 	{0,0, 6, 6},
 
-	//‚Ç^‚ñ’†
+	//ã©çœŸã‚“ä¸­
 	{2,2,99,99},
-	//^‚Á•
+	//çœŸã£é»’
 	{99,99,99,99},
 
-	//•A’[‚Á‚±‚¾‚¯
+	//é»’ã€ç«¯ã£ã“ã ã‘
 	{-3,4,99,99},
 	{-3,0,99,99},
 	{6,4,99,99},
@@ -175,7 +175,7 @@ static char kuidata[256][4] =
 	{2,-2,99,99},
 	{-2,-2,99,99},
 
-	//”’A’[‚Á‚±‚¾‚¯
+	//ç™½ã€ç«¯ã£ã“ã ã‘
 	{-3,4,99,99},
 	{-3,0,99,99},
 	{6,4,99,99},
@@ -205,7 +205,7 @@ static char kuidata[256][4] =
 
 
 
-	//Œã‚Íƒ_ƒ~[
+	//å¾Œã¯ãƒ€ãƒŸãƒ¼
 	{99,99,99,99},//
 	{99,99,99,99},//
 	{99,99,99,99},//
@@ -311,7 +311,7 @@ static char kuidata[256][4] =
 	{99,99,99,99},//
 } ;
 
-//ƒ¿
+//Î±
 static int ChainTable0[][2] =
 {
 	{ 8, 0,},
@@ -372,7 +372,7 @@ static int ChainTable0[][2] =
 	{0xFFFF},
 };
 
-//ƒÀ@‚w•ûŒü‚É‚S‚Ì”{”
+//Î²ã€€ï¼¸æ–¹å‘ã«ï¼”ã®å€æ•°
 static int ChainTable1[][2] =
 {
 	{ 8, 0},
@@ -407,8 +407,8 @@ static int ChainTable1[][2] =
 	{0xFFFF},
 };
 
-//ƒÁ@x=4m@y=4n+1
-//¶‰E‘ÎÌ‚¾‚ªã‰º‘ÎÌ‚Å‚Í‚È‚¢
+//Î³ã€€x=4mã€€y=4n+1
+//å·¦å³å¯¾ç§°ã ãŒä¸Šä¸‹å¯¾ç§°ã§ã¯ãªã„
 static int ChainTable2[][2] =
 {
 	{ 4,-7},
@@ -435,7 +435,7 @@ static int ChainTable2[][2] =
 	{0xFFFF},
 };
 
-//ƒÃ
+//Îµ
 static int ChainTable3[][2] =
 {
 	{ 6, 6},
@@ -450,56 +450,56 @@ static void GetChainTable( int x , int y , int (**PPout)[2] , bool *isYmirror , 
 	RotateCorrect( &x , 4 ) ;
 	RotateCorrect( &y , 4 ) ;
 	if( x==0 && y==0 )
-	{//ƒ¿
+	{//Î±
 		(*PPout) = ChainTable0 ;
 		(*isYmirror) = false ;
 		(*isXYswap) = false ;
 		return ;
 	}
 	if( x==2 && y==2 )
-	{//ƒÃ
+	{//Îµ
 		(*PPout) = ChainTable3 ;
 		(*isYmirror) = false ;
 		(*isXYswap) = false ;
 		return ;
 	}
 	if( x==0 && y==2 )
-	{//ƒÀ
+	{//Î²
 		(*PPout) = ChainTable1 ;
 		(*isYmirror) = false ;
 		(*isXYswap) = false ;
 		return ;
 	}
 	if( x==2 && y==0 )
-	{//ƒÀ
+	{//Î²
 		(*PPout) = ChainTable1 ;
 		(*isYmirror) = false ;
 		(*isXYswap) = true ;
 		return ;
 	}
 	if( x==0 && y==1 )
-	{//ƒÁ
+	{//Î³
 		(*PPout) = ChainTable2 ;
 		(*isYmirror) = false ;
 		(*isXYswap) = false ;
 		return ;
 	}
 	if( x==0 && y==3 )
-	{//ƒÁ
+	{//Î³
 		(*PPout) = ChainTable2 ;
 		(*isYmirror) = true ;
 		(*isXYswap) = false ;
 		return ;
 	}
 	if( x==1 && y==0 )
-	{//ƒÁ
+	{//Î³
 		(*PPout) = ChainTable2 ;
 		(*isYmirror) = false ;
 		(*isXYswap) = true ;
 		return ;
 	}
 	if( x==3 && y==0 )
-	{//ƒÁ
+	{//Î³
 		(*PPout) = ChainTable2 ;
 		(*isYmirror) = true ;
 		(*isXYswap) = true ;
@@ -540,19 +540,19 @@ int x0,x1,y0,y1 ;
 		for( int iy=y0 ; iy<=y1 ; iy++ )
 		for( int ix=x0 ; ix<=x1 ; ix++ )
 		{
-//ƒ`ƒbƒv‚Åƒ‹[ƒv
+//ãƒãƒƒãƒ—ã§ãƒ«ãƒ¼ãƒ—
 			BYTE koholist[256][4] ;
 			int  kohopos[4] ;
 			kohopos[0] = kohopos[1] = kohopos[2] = kohopos[3] = 0 ;
 
 			for( int il=0 ; il<4 ; il++ )
-			{//ƒ^ƒCƒ‹‚Åƒ‹[ƒv
+			{//ã‚¿ã‚¤ãƒ«ã§ãƒ«ãƒ¼ãƒ—
 				int nokui ;
 				char kuilist[2][2] ;
 				nokui = 0 ;
 					/*
 				for( int q=0 ; q<9 ; q++ )
-				{//Y—LŒøŒ—“à‚ÌY‚ğ’T‚·
+				{//æ­æœ‰åŠ¹åœå†…ã®æ­ã‚’æ¢ã™
 					static BYTE kuimask[9] =
 					{
 						0x40 , 0xF0 , 0xF0 ,
@@ -799,7 +799,7 @@ bool TF_mm_kui(TCB *caller)
 			if( i==8 )mmkuipenX = - 1;
 
 			if( !MousePush( MB_L ) && MousePush( MB_R ) )
-			{//“¯‚¶”z’u‚Ì•Êƒ`ƒbƒv‚ğ’T‚·
+			{//åŒã˜é…ç½®ã®åˆ¥ãƒãƒƒãƒ—ã‚’æ¢ã™
 				BYTE *Ptmp ;
 				Ptmp = &working.exptile[editingcn][(gmx/2+gmy/2*FZCD_CHIP_P_MAP_W)*FZCD_SOE_CHIP] ;
 				int cmptile[4] ;
@@ -826,11 +826,11 @@ bool TF_mm_kui(TCB *caller)
 								if( tmp < 0x9B )continue ;
 								switch( tmp )
 								{
-								case 0xC2://Fˆá‚¢
+								case 0xC2://è‰²é•ã„
 								break ;
-								case 0xA5://B•Ç
-								case 0xC0://M˜H–Ê
-								case 0xC1://B˜H–Ê
+								case 0xA5://Bå£
+								case 0xC0://Mè·¯é¢
+								case 0xC1://Bè·¯é¢
 									if( KeyOn( KC_SHIFT ) )break ;
 								case 0x9C://<<
 								case 0xA0://>>
@@ -878,13 +878,13 @@ bool TF_mm_kui(TCB *caller)
 				tx -= mainx*MAP_TILE_SIZE_D*2 ;
 				ty -= mainy*MAP_TILE_SIZE_D*2 ;
 
-				mmkuiarcargy = ty ;//ƒƒO‚ÌˆÓ–¡–³‚µ
+				mmkuiarcargy = ty ;//ãƒ­ã‚°ã®æ„å‘³ç„¡ã—
 
 				int rad ;
 				rad = MYABS( mmkuiarcargx - tx ) ;
 				if( rad < 32 )
 				{
-					MessageBox( hWnd , "”¼Œa‚ğ‚à‚¤­‚µ‘å‚«‚­æ‚Á‚Ä‚­‚¾‚³‚¢" , "ƒGƒ‰[" , MB_OK ) ;
+					MessageBox( hWnd , "åŠå¾„ã‚’ã‚‚ã†å°‘ã—å¤§ããå–ã£ã¦ãã ã•ã„" , "ã‚¨ãƒ©ãƒ¼" , MB_OK ) ;
 				}
 				else
 				{
@@ -907,7 +907,7 @@ bool TF_mm_kui(TCB *caller)
 
 					int log[512] ;
 					/*static */int movetable[][16] =
-					{/*Å‰‚Ì‚Q‚Â‚Í‡Œv’l@‚»‚êˆÈ~‚ÍˆÚ“®’l*/
+					{/*æœ€åˆã®ï¼’ã¤ã¯åˆè¨ˆå€¤ã€€ãã‚Œä»¥é™ã¯ç§»å‹•å€¤*/
 						{0,8,0,8,-1},
 						{4,32,1,8,1,8,1,8,1,8,-1},
 						{4,24,1,8,1,8,2,8,-1},
@@ -981,7 +981,7 @@ bool TF_mm_kui(TCB *caller)
 			mmkuisel = 0 ;
 			RequestRedraw() ;
 		}
-	//’Ê‰ß
+	//é€šé
 	case 2:
 		if( MousePush( MB_R ) )
 		{

@@ -21,7 +21,7 @@ bool TF_app_manager(TCB *caller)
 		Prom = NULL ;
 		if( (romsize = LoadMemoryFromFile( BASE_ROM_NAME , &Prom )) <= 0 )
 		{
-			MessageBox( hWnd , BASE_ROM_NAME "\n‚ªŠJ‚¯‚Ü‚¹‚ñ" , "ƒGƒ‰[" , MB_OK ) ;
+			MessageBox( hWnd , BASE_ROM_NAME "\nãŒé–‹ã‘ã¾ã›ã‚“" , "ã‚¨ãƒ©ãƒ¼" , MB_OK ) ;
 			return true ;
 		}
 		{
@@ -30,12 +30,12 @@ bool TF_app_manager(TCB *caller)
 			{
 				if( romsize==DEFAULT_ROM_SIZE+0x200 )
 				{
-					MessageBox( hWnd , BASE_ROM_NAME "‚Éƒwƒbƒ_‚ª•t‰Á‚³‚ê‚Ä‚¢‚È‚¢‚©Šm”F‚µ‚Ä‚­‚¾‚³‚¢" , "ƒGƒ‰[" , MB_OK ) ;
+					MessageBox( hWnd , BASE_ROM_NAME "ã«ãƒ˜ãƒƒãƒ€ãŒä»˜åŠ ã•ã‚Œã¦ã„ãªã„ã‹ç¢ºèªã—ã¦ãã ã•ã„" , "ã‚¨ãƒ©ãƒ¼" , MB_OK ) ;
 					onerror = true ;
 				}
 				else
 				{
-					MessageBox( hWnd , "‚q‚n‚l‚ÌƒTƒCƒY‚ªˆÙí‚Å‚·" , "ƒGƒ‰[" , MB_OK ) ;
+					MessageBox( hWnd , "ï¼²ï¼¯ï¼­ã®ã‚µã‚¤ã‚ºãŒç•°å¸¸ã§ã™" , "ã‚¨ãƒ©ãƒ¼" , MB_OK ) ;
 					onerror = true ;
 				}
 			}
@@ -45,15 +45,15 @@ bool TF_app_manager(TCB *caller)
 				if( eh != EHASH_OF_AUTHOR )
 				{
 					char str[256] ;
-					sprintf( str , "‚±‚Ìƒ\ƒtƒgŠJ”­ŽÒ‚ÌROM‚ÌHash:%06X\n“Ç‚Ýž‚Ü‚ê‚½ROM‚ÌHash:%06X\nROM“à—e‚ªˆÙ‚È‚é‚ÆŽv‚í‚ê‚Ü‚·" , EHASH_OF_AUTHOR , eh ) ;
-					MessageBox( hWnd , str , "ƒGƒ‰[" , MB_OK ) ;
+					sprintf( str , "ã“ã®ã‚½ãƒ•ãƒˆé–‹ç™ºè€…ã®ROMã®Hash:%06X\nèª­ã¿è¾¼ã¾ã‚ŒãŸROMã®Hash:%06X\nROMå†…å®¹ãŒç•°ãªã‚‹ã¨æ€ã‚ã‚Œã¾ã™" , EHASH_OF_AUTHOR , eh ) ;
+					MessageBox( hWnd , str , "ã‚¨ãƒ©ãƒ¼" , MB_OK ) ;
 					onerror = true ;
 				}
 			}
 			if( onerror )
 			{
 				int ans ;
-				ans = MessageBox( hWnd , "‚»‚ê‚Å‚à‘±‚¯‚Ü‚·‚©H" , "Šm”F"  , MB_YESNO ) ;
+				ans = MessageBox( hWnd , "ãã‚Œã§ã‚‚ç¶šã‘ã¾ã™ã‹ï¼Ÿ" , "ç¢ºèª"  , MB_YESNO ) ;
 				if( ans == IDNO )return true ;
 			}
 		}

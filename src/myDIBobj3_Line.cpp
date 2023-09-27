@@ -3,71 +3,71 @@
 #include "myDIBobj3_p.h"
 
 /*
-	����`�悷��֐��B
-	���j�́AmyDIBobj3_Cls.cpp�ɏ����Ă݂��B
+	線を描画する関数。
+	方針は、myDIBobj3_Cls.cppに書いてみた。
 */
 
 
-//�Œ菬��ForLine
+//固定小数ForLine
 #define UBITSFL			14
 #define	D2FFL(num)		((INT32)(num*(1<<UBITSFL)))
 #define F2IFL(num)		(num>>UBITSFL)
 
 
-//�͈͂��Q���ɕ����Ă����āA�K������M���M���̈ʒu��T���B
-//���炵�����������A�ĊO��������
-//�E����ɔ͈͓�
+//範囲を２つずつに分けていって、適合するギリギリの位置を探す。
+//汚らしいやり方だが、案外いいかも
+//右が常に範囲内
 static int DivideCorrectR( int sa , int ea , int cb0 , int cb1 , int b0 , INT32 slope)
 {
-	//���Ԉʒu
+	//中間位置
 int ma = (ea+sa)/2 ;
 int mb ;
-	//�M���M���ʒu�ł���
+	//ギリギリ位置である
 	if( ma == sa )
 	{
-		return ea ;//�E���͈͓�������
+		return ea ;//右が範囲内だから
 	}
-	//���Ԉʒu�Ōv�Z
+	//中間位置で計算
 	mb = b0 + slope * (ma-sa) ;
 	if( cb0 <= mb && mb < cb1 )
 	{
-	//���Ԉʒu�͂n�j������
+	//中間位置はＯＫだった
 		return DivideCorrectR( sa , ma , cb0 , cb1 , b0 , slope ) ;
 	}
 	else
-	{//���Ԉʒu�̓_��������
+	{//中間位置はダメだった
 		return DivideCorrectR( ma , ea , cb0 , cb1 , mb , slope ) ;
 	}
 }
-//������ɔ͈͓�
+//左が常に範囲内
 static int DivideCorrectL( int sa , int ea , int cb0 , int cb1 , int b0 , INT32 slope)
 {
-	//���Ԉʒu
+	//中間位置
 int ma = (ea+sa)/2 ;
 int mb ;
-	//�M���M���ʒu�ł���
+	//ギリギリ位置である
 	if( ma == sa )
 	{
-		return sa ;//�����͈͓�������
+		return sa ;//左が範囲内だから
 	}
-	//���Ԉʒu�Ōv�Z
+	//中間位置で計算
 	mb = b0 + slope * (ma-sa) ;
 	if( cb0 <= mb && mb < cb1 )
 	{
-	//���Ԉʒu�͂n�j������
+	//中間位置はＯＫだった
 		return DivideCorrectL( ma , ea , cb0 , cb1 , mb , slope ) ;
 	}
 	else
-	{//���Ԉʒu�̓_��������
+	{//中間位置はダメだった
 		return DivideCorrectL( sa , ma , cb0 , cb1 , b0 , slope ) ;
 	}
 }
-//�����␳����K�v������B���́A�}�C�i�[�P�[�X�ł���B
-//�Ȃ��Ȃ�A��ʂ��܂����ł��܂��Ƃ��́A���t�̍��W�n���K�p����邩��B
-//�c�c�������A�\���͂���B
-//���Ԃ�A���Ԃ̈ʒu�͔͈͓��Ȃ̂Łi����ۂǂ������ȉ�ʔ䗦���Ƙb������Ă��邯�ǁj
-//�͈͓����ǂ������ׁA�͈͓��Ȃ�ADivideCorrectR,L������B
-//�͈͊O��������c�c�x�O���B
+//両方補正する必要がある。実は、マイナーケースである。
+//なぜなら、画面をまたいでしまうときは、大抵逆の座標系が適用されるから。
+//……しかし、可能性はある。
+//たぶん、中間の位置は範囲内なので（よっぽどおかしな画面比率だと話が違ってくるけど）
+//範囲内かどうか調べ、範囲内なら、DivideCorrectR,Lをする。
+//範囲外だったら……度外視。
 static bool EitherCorrect( int *Psa , int *Pea , INT32 *Ppdb , int cb0 , int cb1 , int b0 , INT32 slope )
 {
 int ma=((*Pea)+(*Psa))/2 ;
@@ -99,30 +99,30 @@ int tmp;
 
 inline void MyDIBObj3 :: Line_sub2( bool isXY , double sloped , const MDO3Opt *opt , int isfc , double a1d , double b1d , double a2d , double b2d , BMPD color )
 {
-//a-b���W�n�ƌ���
-//�������ɂO�D�T�𑫂��Aa�����̏�����؂�̂āi�܂�l�̌ܓ��j�Aa�����̐����ʒu���v�Z����B
+//a-b座標系と見る
+//両方向に０．５を足し、a方向の小数を切り捨て（つまり四捨五入）、a方向の整数位置を計算する。
 	a1d += 0.5;
 	a2d += 0.5;
 	b1d += 0.5;
 	b2d += 0.5;
-//�X�����Œ菬���Ōv�Z����
+//傾きを固定小数で計算する
 INT32 slope;
 	slope  = D2FFL( sloped ) ;
-//���[�v���Ab�ʒu���Œ菬���Ŏ������́Bpresent delta b
+//ループ中、b位置を固定小数で示すもの。present delta b
 INT32 pdb;
 	pdb    = D2FFL( b1d );
-//a�����؎̂Ăɍۂ���ړ����i�K�����Ɉړ����邽�߁A�����j
+//a方向切捨てに際する移動分（必ず左に移動するため、引く）
 	pdb -= D2FFL(sloped*(a1d-(int)a1d));
 
-//�T�[�t�F�C�X�̃[���ʒu
+//サーフェイスのゼロ位置
 BMPD *P00=sfc[isfc].data ;
 int  noshift=sfc[isfc].width_bits ;
-//���[�v�J�E���^
+//ループカウンタ
 int na;
-//�J�n�E�I���ʒu
+//開始・終了位置
 int sa = (int)a1d ;
 int ea = (int)a2d ;
-//�N���b�s���O
+//クリッピング
 int ca,cas,cb,cbs;
 	if( isXY )
 	{
@@ -138,7 +138,7 @@ int ca,cas,cb,cbs;
 		ca  = sfc[isfc].clipy ;
 		cas = ca + sfc[isfc].clipheight ;
 	}
-//�܂��́Aa�����i���ꂾ���Ȃ�y�Ȃ̂Ɂc�c�j
+//まずは、a方向（これだけなら楽なのに……）
 	if( sa < ca )
 	{
 		pdb += ((ca-sa)*slope) ;
@@ -148,27 +148,27 @@ int ca,cas,cb,cbs;
 	{
 		ea = cas ;
 	}
-	if( sa > ea )return;//�s�K�v���H
-//�����b����
-//�N���b�v�͈͂��Œ菬���ɂ��Ă�����
+	if( sa > ea )return;//不必要か？
+//難解なb方向
+//クリップ範囲を固定小数にしておこう
 	ca  = D2FFL( ca  ) ;
 	cas = D2FFL( cas ) ;
 	cb  = D2FFL( cb  ) ;
 	cbs = D2FFL( cbs ) ;
-INT32 expeb;//�\�������A�ŏI���ʒu
+INT32 expeb;//予期される、最終ｂ位置
 	expeb = pdb + slope * (ea-sa) ;
 	if( pdb < cb )
-	{//�n�܂�̈ʒu�ŁA���������ɂ͂ݏo�Ă���
+	{//始まりの位置で、ｂ負方向にはみ出ている
 		if( expeb < cb )
-		{//�I���̈ʒu�ŁA���������ɂ͂ݏo�Ă���
+		{//終わりの位置で、ｂ負方向にはみ出ている
 			return ;
 		}
 		else if (expeb >= cbs )
-		{//�I���̈ʒu�ŁA���������ɂ͂ݏo�Ă���
+		{//終わりの位置で、ｂ正方向にはみ出ている
 			if(!EitherCorrect( &sa , &ea , &pdb , cb , cbs , pdb , slope ))return;
 		}
 		else
-		{//�I���̈ʒu�͂͂ݏo���Ă��Ȃ�
+		{//終わりの位置ははみ出していない
 int tmp;
 			tmp = DivideCorrectR( sa , ea , cb , cbs , pdb , slope ) ;
 			pdb += ((tmp-sa)*slope) ;
@@ -176,17 +176,17 @@ int tmp;
 		}
 	}
 	else if (pdb >= cbs )
-	{//�n�܂�̈ʒu�ŁA���������ɂ͂ݏo�Ă���
+	{//始まりの位置で、ｂ正方向にはみ出ている
 		if( expeb < cb )
-		{//�I���̈ʒu�ŁA���������ɂ͂ݏo�Ă���
+		{//終わりの位置で、ｂ負方向にはみ出ている
 			if(!EitherCorrect( &sa , &ea , &pdb , cb , cbs , pdb , slope ))return;
 		}
 		else if (expeb >= cbs )
-		{//�I���̈ʒu�ŁA���������ɂ͂ݏo�Ă���
+		{//終わりの位置で、ｂ正方向にはみ出ている
 			return ;	
 		}
 		else
-		{//�I���̈ʒu�͂͂ݏo���Ă��Ȃ�
+		{//終わりの位置ははみ出していない
 int tmp;
 			tmp = DivideCorrectR( sa , ea , cb , cbs , pdb , slope ) ;
 			pdb += ((tmp-sa)*slope) ;
@@ -194,22 +194,22 @@ int tmp;
 		}
 	}
 	else
-	{//�n�܂�̈ʒu�͂͂ݏo���Ă��Ȃ�
+	{//始まりの位置ははみ出していない
 		if( expeb < cb )
-		{//�I���̈ʒu�ŁA���������ɂ͂ݏo�Ă���
+		{//終わりの位置で、ｂ負方向にはみ出ている
 			ea = DivideCorrectL( sa , ea , cb , cbs , pdb , slope ) ;
 		}
 		else if (expeb >= cbs )
-		{//�I���̈ʒu�ŁA���������ɂ͂ݏo�Ă���
+		{//終わりの位置で、ｂ正方向にはみ出ている
 			ea = DivideCorrectL( sa , ea , cb , cbs , pdb , slope ) ;
 		}
 		else
-		{//�I���̈ʒu�͂͂ݏo���Ă��Ȃ�
-			//�Ȃɂ����Ȃ��Ăn�j
+		{//終わりの位置ははみ出していない
+			//なにもしなくてＯＫ
 		}
 	}
 /*
-	//�e�X�g�p�I�I�I
+	//テスト用！！！
 #ifdef _DEBUG
 	ca  = F2IFL( ca  ) ;
 	cas = F2IFL( cas ) ;
@@ -218,11 +218,11 @@ int tmp;
 #endif
 	for( na=sa ; na<ea ; na++ )
 	{
-		//�e�X�g���[�`���I�I�I
+		//テストルーチン！！！
 #ifdef _DEBUG
 		if( na < ca || na>= cas || F2IFL(pdb)<cb || F2IFL(pdb)>=cbs)
 		{
-			MessageBox( hwndp , "�\�����Ƃ��" , "���Ԃ�" , MB_OK ) ;
+			MessageBox( hwndp , "暴走しとるよ" , "ぐぶぅ" , MB_OK ) ;
 		}
 #endif
 		if( isXY )
@@ -260,7 +260,7 @@ default:return;}
 }
 inline void MyDIBObj3 :: Line_sub1( bool isXY , double sloped , const MDO3Opt *opt , int isfc , double a1d , double b1d , double a2d , double b2d , BMPD color )
 {
-//a-b���W�n�ƌ���Ba1��a2���r���A�������ق�����傫���ق��ɏ�������悤�ɂ���
+//a-b座標系と見る。a1とa2を比較し、小さいほうから大きいほうに処理するようにする
 	if( a1d < a2d ) 
 	{
 		Line_sub2( isXY , sloped , opt , isfc , a1d , b1d , a2d , b2d , color ) ;

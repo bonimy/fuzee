@@ -2,7 +2,7 @@
 #define KEYCODE_HEADER_INCLUDED
 
 /*
-	���[�ȃL�[�R�[�h�萔�B
+	半端なキーコード定数。
 */
 
 enum KeyCode

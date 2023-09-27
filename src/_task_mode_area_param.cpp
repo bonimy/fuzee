@@ -174,14 +174,14 @@ void TV_mode_area_param( TCB *caller )
 		DrawArea( mainx , mainy ) ;
 		if( selected!=-1 )
 		{
-			KAGEMOJI( SFC_BACK , "��ʁ@�@ ���� ���񐫔\�@�L�[����" , 12 , WINHEIGHT-16*(4) , 16 , 8 ) ;
+			KAGEMOJI( SFC_BACK , "種別　　 速さ 旋回性能　キー操作" , 12 , WINHEIGHT-16*(4) , 16 , 8 ) ;
 			for( int i=0 ; i<3 ; i++ )
 			{
-				char *Pstr[3] = {"���L��","���Ȃ�","�΂Ȃ�",} ;
+				char *Pstr[3] = {"名有り","紫など","緑など",} ;
 				char *Pstr2[3] = {"RT YU IO","FG HJ KL","VB NM ,.",} ;
 				char buf[128] ;
 				int  tmp = Pdest->arg[1+i] ;
-				sprintf( buf , "%s�F�@%d�@�@�@%d�@�@�@%s" , Pstr[i] , tmp&3 , (tmp>>4)&3 , Pstr2[i] ) ;
+				sprintf( buf , "%s：　%d　　　%d　　　%s" , Pstr[i] , tmp&3 , (tmp>>4)&3 , Pstr2[i] ) ;
 				KAGEMOJI( SFC_BACK , buf , 12 , WINHEIGHT-16*(3-i) , 16 , 8 ) ;
 				DrawMachineToken( 6 , WINHEIGHT-16*(3-i)+8 , i ) ;
 			}
@@ -189,14 +189,14 @@ void TV_mode_area_param( TCB *caller )
 				char buf[128] ;
 				char *onoff[2] = {"ON","OFF"} ;
 				char *offon[2] = {"OFF","ON"} ;
-				sprintf( buf , "1:�}�V�������ꂽ�ʒu�𑖍s/%s�@2:�D���ю҂����[�v/%s" , 
+				sprintf( buf , "1:マシン毎ずれた位置を走行/%s　2:好成績者がワープ/%s" , 
 					onoff[!!(Pdest->arg[0]&0x40)] , onoff[!!(Pdest->arg[0]&0x80)] ) ;
 				KAGEMOJI( SFC_BACK , buf , 300 , WINHEIGHT-16*3 , 16 , 8 ) ;
-				sprintf( buf , "3:�X�^�[�g����ɂ͒��i/%s" , 
+				sprintf( buf , "3:スタート直後には直進/%s" , 
 					offon[!!(Pdest->arg[0]&0x10)] ) ;
 				KAGEMOJI( SFC_BACK , buf , 300 , WINHEIGHT-16*2 , 16 , 8 ) ;
 			}
-			KAGEMOJI( SFC_BACK , "C:�ݒ�R�s�[�@X:�ݒ�\��t��" , 300 , WINHEIGHT-16 , 16 , 8 ) ;
+			KAGEMOJI( SFC_BACK , "C:設定コピー　X:設定貼り付け" , 300 , WINHEIGHT-16 , 16 , 8 ) ;
 		}
 	ALIAS_END() ;
 }

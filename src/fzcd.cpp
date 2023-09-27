@@ -67,7 +67,7 @@ int bap , chp ;
 bool isprocess ;
 		isprocess = true ;
 
-		//‚à‚µAŒq‚¬Š·‚¦ƒŒƒCƒ„[‚ÌƒuƒƒbƒN‚ª‘S‚ÄFFFF‚È‚çˆ—‚ğƒXƒLƒbƒv
+		//ã‚‚ã—ã€ç¹‹ãæ›ãˆãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒ–ãƒ­ãƒƒã‚¯ãŒå…¨ã¦FFFFãªã‚‰å‡¦ç†ã‚’ã‚¹ã‚­ãƒƒãƒ—
 		if( icn )
 		{
 			isprocess = false ;
@@ -159,7 +159,7 @@ BYTE tmptile[FZCD_CHIP_P_BAND*FZCD_SOE_CHIP] ;
 			{
 				memcpy( chbuf+comp , tmptile , FZCD_SOA_BAND ) ;
 				chp += FZCD_SOA_BAND ;
-				if( chp>=FZCD_CHIP_SPACE_LIMIT*2 )return "ƒoƒ“ƒh—e—ÊƒI[ƒo[" ;
+				if( chp>=FZCD_CHIP_SPACE_LIMIT*2 )return "ãƒãƒ³ãƒ‰å®¹é‡ã‚ªãƒ¼ãƒãƒ¼" ;
 			}
 			comp += 0x7000 ;
 			tmpband[iba*2+0] = comp ;
@@ -174,7 +174,7 @@ BYTE tmptile[FZCD_CHIP_P_BAND*FZCD_SOE_CHIP] ;
 		{
 			memcpy( babuf+comp , tmpband , FZCD_SOA_BLOCK ) ;
 			bap += FZCD_SOA_BLOCK ;
-			if( bap>=FZCD_BAND_SPACE_LIMIT*2 )return "ƒuƒƒbƒN—e—ÊƒI[ƒo[" ;
+			if( bap>=FZCD_BAND_SPACE_LIMIT*2 )return "ãƒ–ãƒ­ãƒƒã‚¯å®¹é‡ã‚ªãƒ¼ãƒãƒ¼" ;
 		}
 		blbuf[icn][ibl] = comp/FZCD_SOA_BLOCK ;
 	}
@@ -188,11 +188,11 @@ BYTE tmptile[FZCD_CHIP_P_BAND*FZCD_SOE_CHIP] ;
 		(*Psizeofchip) = chp ;
 	}
 	if( culcmode )return "" ;
-	if( bap >= FZCD_BAND_SPACE_LIMIT )return "ƒuƒƒbƒN—e—ÊƒI[ƒo[" ;
-	if( chp >= FZCD_CHIP_SPACE_LIMIT )return "ƒoƒ“ƒh—e—ÊƒI[ƒo[" ;
-	if( region_pre < 0 )return "ƒ\ƒtƒg‚Ì•s‹ï‡" ;
+	if( bap >= FZCD_BAND_SPACE_LIMIT )return "ãƒ–ãƒ­ãƒƒã‚¯å®¹é‡ã‚ªãƒ¼ãƒãƒ¼" ;
+	if( chp >= FZCD_CHIP_SPACE_LIMIT )return "ãƒãƒ³ãƒ‰å®¹é‡ã‚ªãƒ¼ãƒãƒ¼" ;
+	if( region_pre < 0 )return "ã‚½ãƒ•ãƒˆã®ä¸å…·åˆ" ;
 
-	//Œq‚¬‘Ö‚¦
+	//ç¹‹ãæ›¿ãˆ
 	{
 	for( int icn=1 ; icn<2+(region_pre==7) ; icn++ )
 	{
@@ -234,7 +234,7 @@ BYTE ccnec[FZCD_MAP_SPACE_LIMIT] ;
 		SETROME16( Prom , romsize , 0x118100+(*Poffsetcc) , 0xFFFF ) ;
 		(*Poffsetcc) += 2 ;
 		if( (*Poffsetcc) > 256 )
-			return "Œq‚¬‘Ö‚¦î•ñ—e—ÊƒI[ƒo[" ;
+			return "ç¹‹ãæ›¿ãˆæƒ…å ±å®¹é‡ã‚ªãƒ¼ãƒãƒ¼" ;
 	}
 	}
 
@@ -279,7 +279,7 @@ int tpos ;
 	(*Poffset) += chp ;
 
 
-	//ƒGƒŠƒA
+	//ã‚¨ãƒªã‚¢
 	for( int cc=0 ; cc<2+(region_pre==7) ; cc++ )
 	{
 		int noarea = -1 ;
@@ -297,18 +297,18 @@ int tpos ;
 			}
 		}
 		if( noarea < 0 )continue ;
-		//ƒGƒŠƒA”ƒI[ƒo[
-		//‚æ‚­‚í‚©‚ç‚ñ‚ªA•ªŠò“¹‚ª‚ ‚é‚ÆAˆê‚Âƒƒ‚ƒŠã‚ÉƒXƒLƒ}‚ğì‚Á‚Ä“WŠJ‚·‚é‚ç‚µ‚¢‚Ì‚Å‚P‚ğ‘«‚·
+		//ã‚¨ãƒªã‚¢æ•°ã‚ªãƒ¼ãƒãƒ¼
+		//ã‚ˆãã‚ã‹ã‚‰ã‚“ãŒã€åˆ†å²é“ãŒã‚ã‚‹ã¨ã€ä¸€ã¤ãƒ¡ãƒ¢ãƒªä¸Šã«ã‚¹ã‚­ãƒã‚’ä½œã£ã¦å±•é–‹ã™ã‚‹ã‚‰ã—ã„ã®ã§ï¼‘ã‚’è¶³ã™
 		if( (noarea+1)+(noarea_sub+1)+(noarea_sub!=-1) > FZCD_MAX_AREA )
 		{
-			return "ƒGƒŠƒAE•ªŠòƒGƒŠƒA‚ğ‚ ‚í‚¹‚é‚ÆAŒÀŠE”(254ŒÂ‚­‚ç‚¢)‚ğ‰z‚¦‚Ä‚¢‚Ü‚·" ;
+			return "ã‚¨ãƒªã‚¢ãƒ»åˆ†å²ã‚¨ãƒªã‚¢ã‚’ã‚ã‚ã›ã‚‹ã¨ã€é™ç•Œæ•°(254å€‹ãã‚‰ã„)ã‚’è¶Šãˆã¦ã„ã¾ã™" ;
 		}
-		//—e—Ê•s‘«
-		if( (*Poffsete) +					//ŠJnˆÊ’u
-			(9 + (noarea_sub!=-1)*9 + 1) +	//ƒGƒŠƒAƒwƒbƒ_iHj
-			12*(1+(noarea_sub!=-1)) +			//ƒGƒŠƒAî•ñ‚ÌƒAƒhƒŒƒXƒŠƒXƒg
-			noarea*6 + (noarea_sub+1)*6		//î•ñÀ‘Ì 
-			>= 0x110000 )return "ƒGƒŠƒA‚ğ‘‚«‚ŞƒXƒy[ƒX‚ª‘«‚è‚Ü‚¹‚ñ" ;
+		//å®¹é‡ä¸è¶³
+		if( (*Poffsete) +					//é–‹å§‹ä½ç½®
+			(9 + (noarea_sub!=-1)*9 + 1) +	//ã‚¨ãƒªã‚¢ãƒ˜ãƒƒãƒ€ï¼ˆï¼Ÿï¼‰
+			12*(1+(noarea_sub!=-1)) +			//ã‚¨ãƒªã‚¢æƒ…å ±ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ãƒªã‚¹ãƒˆ
+			noarea*6 + (noarea_sub+1)*6		//æƒ…å ±å®Ÿä½“ 
+			>= 0x110000 )return "ã‚¨ãƒªã‚¢ã‚’æ›¸ãè¾¼ã‚€ã‚¹ãƒšãƒ¼ã‚¹ãŒè¶³ã‚Šã¾ã›ã‚“" ;
 		Pareaadrlist[cc] = (*Poffsete) ;
 
 int adr ;
@@ -326,7 +326,7 @@ int adr ;
 		(*Poffsete) += 9 ;
 		adr += 9 ;
 		if( noarea_sub!= -1 )
-		{//•ªŠòƒGƒŠƒA‚ ‚è
+		{//åˆ†å²ã‚¨ãƒªã‚¢ã‚ã‚Š
 			SETROME8 ( Prom , romsize , adr+0 , 0xFF ) ;
 			SETROME16( Prom , romsize , adr+1 , (*Poffsete)+10+2*6 ) ;
 			SETROME8 ( Prom , romsize , adr+3 , 0 ) ;
@@ -336,12 +336,12 @@ int adr ;
 			(*Poffsete) += 9 ;
 			adr += 9 ;
 		}
-		//I’[ƒR[ƒh
+		//çµ‚ç«¯ã‚³ãƒ¼ãƒ‰
 		SETROME8 ( Prom , romsize , adr , 0 ) ;
 		(*Poffsete) += 1 ;
 		adr += 1 ;
 
-		//Šeƒf[ƒ^‚ÌƒAƒhƒŒƒX‚ÌƒŠƒXƒg‘‚«o‚µ
+		//å„ãƒ‡ãƒ¼ã‚¿ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã®ãƒªã‚¹ãƒˆæ›¸ãå‡ºã—
 		{
 			int listsize = 2*6 ;
 			if( noarea_sub!=-1 )listsize*=2 ;
@@ -365,7 +365,7 @@ int adr ;
 			(*Poffsete) += listsize ;
 		}
 
-		//ƒf[ƒ^‚ÌÀ‘Ì
+		//ãƒ‡ãƒ¼ã‚¿ã®å®Ÿä½“
 		{
 			for( int k=0 ; k<1+(noarea_sub!=-1) ; k++ )
 			{
@@ -380,7 +380,7 @@ int adr ;
 					tadr += k*noarea*6 ;
 					tadr += q ;
 					shift = llen ;
-					//ƒ¢‚w
+					//Î”ï¼¸
 					if( !k )
 						tmp = (area[cc][q+1].x-area[cc][q].x)/8 ;
 					else
@@ -390,9 +390,9 @@ int adr ;
 						else
 							tmp = (area_sub[cc][q].x-area[cc][area_sub_org].x)/8 ;
 					}
-					if( tmp<-0x80 || tmp>0x7F )return "‰“‚­—£‚ê‚½‚Q‚Â‚ÌƒGƒŠƒA‚ª‚ ‚è‚Ü‚·B‹ß‚Ã‚¯‚Ä‚­‚¾‚³‚¢B";
+					if( tmp<-0x80 || tmp>0x7F )return "é ãé›¢ã‚ŒãŸï¼’ã¤ã®ã‚¨ãƒªã‚¢ãŒã‚ã‚Šã¾ã™ã€‚è¿‘ã¥ã‘ã¦ãã ã•ã„ã€‚";
 					SETROME8 ( Prom , romsize , tadr+shift*0 , tmp ) ;
-					//ƒ¢‚x
+					//Î”ï¼¹
 					if( !k )
 						tmp = (area[cc][q+1].y-area[cc][q].y)/8 ;
 					else
@@ -402,7 +402,7 @@ int adr ;
 						else
 							tmp = (area_sub[cc][q].y-area[cc][area_sub_org].y)/8 ;
 					}
-					if( tmp<-0x80 || tmp>0x7F )return "‰“‚­—£‚ê‚½‚Q‚Â‚ÌƒGƒŠƒA‚ª‚ ‚è‚Ü‚·B‹ß‚Ã‚¯‚Ä‚­‚¾‚³‚¢B";
+					if( tmp<-0x80 || tmp>0x7F )return "é ãé›¢ã‚ŒãŸï¼’ã¤ã®ã‚¨ãƒªã‚¢ãŒã‚ã‚Šã¾ã™ã€‚è¿‘ã¥ã‘ã¦ãã ã•ã„ã€‚";
 					SETROME8 ( Prom , romsize , tadr+shift*1 , tmp ) ;
 
 					AREA (*Pdest)[3][FZCD_MAX_AREA] ;
@@ -413,7 +413,7 @@ int adr ;
 						offset = 0 ;
 						Pdest = &area_sub ;
 					}
-					//ƒpƒ‰ƒ[ƒ^
+					//ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 					BYTE bval=0x00 ;
 					if( k )bval = 0x20 ;
 					else
@@ -426,7 +426,7 @@ int adr ;
 //					val |= 0x80 ;
 					SETROME8 ( Prom , romsize , tadr+shift*2 , val ) ;
 					}
-					//‚b‚o‚t‹““®î•ñ
+					//ï¼£ï¼°ï¼µæŒ™å‹•æƒ…å ±
 					SETROME8 ( Prom , romsize , tadr+shift*3 , (*Pdest)[cc][q+offset].arg[1] ) ;
 					SETROME8 ( Prom , romsize , tadr+shift*4 , (*Pdest)[cc][q+offset].arg[2] ) ;
 					SETROME8 ( Prom , romsize , tadr+shift*5 , (*Pdest)[cc][q+offset].arg[3] ) ;
@@ -458,7 +458,7 @@ char buf[128] ;
 char *Pstr ;
 #define ERR_RET			{fclose(fp);return -1 ;}
 
-	Pstr = ";•—î@ƒR[ƒXƒtƒ@ƒCƒ‹\n;ƒ\ƒtƒg‹N“®’†‚Í’¼‚É•ÏX‚µ‚È‚¢‚Å‰º‚³‚¢\n;#‚©‚çn‚Ü‚ésˆÈŠO‚ÍƒRƒƒ“ƒg‚Å‚·\n\n\n" ;
+	Pstr = ";é¢¨æƒ…ã€€ã‚³ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«\n;ã‚½ãƒ•ãƒˆèµ·å‹•ä¸­ã¯ç›´ã«å¤‰æ›´ã—ãªã„ã§ä¸‹ã•ã„\n;#ã‹ã‚‰å§‹ã¾ã‚‹è¡Œä»¥å¤–ã¯ã‚³ãƒ¡ãƒ³ãƒˆã§ã™\n\n\n" ;
 	if( fprintf( fp , "%s\n" , Pstr ) <0 )ERR_RET;
 
 
@@ -616,12 +616,12 @@ int tmp[10] ;
 #undef ERR_RET
 
 	if( FZCDversion != FZCD_VERSION )
-	{//FZCDƒo[ƒWƒ‡ƒ“ƒRƒ“ƒo[ƒg
+	{//FZCDãƒãƒ¼ã‚¸ãƒ§ãƒ³ã‚³ãƒ³ãƒãƒ¼ãƒˆ
 		switch( FZCDversion )
 		{
-		case 0x0000://ƒo[ƒWƒ‡ƒ“–³‚µ
+		case 0x0000://ãƒãƒ¼ã‚¸ãƒ§ãƒ³ç„¡ã—
 			{
-				//ƒGƒŠƒAƒpƒ‰ƒ[ƒ^‚ğƒZƒbƒg‚µ‚Ä‚â‚é
+				//ã‚¨ãƒªã‚¢ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’ã‚»ãƒƒãƒˆã—ã¦ã‚„ã‚‹
 				for( int q=0 ; q<3 ; q++ )
 				for( int i=0 ; i<FZCD_MAX_AREA ; i++ )
 				{
@@ -632,12 +632,12 @@ int tmp[10] ;
 				}
 			}
 
-		//’Ê‰ß
-		case 0x0100://1.00 -> 1.01 Œq‚¬Š·‚¦‚ÌFFFF‚ğ“§‰ß‚É
+		//é€šé
+		case 0x0100://1.00 -> 1.01 ç¹‹ãæ›ãˆã®FFFFã‚’é€éã«
 			{
 				for( int icn=1 ; icn<3 ; icn++ )
 				{
-					//‚»‚ÌƒuƒƒbƒN‚ğ•â³‚·‚é‚©
+					//ãã®ãƒ–ãƒ­ãƒƒã‚¯ã‚’è£œæ­£ã™ã‚‹ã‹
 					for( int ibl=0 ; ibl<FZCD_BLOCK_P_MAP_W*FZCD_BLOCK_P_MAP_H ; ibl++ )
 					{
 						for( int iba=0 ; iba<FZCD_BAND_P_BLOCK_H ; iba++ )
@@ -656,7 +656,7 @@ int tmp[10] ;
 							if( iba==-1 )break ;
 						}
 						if( iba==-1 )continue ;
-						//•â³
+						//è£œæ­£
 						for( iba=0 ; iba<FZCD_BAND_P_BLOCK_H ; iba++ )
 						{
 							int px,py ;
@@ -668,10 +668,10 @@ int tmp[10] ;
 					}
 				}
 			}
-		//’Ê‰ß
-		case 0x0101://1.01 -> 1.02@•ªŠòŠJnˆÊ’uİ’è
-			;//ƒRƒ“ƒo[ƒg‚Ì•K—v‚È‚µ
-		//’Ê‰ß
+		//é€šé
+		case 0x0101://1.01 -> 1.02ã€€åˆ†å²é–‹å§‹ä½ç½®è¨­å®š
+			;//ã‚³ãƒ³ãƒãƒ¼ãƒˆã®å¿…è¦ãªã—
+		//é€šé
 		}
 	}
 	return 0 ;

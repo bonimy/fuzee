@@ -2,12 +2,12 @@
 #define MYTIMER_HEADER_INCLUDED
 
 /*
-	��ɃQ�[���p�̂��߂ɍ�����^�C�}�[���[�`���B
+	主にゲーム用のために作ったタイマールーチン。
 
 
 
-//���b�Z�[�W���[�v�̕ς��ɁA���̃��[�v���g��
-//Func()�́A���Ԋu�ŌĂяo�������֐�
+//メッセージループの変わりに、このループを使う
+//Func()は、一定間隔で呼び出したい関数
 
 MyTimerObj mto(60);
 	for(;;)
@@ -18,12 +18,12 @@ MyTimerObj mto(60);
 */
 
 /*
-�@�����������Ƃ��ɂ́A�����o�ϐ��͍ŏ���M�����悤�I�Ƃ��l���Ă��݂����O�O
-�@�t�Ɍ��Â炭�ˁH
+　これを作ったときには、メンバ変数は最初にMをつけよう！とか考えてたみたい＾＾
+　逆に見づらくね？
 
-�@����͒u���Ă����āA���̃^�C�}�[�́A
-�@�g����Ȃ�AQueryPerformanceCounter���A�g���Ȃ��Ȃ�timeGetTime���g���܂��B
-�@���x���i�Ⴂ�Ȃ�ł����c�c�ł��A�O�҂��g���Ȃ����Ƃ��Ă���̂��Ȃ��B
+　それは置いておいて、このタイマーは、
+　使えるなら、QueryPerformanceCounterを、使えないならtimeGetTimeを使います。
+　精度が段違いなんですが……でも、前者が使えないことってあるのかなぁ。
 */
 
 class MyTimerObj
@@ -67,26 +67,26 @@ public:
 	void SetFPS(int ifps=60);
 	bool Wait(MSG *iptrmsg);
 
-	//�����e�o�r��Ԃ�
+	//実測ＦＰＳを返す
 	int GetFPS(){return MFPS;}
 
-	//�E�F�C�g�̊ԂɁA����ASleep(1)��������Ԃ��B�����قǗ]�T���Ă��ƁB
+	//ウェイトの間に、何回、Sleep(1)したかを返す。多いほど余裕ってこと。
 	int GetNofSleep(){return MNOsleep;}
 
-	//�f�o�b�O���̂݁BFunc()�������������ׂ�Ԃ��H����A�v���b�V���[����Ȃ�����c�c���Ęb������
+	//デバッグ時のみ。Func()を処理した負荷を返す？いや、プレッシャーじゃないだろ……って話だけど
 	int GetPressure(){return Mpressure;}
 
-	//���̂��A�Ȃ񂩎��Ԃɕϊ��������̂�Ԃ��H
+	//↑のを、なんか時間に変換したものを返す？
 	int GetProcessTime(){if(MisTGT)return Mpressure*1000*10;return (int)(Mpressure * 1000 * 10 / MUtimervalue.SforPC.Mfreq.QuadPart);}
 
-	//�H���Ɏg���̂��A�E�F�C�g�̍Ō�̎��Ԃ�Ԃ��H
+	//？何に使うのか、ウェイトの最後の時間を返す？
 	DWORD GetEndTime(){if(MisTGT)return MUtimervalue.SforTGT.Mendtime;return MUtimervalue.SforPC.Mendtime.LowPart;}
 
-	//����Ȃ�̐��x�ŏ������Ԃ𑪒肷��̂Ɏg���B
-	//�P��O�ɁA���̊֐����Ăяo���Ă���̎��Ԍo�߂�b�P�ʂŕԂ��B
+	//それなりの精度で処理時間を測定するのに使う。
+	//１回前に、この関数を呼び出してからの時間経過を秒単位で返す。
 	double ProcessTimeCount();
 	
-	//�t���[���X�L�b�v���]�܂�Ă��邩��Ԃ�
+	//フレームスキップが望まれているかを返す
 	bool FrameSkipIsRequired(){return Mframeskiprequired ; }
 };
 

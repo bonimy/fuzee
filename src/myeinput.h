@@ -2,9 +2,9 @@
 #define MYEINPUT_HEADER_INCLUDED
 
 /*
-	�L�[�{�[�h�E�}�E�X���͏��Ǘ����[�`���B
-	�e�t���[���̍Ō��KeyMove���ĂсA���ƁA
-	���̃R�[�h���E�C���h�E�v���V�[�W���̃��b�Z�[�W��switch���ɓ���Ďg��
+	キーボード・マウス入力情報管理ルーチン。
+	各フレームの最後にKeyMoveを呼び、あと、
+	下のコードをウインドウプロシージャのメッセージ別switch内に入れて使う
 */
 /*
 	case WM_KEYDOWN:
@@ -37,7 +37,7 @@
 */
 
 /*
-	�}�E�X�{�^���̃C���f�b�N�X
+	マウスボタンのインデックス
 */
 enum mousebuttonidentifyindex
 {
@@ -47,24 +47,24 @@ enum mousebuttonidentifyindex
 };
 
 /*
-	�g���O�ɁAKeyStart���Ă�ł��ǂ��c�c
-	�Ƃ������A����ɌĂ΂��̂ŌĂ΂Ȃ��ėǂ�
+	使う前に、KeyStartを呼んでも良い……
+	というか、勝手に呼ばれるので呼ばなくて良い
 */
 extern bool KeyStart();
 //extern void KeyEnd();
 
 /*
-	�P�t���[���̍Ō�ɂ�����Ă�
+	１フレームの最後にこれを呼ぶ
 */
 extern void KeyMove();
 
 
 /*
-	On......�����Ă���
-	Off.....������Ă���
-	Push....�����ꂽ�u��
-	Release.�����ꂽ�u��
-	�c�c�Ȃ�true��Ԃ�
+	On......押してある
+	Off.....離されている
+	Push....押された瞬間
+	Release.離された瞬間
+	……ならtrueを返す
 */
 extern bool KeyOn(int code);
 extern bool KeyOff(int code);
@@ -77,34 +77,34 @@ extern bool MousePush(mousebuttonidentifyindex wb);
 extern bool MouseRelease(mousebuttonidentifyindex wb);
 
 /*
-	�}�E�X�̈ʒu���擾����
+	マウスの位置を取得する
 */
 extern int  GetMousePosX();
 extern int  GetMousePosY();
 
 /*
-	�����L�[�������ꂽ�i�u�ԁj�Ȃ�A���̔ԍ���Ԃ��B
-	������Ă��Ȃ����-1��Ԃ��B
-	isHEXenable��true�ɂ���΁AA�`F���ΏۂɂȂ�B
-	���������ɉ�����Ă����ꍇ�́A�Ⴂ�����D�悳���B
+	数字キーが押された（瞬間）なら、その番号を返す。
+	押されていなければ-1を返す。
+	isHEXenableをtrueにすれば、A～Fも対象になる。
+	複数同時に押されていた場合は、若い方が優先される。
 */
 extern int GetNumberKey( bool isHEXenable = false ) ;
 
 /*
-	�����I�ɃL�[��}�E�X�{�^���𗣂������Ƃɂ���B
-	�E�C���h�E�v���V�[�W����KEYUP���̃��b�Z�[�W���s���Ȃ��������Ƃɂ�鉟�����ςȂ��h�~�B
+	強制的にキーやマウスボタンを離したことにする。
+	ウインドウプロシージャにKEYUP等のメッセージが行かなかったことによる押しっぱなし防止。
 */
 extern void ForceReleaseKey();
 extern void ForceReleaseMouse();
 /*
-	�Ăяo���Ɖ�����Ă��Ȃ������ɂ��邱�Ƃ��ł���
+	呼び出すと押されていない扱いにすることができる
 */
 extern void InvalidateKey() ;
 extern void InvalidateMouse() ;
 extern void InvalidateKeyCode(int code);
 extern bool IsValidKeyCode(int code);
 /*
-	�E�C���h�E�v���V�[�W�����ŌĂ�
+	ウインドウプロシージャ内で呼ぶ
 */
 extern void ProOn(int wparam);
 extern void ProOff(int wparam);

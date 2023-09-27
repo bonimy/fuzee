@@ -3,8 +3,8 @@
 #include "myDIBobj3.h"
 #include "myDIBobj3_p.h"
 
-//�f�t�H���g�c�c�ł͂Ȃ����A�Ƃ��ɕ`��ɓ���ȕ����w�肵�Ȃ��Ƃ����O��ł́A
-//�`��֐��ɓn���A�`�摮���|�C���^
+//デフォルト……ではないが、とくに描画に特殊な物を指定しないという前提での、
+//描画関数に渡す、描画属性ポインタ
 
 static MDO3Opt MDO3normal_body = { MDO3F_COLORKEY | MDO3F_CLIP , 0xFF , 0 };
 MDO3Opt *MDO3normal = &MDO3normal_body;
@@ -12,32 +12,32 @@ static MDO3Opt MDO3WINAPI_body = { MDO3F_COLORKEY | MDO3F_CLIP | MDO3F_USE_WINAP
 MDO3Opt *MDO3WINAPI = &MDO3WINAPI_body;
 BMPD *PAlphaTable=NULL;
 
-//�������e�[�u�����A����Q�Ƃ���Ă��邩
-//�����Ƃ��A���̃N���X���Q�ȏ�g���A�v���P�[�V�������Ă��肦��񂾂낤��
+//半透明テーブルが、何回参照されているか
+//もっとも、このクラスを２つ以上使うアプリケーションってありえるんだろうか
 static int NOAlphaTableReferenced=0;
 
-//�T�[�t�F�C�X��HDC��Ԃ��B
-//���Ă������A����͍P��I�ɕێ����Ă��Ă������̂Ȃ̂��낤���c�c
+//サーフェイスのHDCを返す。
+//っていうか、これは恒常的に保持していていいものなのだろうか……
 HDC MyDIBObj3 ::GetHDC(int isfc)
 {
 	if(!SFCCheck(isfc))return NULL;
 	return sfc[isfc].hdc;
 }
 
-//�J���[�L�[���Z�b�g����
+//カラーキーをセットする
 void MyDIBObj3 ::SetColorKey(BMPD icolorkey)
 {
 	colorkey = icolorkey;
 }
 
-//�T�[�t�F�C�X�ɃN���b�p�[���Z�b�g�B
-//�Z�b�g���ɁA�ςȒl���w�肳��Ă��Ȃ������`�F�b�N�B
-//����Ƃ͕ʂɁA(x0,y0)-(x1,y1)�^�C�v��������ق��������C�����Ȃ��ł��Ȃ��B
+//サーフェイスにクリッパーをセット。
+//セット時に、変な値が指定されていないかをチェック。
+//これとは別に、(x0,y0)-(x1,y1)タイプも作ったほうがいい気がしないでもない。
 
 void MyDIBObj3 ::SetClipper( int isfc , int ix , int iy , int iw , int ih )
 {
 	if(!SFCCheck(isfc))return;
-	//�N���b�p�[�̃N���b�s���O
+	//クリッパーのクリッピング
 	if( ix < 0 ){ iw += ix ; ix = 0 ;}
 	if( iy < 0 ){ ih += iy ; iy = 0 ;}
 	if( iw < 0 || ih < 0 )
@@ -59,16 +59,16 @@ void MyDIBObj3 ::SetClipper( int isfc , int ix , int iy , int iw , int ih )
 	sfc[isfc].clipheight = ih;
 }
 /*
-�T�[�t�F�C�X����A�r�b�g�}�b�v�ւ̃|�C���^���擾�B
-����𗘗p���āA�A�v���P�[�V�������ŃO���O���������邱�Ƃ��o����킯�B
-�c�c�����Ƃ��A�I�[�o�[���C�h����΂����̂ł́A�Ƃ����b�����邯�ǂˁB
+サーフェイスから、ビットマップへのポインタを取得。
+これを利用して、アプリケーション側でグリグリいじくることも出来るわけ。
+……もっとも、オーバーライドすればいいのでは、という話もあるけどね。
 */
 BMPD *MyDIBObj3 :: GetSurfacePointer(int isfc){
 	if(!SFCCheck(isfc))return NULL;
 	return sfc[isfc].data;
 }
 
-//�F���擾
+//色を取得
 BMPD MyDIBObj3 :: Pick( int isfc , int x , int y )
 {
 	if(!SFCCheck(isfc))return 0xFFFF ;
@@ -78,14 +78,14 @@ BMPD MyDIBObj3 :: Pick( int isfc , int x , int y )
 }
 
 /*
-�R���X�g���N�^�B
-�T�[�t�F�C�X���@�@�o�b�N�T�[�t�F�C�X���@�@�����@�@�J���[�L�[
-��n���B
-���s����ƁAsfc��NULL�ɂȂ��Ă���B
-���̏�Ԃł́A���̂����Ȃ�֐����A�����Ȃ��������Ȃ��c�c�͂��B
-���̂ق��̊֐��ɂ��Ă��A���s���Ă��A�����Ȃ��������Ȃ��c�c�Ƃ����̂𗝑z�Ƃ��Ă���B
-�����܂ŗ��z�ŁA�֐��Ƀ}�Y�C�l��H�ׂ�����Ƃ������莀�񂾂肷�邯�ǁB
-���łɁA�����������Ɏg���e�[�u�����쐬�B
+コンストラクタ。
+サーフェイス数　　バックサーフェイス幅　　高さ　　カラーキー
+を渡す。
+失敗すると、sfcがNULLになっている。
+この状態では、他のいかなる関数も、落ちないが動かない……はず。
+このほかの関数にしても、失敗しても、落ちないが動かない……というのを理想としている。
+あくまで理想で、関数にマズイ値を食べさせるとあっさり死んだりするけど。
+ついでに、半透明合成に使うテーブルを作成。
 */
 MyDIBObj3 :: MyDIBObj3(int nosfc,int width,int height,BMPD icolorkey)
 {
@@ -106,10 +106,10 @@ MyDIBObj3 :: MyDIBObj3(int nosfc,int width,int height,BMPD icolorkey)
 	if(!PAlphaTable)
 	{
 		NOAlphaTableReferenced = 1;
-		// 2 x 8000h * 16 * 2 = 2 x 2^15 x 2^4 * 2 = 2^21 = (2^10)^2*2^1 = 2M�I
-		//�e�[�u�����g���A�t�ɑ��x�����̌����ɂȂ�ƒ��������c�c
-		//l�́A�r�b�g�}�b�v�̍ŏ�ʃr�b�g���s��Ȃ��ߕK�v
-		//�؎̂Ċ���Z�Ȃ��߁A�኱�Â��Ȃ邪�A�����m�i�H�j�𑫂��Z���Ĉ��S
+		// 2 x 8000h * 16 * 2 = 2 x 2^15 x 2^4 * 2 = 2^21 = (2^10)^2*2^1 = 2M！
+		//テーブル酷使も、逆に速度悪化の原因になると聴いたが……
+		//lは、ビットマップの最上位ビットが不定なため必要
+		//切捨て割り算なため、若干暗くなるが、裏同士（？）を足し算して安全
 		PAlphaTable = (BMPD*)GlobalAlloc( GMEM_FIXED , sizeof(BMPD)*0x8000*16*2 );
 		for( int a=0 ; a<16 ; a++ )
 		for( int l=0 ; l<2  ; l++ )
@@ -123,8 +123,8 @@ MyDIBObj3 :: MyDIBObj3(int nosfc,int width,int height,BMPD icolorkey)
 	}
 }
 /*
-�f�X�g���N�^�B
-�Ȃ��������Ȃ��Ă��A���ꂾ���ő��v�Ȏd�l�B
+デストラクタ。
+なんも解放しなくても、これだけで大丈夫な仕様。
 */
 MyDIBObj3 :: ~MyDIBObj3()
 {
@@ -137,9 +137,9 @@ MyDIBObj3 :: ~MyDIBObj3()
 }
 
 /*
-�������B
-�Ώۂ̃E�C���h�E�n���h���ƁA�C���X�^���X�n���h����n��
-���łɁA�o�b�N�T�[�t�F�C�X���쐬����B
+初期化。
+対象のウインドウハンドルと、インスタンスハンドルを渡す
+ついでに、バックサーフェイスを作成する。
 */
 void MyDIBObj3 :: Initialize(HWND hwndpval,HINSTANCE hinstanceval)
 {
@@ -151,9 +151,9 @@ void MyDIBObj3 :: Initialize(HWND hwndpval,HINSTANCE hinstanceval)
 }
 
 /*
-�T�[�t�F�C�X���쐬����B
-����Ȋ֐��Ȃ̂ɁA���s���Ă������Ԃ��Ȃ��̂͂ǂ��Ȃ̂�H
-�쐬���s�����T�[�t�F�C�X���g���Ă��A�����Ȃ����Ǔ����Ȃ��c�c�Ƃ����d�l�炵��
+サーフェイスを作成する。
+こんな関数なのに、失敗しても何も返さないのはどうなのよ？
+作成失敗したサーフェイスを使っても、落ちないけど動かない……という仕様らしい
 */
 void MyDIBObj3 :: CreateSurface(int isfc,int width,int height)
 {
@@ -186,7 +186,7 @@ BITMAPINFOHEADER *pbh;
 	pbh = &sfc[isfc].info.bmiHeader;
 	pbh->biSize=sizeof(BITMAPINFOHEADER);
 	pbh->biWidth=width;
-	pbh->biHeight=-height;						//�s�œV�n���Ȃ�
+	pbh->biHeight=-height;						//不で天地しない
 	pbh->biPlanes=1;
 	pbh->biBitCount=16;	
 	pbh->biCompression=BI_RGB;
@@ -208,7 +208,7 @@ BITMAPINFOHEADER *pbh;
 	{
 		if(sfc[isfc].hbitmap != 0)DeleteObject(sfc[isfc].hbitmap);
 		sfc[isfc].data = NULL;
-		DEBUG_OUTPUT("makesurface() DIB�̏����Ɏ��s�I\n");
+		DEBUG_OUTPUT("makesurface() DIBの準備に失敗！\n");
 		return;
 	}
 
@@ -217,7 +217,7 @@ BITMAPINFOHEADER *pbh;
 	{
 		DeleteObject(sfc[isfc].hbitmap);
 		sfc[isfc].data = NULL;
-		DEBUG_OUTPUT("makesurface() HDC�̏����Ɏ��s�I\n");
+		DEBUG_OUTPUT("makesurface() HDCの準備に失敗！\n");
 		return;
 	}
 	sfc[isfc].holdbitmap = (HBITMAP)SelectObject(sfc[isfc].hdc,sfc[isfc].hbitmap);
@@ -225,13 +225,13 @@ BITMAPINFOHEADER *pbh;
 	{
 		DeleteObject(sfc[isfc].hbitmap);
 		sfc[isfc].data = NULL;
-		DEBUG_OUTPUT("makesurface() �r�b�g�}�b�v���t���Ɏ��s�I\n");
+		DEBUG_OUTPUT("makesurface() ビットマップ取り付けに失敗！\n");
 	}
 }
 
 /*
-�T�[�t�F�C�X���������B
-���ʎ����ł͌ĂԕK�v���������A�T�[�t�F�C�X��������������č�蒼�������ꍇ�ȂǁB
+サーフェイスを解放する。
+普通自分では呼ぶ必要が無いが、サーフェイスをいったん消して作り直したい場合など。
 */
 void MyDIBObj3 :: ReleaseSurface(int isfc)
 {
@@ -245,7 +245,7 @@ void MyDIBObj3 :: ReleaseSurface(int isfc)
 	}
 }
 /*
-����B�f�X�g���N�^���ĂԂ̂ŁA�ʂɎ����ŌĂԕK�v�͖����B
+解放。デストラクタが呼ぶので、別に自分で呼ぶ必要は無い。
 */
 void MyDIBObj3 :: Release()
 {
@@ -259,36 +259,36 @@ void MyDIBObj3 :: Release()
 	}
 }
 /*
-	�r�b�g�}�b�v�̃��[�h�B
+	ビットマップのロード。
 */
 void MyDIBObj3 :: LoadBitmap(int isfc,LPTSTR filename)
 {
 	if(!SFCCheck(isfc))return;
-	//�ꎞ��Ɨp��HDC��BITMAP�n���h��
+	//一時作業用のHDCとBITMAPハンドル
 	HDC mem1;
 	HBITMAP hbm,old;
-	//�r�b�g�}�b�v��ǂݍ���
+	//ビットマップを読み込む
 	hbm = (HBITMAP)LoadImage(hinstancep,filename,IMAGE_BITMAP,0,0,LR_LOADFROMFILE);
 	if(hbm == 0)
 	{
-		DEBUG_OUTPUT("�r�b�g�}�b�v�̓ǂ݂��݂Ɏ��s�I\n");
+		DEBUG_OUTPUT("ビットマップの読みこみに失敗！\n");
 		return;
 	}
-	//�E�C���h�E�̂g�c�b�ƌ������̂��郁�����c�b�����
+	//ウインドウのＨＤＣと交換性のあるメモリＤＣを作る
 	mem1 = CreateCompatibleDC(hdcp);
-	//�Z�b�g����
+	//セットして
 	old = (HBITMAP)SelectObject(mem1,hbm);
-	//�]��
+	//転送
 	BitBlt(sfc[isfc].hdc,0,0,sfc[isfc].width,sfc[isfc].height,mem1,0,0,SRCCOPY);
-	//�S������
+	//全部消す
 	SelectObject(mem1,old);
 	DeleteDC(mem1);
 	DeleteObject(hbm);
 }
 /*
-	�r�b�g�}�b�v�̃Z�[�u
-	�Q�S�r�b�gbmp���o��
-	x�ȍ~�̈�����S��-1�ɂ���ƁA�T�[�t�F�C�X�S�̂��o�͂���
+	ビットマップのセーブ
+	２４ビットbmpを出力
+	x以降の引数を全て-1にすると、サーフェイス全体を出力する
 */
 void MyDIBObj3 :: SaveBitmap( char *filename , int isfc , int x , int y , int width , int height )
 {
@@ -368,13 +368,13 @@ int  tmp ;
 }
 
 /*
-	�o�b�N�T�[�t�F�C�X���v���C�}���[�T�[�t�F�C�X�ɓ]�����ĉ�ʂɕ\������B
-	�c�c���͂����ł߂���d�ɂȂ��Ă�̂�ˁB
-	��ʂ��R�Q�r�b�g�ɐݒ肵�Ă���ƁA�ǂ����ABitBlt��16bit->32bit�]�������Ȃ�d���݂����Łc�c
-	��ʂ��P�U�r�b�g�ɂ��Ă���Ƒ����Ȃ��ł����ˁc�c
-	�Ƃ���ŁA�t���b�v�̈Ӗ����ԈႦ�Ă���悤�ȁB
-	�����ɂ́A�t���b�v�̃^�C�v�ƁA���ƁA�^�C�v�ɂ�鑮����n���B
-	�ǂ�ȑ������́A��������΂����킩�邩�ƁB
+	バックサーフェイスをプライマリーサーフェイスに転送して画面に表示する。
+	……実はここでめちゃ重になってるのよね。
+	画面を３２ビットに設定していると、どうも、BitBltで16bit->32bit転送がかなり重いみたいで……
+	画面を１６ビットにしていると速くなるんですがね……
+	ところで、フリップの意味を間違えているような。
+	引数には、フリップのタイプと、あと、タイプによる属性を渡す。
+	どんな属性かは、下を見ればすぐわかるかと。
 */
 void MyDIBObj3 :: Flip( int fliptype , int* argv )
 {
@@ -398,7 +398,7 @@ void MyDIBObj3 :: Flip( int fliptype , int* argv )
 }
 
 /*
-	�e�L�X�g�`��B
+	テキスト描画。
 */
 
 void MyDIBObj3 :: Text(int isfc,char* str,int x,int y,int height,int width,UINT color)
@@ -407,10 +407,10 @@ void MyDIBObj3 :: Text(int isfc,char* str,int x,int y,int height,int width,UINT 
 HFONT tmpfont;
 	tmpfont = CreateFont(height,width,0,0,0,false,false,false,
 		SHIFTJIS_CHARSET,OUT_DEFAULT_PRECIS,CLIP_DEFAULT_PRECIS,DEFAULT_QUALITY,
-		DEFAULT_PITCH | FF_DONTCARE,"�l�r ����" );
+		DEFAULT_PITCH | FF_DONTCARE,"ＭＳ 明朝" );
 	if(tmpfont == NULL)
 	{
-		DEBUG_OUTPUT("textdraw() �t�H���g�̍쐬�Ɏ��s�I");
+		DEBUG_OUTPUT("textdraw() フォントの作成に失敗！");
 		return;
 	}
 

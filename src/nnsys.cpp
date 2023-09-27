@@ -21,14 +21,14 @@ static char nullbuf = '\0';
 	char *tmp;
 	if(issignadd)
 	{
-		//æ“ª‚É•„†‚ğƒZƒbƒg
+		//å…ˆé ­ã«ç¬¦å·ã‚’ã‚»ãƒƒãƒˆ
 		buffer[buf][0] = ' ';
 		if(num < 0)
 		{
 			buffer[buf][0] = '-';
 			num = -num;
 		}
-		//‚¨‚µ‚è‚Éƒkƒ‹•¶š‚ğ“ü‚ê‚é
+		//ãŠã—ã‚Šã«ãƒŒãƒ«æ–‡å­—ã‚’å…¥ã‚Œã‚‹
 		buffer[buf][place+1] = '\0';
 	
 		for(tmp = &buffer[buf][place] ; tmp != &buffer[buf][0] ; tmp--)
@@ -41,7 +41,7 @@ static char nullbuf = '\0';
 	else
 	{
 		if(num < 0)return &nullbuf;
-		//‚¨‚µ‚è‚Éƒkƒ‹•¶š‚ğ“ü‚ê‚é
+		//ãŠã—ã‚Šã«ãƒŒãƒ«æ–‡å­—ã‚’å…¥ã‚Œã‚‹
 		buffer[buf][place] = '\0';
 	
 		for(tmp = &buffer[buf][place-1] ;  ; tmp--)
@@ -172,14 +172,14 @@ static char nullbuf = '\0';
 	char *tmp;
 	if(issignadd)
 	{
-		//æ“ª‚É•„†‚ğƒZƒbƒg
+		//å…ˆé ­ã«ç¬¦å·ã‚’ã‚»ãƒƒãƒˆ
 		Pbuf[0] = ' ';
 		if(num < 0)
 		{
 			Pbuf[0] = '-';
 			num = -num;
 		}
-		//‚¨‚µ‚è‚Éƒkƒ‹•¶š‚ğ“ü‚ê‚é
+		//ãŠã—ã‚Šã«ãƒŒãƒ«æ–‡å­—ã‚’å…¥ã‚Œã‚‹
 		Pbuf[place+1] = '\0';
 	
 		for(tmp = &Pbuf[place] ; tmp != &Pbuf[0] ; tmp--)
@@ -192,7 +192,7 @@ static char nullbuf = '\0';
 	else
 	{
 		if(num < 0)return &nullbuf;
-		//‚¨‚µ‚è‚Éƒkƒ‹•¶š‚ğ“ü‚ê‚é
+		//ãŠã—ã‚Šã«ãƒŒãƒ«æ–‡å­—ã‚’å…¥ã‚Œã‚‹
 		Pbuf[place] = '\0';
 	
 		for(tmp = &Pbuf[place-1] ;  ; tmp--)
@@ -336,8 +336,8 @@ static char buf[10][9];
 double AimAngle(double EEX,double EEY,double MEX,double MEY){
 double TX,TY;
 double temp;
-TX = (MEX - EEX);//æ‚ª‰E‘¤‚Ì{
-TY = (MEY - EEY);//æ‚ª‰º‘¤‚Ì{
+TX = (MEX - EEX);//å…ˆãŒå³å´ã®æ™‚ï¼‹
+TY = (MEY - EEY);//å…ˆãŒä¸‹å´ã®æ™‚ï¼‹
 if(MYABS(TX) > 0.000001){
 	temp = (double)atan(TY / TX);
 	if(TX<0)temp+=PI;
@@ -487,7 +487,7 @@ int i ;
 }
 
 
-//‚©‚È‚èƒeƒLƒg[‚È‚Q‚SƒrƒbƒgƒnƒbƒVƒ…iHj’lì¬
+//ã‹ãªã‚Šãƒ†ã‚­ãƒˆãƒ¼ãªï¼’ï¼”ãƒ“ãƒƒãƒˆãƒãƒƒã‚·ãƒ¥ï¼ˆï¼Ÿï¼‰å€¤ä½œæˆ
 unsigned int EHash( unsigned char *Pd , int length )
 {
 unsigned int h;

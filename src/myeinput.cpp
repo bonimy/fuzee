@@ -3,7 +3,7 @@
 #include "keycode.h"
 
 /*
-	ƒL[ƒ{[ƒhEƒ}ƒEƒX“ü—Íî•ñŠÇ—ƒ‹[ƒ`ƒ“B
+	ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ãƒ»ãƒžã‚¦ã‚¹å…¥åŠ›æƒ…å ±ç®¡ç†ãƒ«ãƒ¼ãƒãƒ³ã€‚
 */
 
 #define		MAXKEY		256

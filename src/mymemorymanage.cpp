@@ -1,5 +1,5 @@
 /*
-	�悭�Ӑ}�̂킩��Ȃ��������Ǘ����[�`���B
+	よく意図のわからないメモリ管理ルーチン。
 */
 #include <stdio.h>
 #include <string.h>
@@ -17,25 +17,25 @@
 
 
 
-//�ꑧ�œǂޗ�
+//一息で読む量
 #define READLENGTH	0x00100000
 
 static int ret;
 #define	ERRRET(tok,num)		{ret=-num;goto tok##num;}
 
 
-/*	�t�@�C��������ptrbuf�Ƀ����������蓖�Ă����[�h�B
-	�t�@�C���T�C�Y��Ԃ��B
-	-1	�o�b�t�@����łȂ�
-	-2�@�ꎞ�o�b�t�@���m�ۂł��Ȃ�
-	-3�@�t�@�C�����I�[�v���ł��Ȃ�
-	-4�@�t�@�C�����ǂ߂Ȃ�
-	-5�@�ꎞ�o�b�t�@���g���ł��Ȃ�
-	-6�@�Ԃ��ׂ��o�b�t�@���m�ۂł��Ȃ�
+/*	ファイルから空のptrbufにメモリを割り当てかつロード。
+	ファイルサイズを返す。
+	-1	バッファが空でない
+	-2　一時バッファが確保できない
+	-3　ファイルがオープンできない
+	-4　ファイルが読めない
+	-5　一時バッファを拡張できない
+	-6　返すべきバッファが確保できない
 */
 int LoadMemoryFromFile(char *filename , unsigned char **ptrbuf)
 {
-	//�o�b�t�@���`�F�b�N
+	//バッファをチェック
 	if(*ptrbuf != NULL)return -1 ;
 
 	FILE *fp ;
@@ -47,7 +47,7 @@ int LoadMemoryFromFile(char *filename , unsigned char **ptrbuf)
 	size = ftell( fp ) ;
 	fseek( fp , 0 , SEEK_SET ) ;
 
-	//���ۂɕԂ��o�b�t�@���m��
+	//実際に返すバッファを確保
 	*ptrbuf = (unsigned char*)malloc(size);
 	if(*ptrbuf == NULL){fclose(fp);return -6;}
 
@@ -57,8 +57,8 @@ int LoadMemoryFromFile(char *filename , unsigned char **ptrbuf)
 	return size ;
 }
 #if 0
-//�����Ƃ������A�Ȃ�ł���Ȃɏ璷�ȋL�q�����Ă����̂��낤
-//�t�@�C���T�C�Y�����߂���@��m��Ȃ������H
+//旧式というか、なんでこんなに冗長な記述をしていたのだろう
+//ファイルサイズを求める方法を知らなかった？
 int LoadMemoryFromFile(char *filename , unsigned char **ptrbuf)
 {
 int filehand;
@@ -68,51 +68,51 @@ unsigned char *tmpbuf;
 unsigned char *tmptmpbuf;
 int i;
 	
-	//�o�b�t�@���`�F�b�N
+	//バッファをチェック
 	if(*ptrbuf != NULL)ERRRET(ERRMLFF,1);
-	//�ꎞ�o�b�t�@�m��
+	//一時バッファ確保
 	tmpbuf = (unsigned char*)malloc(sizeof(unsigned char) * READLENGTH);
 	if(tmpbuf == NULL)ERRRET(ERRMLFF,2);
 	
-	//�t�@�C���I�[�v��
+	//ファイルオープン
 	filehand = _open(filename , _O_BINARY | _O_RDONLY);
 	if(filehand == -1)ERRRET(ERRMLFF,3);
 
 
-	//�ǂݍ��݊J�n
+	//読み込み開始
 	tmplength_sum = 0;
 	for(i=0 ;; i++)
 	{
-		//READLENGTH���ǂ�
+		//READLENGTH分読む
 		tmplength = _read(filehand , &tmpbuf[i*READLENGTH] , READLENGTH);
-		//�ǂݍ��݃G���[�`�F�b�N
+		//読み込みエラーチェック
 		if(tmplength < 0)ERRRET(ERRMLFF,4);
-		//���A�ǂ񂾗ʂ����v�ɑ���
+		//今、読んだ量を合計に足す
 		tmplength_sum += tmplength;
-		//READLENGTH�ǂ߂��ꍇ�͑��������邩��
+		//READLENGTH読めた場合は続きがあるかも
 		if(tmplength == READLENGTH)
 		{
-			//�o�b�t�@���L����
+			//バッファを広げる
 			tmptmpbuf = (unsigned char *)realloc(tmpbuf , (i+2)*READLENGTH ) ;
-			//�o�b�t�@���m�ۂł��Ȃ������烊�^�[��
+			//バッファが確保できなかったらリターン
 			if(tmptmpbuf == NULL)ERRRET(ERRMLFF,5);
-			//�����L��������|�C���^���R�s�[
+			//無事広がったらポインタをコピー
 			tmpbuf = tmptmpbuf;
 			continue;
 		}
-		//READLENGTH�ȉ������ǂ߂Ȃ������炨���܂�
+		//READLENGTH以下しか読めなかったらおしまい
 		break;
 	}
 
-	//���ۂɕԂ��o�b�t�@���m��
+	//実際に返すバッファを確保
 	*ptrbuf = (unsigned char*)malloc(tmplength_sum);
 	if(*ptrbuf == NULL)ERRRET(ERRMLFF,6);
 
 
-	//�ꎞ�o�b�t�@������ۂɕԂ��o�b�t�@�ɃR�s�[
+	//一時バッファから実際に返すバッファにコピー
 	memcpy(*ptrbuf , tmpbuf , tmplength_sum);
 
-	//���ǂ̃t�@�C���T�C�Y�����^�[���l��
+	//結局のファイルサイズをリターン値に
 	ret = tmplength_sum;
 ERRMLFF6:
 ERRMLFF5:
@@ -129,10 +129,10 @@ ERRMLFF1:
 
 
 /*
-	���������t�@�C���ɏ����o���B
-	0	����I��
-	-1	�t�@�C�����J���Ȃ�
-	-2	�t�@�C���ɏ����Ȃ�
+	メモリをファイルに書き出す。
+	0	正常終了
+	-1	ファイルが開けない
+	-2	ファイルに書けない
 */
 int WriteFileFromMemory(char *filename , unsigned char *data , int length )
 {
@@ -151,10 +151,10 @@ ERRWFFM1:
 #define		BUFFER_SIZE_LIMIT		0x2000
 
 /*
-	0...����I��
-	1...�I�[�܂œǂݍ���ŏI��
-	-1..�ǂݍ��ݎ��s
-	-2..�������m�ێ��s
+	0...正常終了
+	1...終端まで読み込んで終了
+	-1..読み込み失敗
+	-2..メモリ確保失敗
 */
 int ReadALine( int filehand , char **PPreturnbuf)
 {
@@ -212,7 +212,7 @@ int ReadALine( int filehand , char **PPreturnbuf)
 }
 
 /*
-	��s�����B�����̂ق��̂Ɣ�ׂĂ��蔲���Ȃ͖̂����ŁA���܂�g���Ȃ�
+	一行書く。うえのほうのと比べても手抜きなのは明白で、あまり使えない
 */
 int WriteALine( int filehand , char *Pbuffer )
 {

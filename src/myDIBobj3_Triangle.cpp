@@ -4,22 +4,22 @@
 #include "myDIBobj3.h"
 #include "myDIBobj3_p.h"
 /*
-	�O�p�`��`�悷��֐��B
-	���j�́AmyDIBobj3_Cls.cpp�ɏ����Ă݂��B
+	三角形を描画する関数。
+	方針は、myDIBobj3_Cls.cppに書いてみた。
 
-	�c�c�Q�_�𓯂����W�Ɏw�肵�āA�P�_�����Ⴄ�Ƃ��A�Q�̎O�p�`�͂҂�����q����Ȃ��Ƃ����Ȃ��̂����A
-	���̂Q�_�������ɋ߂��Ƃ���Ȃ��񂾂����ȁc�c
-	�����ɋ߂��Ȃ�Ă����̂̓U���ɂ��邱�ƂɎv���邪�Ȃ��B
-	���Ă������A���܂��̃\�[�X�������A�Ȃɂ���Ă񂾂��S���킩��񂩂����c�c
+	……２点を同じ座標に指定して、１点だけ違うとき、２つの三角形はぴったり繋がらないといけないのだが、
+	その２点が水平に近いとき危ないんだっけな……
+	水平に近いなんていうのはザラにあることに思えるがなぁ。
+	っていうか、いまこのソース見たが、なにやってんだか全くわからんかった……
 
-	�����M���āA�떂�����Č��͋󂩂Ȃ��悤�ɂ����B
-	���A����ɏ��X�L�͈͂������悤�ɂ������߁A���������d�˂�Ɓc�c
-	���ꂾ������Ȃ��A�Ȃ񂩕ςȏo�����肪������c�c
-	����ɘM���āA�c�����ɋ����I�ɂP�傫������悤�ɂ����c�c
-	���܂�Ɍ����c�c
+	少し弄って、誤魔化して穴は空かないようにした。
+	が、代わりに少々広範囲を書くようにしたため、半透明を重ねると……
+	それだけじゃなく、なんか変な出っ張りが生じる……
+	さらに弄って、縦方向に強制的に１大きくするようにした……
+	あまりに顕著……
 */
 
-//�Œ菬��ForTRIangle�炵��
+//固定小数ForTRIangleらしい
 #define UBITSFTRI			14
 #define	D2FFTRI(num)		((INT32)((num)*(1<<UBITSFTRI)))
 #define F2IFTRI(num)		((num)>>UBITSFTRI)
@@ -33,8 +33,8 @@
 
 
 
-//�Q�_�������̌������h�~�p���܂����g�����̗V��
-//�i�����J�����͏d�Ȃ��������c�c�Ƃ������z�j
+//２点水平時の穴あき防止用ごまかし拡張幅の遊び
+//（穴が開くよりは重なった方が……という発想）
 #define FILL_WIDTH			0
 
 #define SET_FOR_TRIANGLE(n1,n2,n3)								;\
@@ -42,26 +42,26 @@
 	leng[1] = (int)y##n2;										\
 	leng[2] = (int)y##n3;										\
 	if( x##n2 < ELINE_GETX(&line[n2],y##n2) )					\
-	{/*������*/													\
-		/*�X�����Z�b�g*/										\
+	{/*左向き*/													\
+		/*傾きをセット*/										\
 		leftslope[0] = D2FFTRI(line[n3].slope) ;				\
 		rightslope[0] = D2FFTRI(line[n2].slope) ;				\
 		leftslope[1] = D2FFTRI(line[n1].slope) ;				\
 		rightslope[1] = D2FFTRI(line[n2].slope) ;				\
-		/*�}�X�ڂ̏�͂��ł̈ʒu�ɕ␳���Z�b�g*/			\
+		/*マス目の上はしでの位置に補正しつつセット*/			\
 		leftppos[0] = D2FFTRI(x##n1-line[n3].slope*(y##n1-(int)y##n1) ) ;	\
 		rightppos[0] = D2FFTRI(x##n1-line[n2].slope*(y##n1-(int)y##n1) ) ;	\
 		leftppos[1] = D2FFTRI(x##n2+line[n1].slope*(1-y##n2+(int)y##n2) ) ;	\
 		rightconnect = true;									\
 	}															\
 	else														\
-	{/*�E����*/													\
-		/*�X�����Z�b�g*/										\
+	{/*右向き*/													\
+		/*傾きをセット*/										\
 		leftslope[0] = D2FFTRI(line[n2].slope) ;				\
 		rightslope[0] = D2FFTRI(line[n3].slope) ;				\
 		leftslope[1] = D2FFTRI(line[n2].slope) ;				\
 		rightslope[1] = D2FFTRI(line[n1].slope) ;				\
-		/*�}�X�ڂ̏�͂��ł̈ʒu�ɕ␳���Z�b�g*/			\
+		/*マス目の上はしでの位置に補正しつつセット*/			\
 		leftppos[0] = D2FFTRI(x##n1-line[n2].slope*(y##n1-(int)y##n1) ) ;	\
 		rightppos[0] = D2FFTRI(x##n1-line[n3].slope*(y##n1-(int)y##n1) ) ;	\
 		rightppos[1] = D2FFTRI(x##n2+line[n1].slope*(1-y##n2+(int)y##n2) ) ;	\
@@ -200,7 +200,7 @@ void MyDIBObj3 :: Triangle( const MDO3Opt *opt , int isfc , double x0 , double y
 {
 ELINE line[3];
 int sameheight=0;
-//�}�X�ڂ̃Z���^�[������c�c����ɁA���炵�Ċi�q�_������B
+//マス目のセンターを見る……代わりに、ずらして格子点を見る。
 	x0 -= 0.5 ;
 	y0 -= 0.5 ;
 	x1 -= 0.5 ;
@@ -219,8 +219,8 @@ int leng[3];
 	rightconnect = false;
 	switch( sameheight )
 	{
-	case 0://��v����
-		//�������˂������c�c
+	case 0://一致無し
+		//きったねぇやり方……
 		if( y0 < y1 )
 		{
 
@@ -254,14 +254,14 @@ int leng[3];
 
 		}
 	break;
-/*	case 1://12��v
+/*	case 1://12一致
 
 		SET_FOR_TRIANGLE_MINOR(1,2,0);
 	break;
-	case 2://20��v
+	case 2://20一致
 		SET_FOR_TRIANGLE_MINOR(2,0,1);
 	break;
-	case 4://01��v
+	case 4://01一致
 		SET_FOR_TRIANGLE_MINOR(0,1,2);
 	break;
 */	default:
@@ -276,45 +276,45 @@ for(i=0 ; i<2 ; i++)
 {
 	if(i==1 || !sameheight)
 	{
-//�������N���b�s���O
+//ｙ方向クリッピング
 int ry0,ry1;
 	ry0 = leng[i] +(i==1);
 	ry1 = leng[i+1]+(i==0) ;
-//���̃N���b�s���O�i�͈͂��k�߂邾���I�j
+//下のクリッピング（範囲を縮めるだけ！）
 	ry1 = min( ry1 , sfc[isfc].clipy+sfc[isfc].clipheight ) ;
-//��̃N���b�s���O�i���E�̌��݈ʒu���A�␳���~�X�������Ă��Ȃ��Ƃ����Ȃ��j
+//上のクリッピング（左右の現在位置を、補正分×傾き足してやらないといけない）
 	if( ry0 < sfc[isfc].clipy )
 	{
 		leftppos[i] += leftslope[i]*( sfc[isfc].clipy-ry0 ) ;
 		rightppos[i] += rightslope[i]*( sfc[isfc].clipy-ry0 ) ;
 		ry0 = sfc[isfc].clipy ;
 	}
-//���ǂ́A��������
+//結局の、処理高さ
 int finexp=ry1-ry0;
-//���܂������g��
+//ごまかし幅拡張
 	rightppos[i]+=FILL_WIDTH ;
 	leftppos[i]+=FILL_WIDTH ;
-//�������R�ɕ�����B�N���b�v�K�v�Ȃ��A����A�����āA�������Ȃ��A�ł���B
+//処理を３つに分ける。クリップ必要なし、あり、そして、処理しない、である。
 bool issideclip=false;
 int tmpx ;
-	//�����ŁA�����I�����̈ʒu
-	tmpx = F2IFTRI(leftppos[i]+leftslope[i]*(finexp-1)) ;//�P�Ⴂ�ʒu
-	//�����̈ړ��O��̗��ʒu���A�N���b�v���E�Ȃ珈�����Ȃ�
+	//左側で、処理終了時の位置
+	tmpx = F2IFTRI(leftppos[i]+leftslope[i]*(finexp-1)) ;//１低い位置
+	//左側の移動前後の両位置が、クリップより右なら処理しない
 	if( min(F2IFTRI(leftppos[i]),tmpx)
 		>= sfc[isfc].clipx+sfc[isfc].clipwidth )continue;
-	//�݂͂�������������Aissideclip��true��
+	//はみだしがあったら、issideclipをtrueに
 	if( 
 		F2IFTRI(leftppos[i]) < sfc[isfc].clipx ||
 		F2IFTRI(leftppos[i]) >= sfc[isfc].clipx+sfc[isfc].clipwidth ||
 		tmpx < sfc[isfc].clipx ||
 		tmpx >= sfc[isfc].clipx+sfc[isfc].clipwidth 
 		)issideclip=true;
-	//�E��
-	tmpx = F2IFTRI(rightppos[i]+rightslope[i]*(finexp-1)) ;//�P�Ⴂ�ʒu
-	//�E���ƁA�E���̈ړ���̈ʒu�̂��E�����A�N���b�v��荶�Ȃ珈�����Ȃ�
+	//右側
+	tmpx = F2IFTRI(rightppos[i]+rightslope[i]*(finexp-1)) ;//１低い位置
+	//右翼と、右翼の移動後の位置のより右側が、クリップより左なら処理しない
 	if( max(F2IFTRI(rightppos[i]),tmpx)
 		< sfc[isfc].clipx )continue;
-	//�݂͂�������������Aissideclip��true��
+	//はみだしがあったら、issideclipをtrueに
 	if( 
 		F2IFTRI(rightppos[i]) < sfc[isfc].clipx ||
 		F2IFTRI(rightppos[i]) >= sfc[isfc].clipx+sfc[isfc].clipwidth ||
@@ -380,22 +380,22 @@ default:return;}
 #include "myDIBobj3.h"
 #include "myDIBobj3_p.h"
 /*
-	�O�p�`��`�悷��֐��B
-	���j�́AmyDIBobj3_Cls.cpp�ɏ����Ă݂��B
+	三角形を描画する関数。
+	方針は、myDIBobj3_Cls.cppに書いてみた。
 
-	�c�c�Q�_�𓯂����W�Ɏw�肵�āA�P�_�����Ⴄ�Ƃ��A�Q�̎O�p�`�͂҂�����q����Ȃ��Ƃ����Ȃ��̂����A
-	���̂Q�_�������ɋ߂��Ƃ���Ȃ��񂾂����ȁc�c
-	�����ɋ߂��Ȃ�Ă����̂̓U���ɂ��邱�ƂɎv���邪�Ȃ��B
-	���Ă������A���܂��̃\�[�X�������A�Ȃɂ���Ă񂾂��S���킩��񂩂����c�c
+	……２点を同じ座標に指定して、１点だけ違うとき、２つの三角形はぴったり繋がらないといけないのだが、
+	その２点が水平に近いとき危ないんだっけな……
+	水平に近いなんていうのはザラにあることに思えるがなぁ。
+	っていうか、いまこのソース見たが、なにやってんだか全くわからんかった……
 
-	�����M���āA�떂�����Č��͋󂩂Ȃ��悤�ɂ����B
-	���A����ɏ��X�L�͈͂������悤�ɂ������߁A���������d�˂�Ɓc�c
-	���ꂾ������Ȃ��A�Ȃ񂩕ςȏo�����肪������c�c
-	����ɘM���āA�c�����ɋ����I�ɂP�傫������悤�ɂ����c�c
-	���܂�Ɍ����c�c
+	少し弄って、誤魔化して穴は空かないようにした。
+	が、代わりに少々広範囲を書くようにしたため、半透明を重ねると……
+	それだけじゃなく、なんか変な出っ張りが生じる……
+	さらに弄って、縦方向に強制的に１大きくするようにした……
+	あまりに顕著……
 */
 
-//�Œ菬��ForTRIangle�炵��
+//固定小数ForTRIangleらしい
 #define UBITSFTRI			14
 #define	D2FFTRI(num)		((INT32)((num)*(1<<UBITSFTRI)))
 #define F2IFTRI(num)		((num)>>UBITSFTRI)
@@ -409,8 +409,8 @@ default:return;}
 
 
 
-//�Q�_�������̌������h�~�p���܂����g�����̗V��
-//�i�����J�����͏d�Ȃ��������c�c�Ƃ������z�j
+//２点水平時の穴あき防止用ごまかし拡張幅の遊び
+//（穴が開くよりは重なった方が……という発想）
 #define FILL_WIDTH			0
 
 #define SET_FOR_TRIANGLE(n1,n2,n3)								;\
@@ -582,7 +582,7 @@ void MyDIBObj3 :: Triangle( const MDO3Opt *opt , int isfc , double x0 , double y
 ELINE line[3];
 int sameheight=0;
 /*
-//�␳�����ق����ǂ��H
+//補正したほうが良い？
 	x0 += 0.5 ;
 	y0 += 0.5 ;
 	x1 += 0.5 ;
@@ -595,15 +595,15 @@ int sameheight=0;
 	if( !ELINE_SET( &line[2] , x0 , y0 , x1 , y1 ) )sameheight+=4;	
 INT32 leftslope[2],rightslope[2];
 INT32 leftppos[2],rightppos[2];
-//INT32 fixfillL,fixfillR;//�����J���Ȃ��悤�ɂ��܂�����
+//INT32 fixfillL,fixfillR;//穴が開かないようにごまかす幅
 bool leftconnect,rightconnect;
 int leng[3];
 	leftconnect = false;
 	rightconnect = false;
 	switch( sameheight )
 	{
-	case 0://��v����
-		//�������˂������c�c
+	case 0://一致無し
+		//きったねぇやり方……
 		if( y0 < y1 )
 		{
 
@@ -637,14 +637,14 @@ int leng[3];
 
 		}
 	break;
-	case 1://12��v
+	case 1://12一致
 
 		SET_FOR_TRIANGLE_MINOR(1,2,0);
 	break;
-	case 2://20��v
+	case 2://20一致
 		SET_FOR_TRIANGLE_MINOR(2,0,1);
 	break;
-	case 4://01��v
+	case 4://01一致
 		SET_FOR_TRIANGLE_MINOR(0,1,2);
 	break;
 	default:
@@ -658,45 +658,45 @@ for(i=0 ; i<2 ; i++)
 {
 	if(i==1 || !sameheight)
 	{
-//�������N���b�s���O
+//ｙ方向クリッピング
 int ry0,ry1;
 	ry0 = leng[i] ;
 	ry1 = leng[i+1] ;
-//���̃N���b�s���O�i�͈͂��k�߂邾���I�j
+//下のクリッピング（範囲を縮めるだけ！）
 	ry1 = min( ry1 , sfc[isfc].clipy+sfc[isfc].clipheight ) ;
-//��̃N���b�s���O�i���E�̌��݈ʒu���A�␳���~�X�������Ă��Ȃ��Ƃ����Ȃ��j
+//上のクリッピング（左右の現在位置を、補正分×傾き足してやらないといけない）
 	if( ry0 < sfc[isfc].clipy )
 	{
 		leftppos[i] += leftslope[i]*( sfc[isfc].clipy-ry0 ) ;
 		rightppos[i] += rightslope[i]*( sfc[isfc].clipy-ry0 ) ;
 		ry0 = sfc[isfc].clipy ;
 	}
-//���ǂ́A��������
+//結局の、処理高さ
 int finexp=ry1-ry0;
-//���܂������g��
+//ごまかし幅拡張
 //	rightppos[i]+=fixfillR ;
 //	leftppos[i]+=fixfillL ;
-//�������R�ɕ�����B�N���b�v�K�v�Ȃ��A����A�����āA�������Ȃ��A�ł���B
+//処理を３つに分ける。クリップ必要なし、あり、そして、処理しない、である。
 bool issideclip=false;
 int tmpx ;
-	//����
-	tmpx = F2IFTRI(leftppos[i]+leftslope[i]*(finexp-1)) ;//�P�Ⴂ�ʒu
-	//�����ƁA�����̈ړ���̈ʒu�̂�荶�����A�N���b�v���E�Ȃ珈�����Ȃ�
+	//左側
+	tmpx = F2IFTRI(leftppos[i]+leftslope[i]*(finexp-1)) ;//１低い位置
+	//左翼と、左翼の移動後の位置のより左側が、クリップより右なら処理しない
 	if( min(F2IFTRI(leftppos[i]),tmpx)
 		>= sfc[isfc].clipx+sfc[isfc].clipwidth )continue;
-	//�݂͂�������������Aissideclip��true��
+	//はみだしがあったら、issideclipをtrueに
 	if( 
 		F2IFTRI(leftppos[i]) < sfc[isfc].clipx ||
 		F2IFTRI(leftppos[i]) >= sfc[isfc].clipx+sfc[isfc].clipwidth ||
 		tmpx < sfc[isfc].clipx ||
 		tmpx >= sfc[isfc].clipx+sfc[isfc].clipwidth 
 		)issideclip=true;
-	//�E��
-	tmpx = F2IFTRI(rightppos[i]+rightslope[i]*(finexp-1)) ;//�P�Ⴂ�ʒu
-	//�E���ƁA�E���̈ړ���̈ʒu�̂��E�����A�N���b�v��荶�Ȃ珈�����Ȃ�
+	//右側
+	tmpx = F2IFTRI(rightppos[i]+rightslope[i]*(finexp-1)) ;//１低い位置
+	//右翼と、右翼の移動後の位置のより右側が、クリップより左なら処理しない
 	if( max(F2IFTRI(rightppos[i]),tmpx)
 		< sfc[isfc].clipx )continue;
-	//�݂͂�������������Aissideclip��true��
+	//はみだしがあったら、issideclipをtrueに
 	if( 
 		F2IFTRI(rightppos[i]) < sfc[isfc].clipx ||
 		F2IFTRI(rightppos[i]) >= sfc[isfc].clipx+sfc[isfc].clipwidth ||

@@ -1,5 +1,5 @@
 /*
-	‚¢‚ë‚¢‚ë”j’]‚µ‚½A©Ìƒ^ƒXƒNƒVƒXƒeƒ€‚Ìƒ‹[ƒ`ƒ“B
+	ã„ã‚ã„ã‚ç ´ç¶»ã—ãŸã€è‡ªç§°ã‚¿ã‚¹ã‚¯ã‚·ã‚¹ãƒ†ãƒ ã®ãƒ«ãƒ¼ãƒãƒ³ã€‚
 */
 #include <assert.h>
 #include "task0702.h"
@@ -91,21 +91,21 @@ TCB *Task0702Manager :: AddTask(TCB *iPmotherTCB , TaskP itaskp , bool (*ifunc)(
 {
 	if( onerror ) return NULL;
 int i;
-	//ŒŸõŠJnˆÊ’u`ÅŒã@‚ğŒŸõ
+	//æ¤œç´¢é–‹å§‹ä½ç½®ï½æœ€å¾Œã€€ã‚’æ¤œç´¢
 	for(i=RotatedIndex ; i<NOTCB ; i++)
 	{
 		if(TaskBody[i].kind == TP_NONE)break;
 	}
-	if( i == NOTCB )//ŒŸõŠJnˆÊ’u`ÅŒã@‚ÉŒ©‚Â‚©‚ç‚È‚©‚Á‚½
+	if( i == NOTCB )//æ¤œç´¢é–‹å§‹ä½ç½®ï½æœ€å¾Œã€€ã«è¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸ
 	{
-		for(i=0 ; i<RotatedIndex ; i++ )//Å‰`ŒŸõŠJnˆÊ’u@‚ğŒŸõ
+		for(i=0 ; i<RotatedIndex ; i++ )//æœ€åˆï½æ¤œç´¢é–‹å§‹ä½ç½®ã€€ã‚’æ¤œç´¢
 		{
 			if(TaskBody[i].kind == TP_NONE)break;
 		}
-		//‚»‚ê‚Å‚àŒ©‚Â‚©‚ç‚È‚©‚Á‚½‚ç‹A‚é
+		//ãã‚Œã§ã‚‚è¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸã‚‰å¸°ã‚‹
 		if( i==RotatedIndex ) return NULL ;
 	}
-	//ŒŸõŠJnˆÊ’u‚ğXV
+	//æ¤œç´¢é–‹å§‹ä½ç½®ã‚’æ›´æ–°
 	RotatedIndex = ( i + 1 ) % NOTCB ;
 
 TCB *Ptmp;
@@ -122,7 +122,7 @@ TCB **PPtailtarg;
 	Ptmp->PCheadTCB  = NULL;
 	Ptmp->PCtailTCB  = NULL;
 	Ptmp->PmotherTCB = iPmotherTCB;
-//ƒfƒoƒbƒOEƒ^ƒXƒN’l‚Ì‚®‚¿‚á‚®‚¿‚á‰»
+//ãƒ‡ãƒãƒƒã‚°æ™‚ãƒ»ã‚¿ã‚¹ã‚¯å€¤ã®ãã¡ã‚ƒãã¡ã‚ƒåŒ–
 #ifdef _DEBUG
 {
 	memset( Ptmp->Pv , 0xCC , sizeof(TCBvalue)*NOTCBValue ) ;
@@ -133,8 +133,8 @@ TCB **PPtailtarg;
 	Ptmp->Pdraw      = idraw;
 	Ptmp->Pfunc      = ifunc;
 
-	//ƒCƒ“ƒfƒbƒNƒX‚ği‚ß‚é‚ªA‚Pü‚µ‚Ä‚O‚Í”ğ‚¯‚éB
-	//‚Æ‚¢‚¤‚©A‚Pü‚µ‚½“_‚ÅA­‚µ”j’]‚·‚é‚ñ‚¾‚ªB
+	//ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’é€²ã‚ã‚‹ãŒã€ï¼‘å‘¨ã—ã¦ï¼ã¯é¿ã‘ã‚‹ã€‚
+	//ã¨ã„ã†ã‹ã€ï¼‘å‘¨ã—ãŸæ™‚ç‚¹ã§ã€å°‘ã—ç ´ç¶»ã™ã‚‹ã‚“ã ãŒã€‚
 	indexcounter++;
 	if(!indexcounter)indexcounter++;
 
@@ -168,7 +168,7 @@ TCB *PbefTCB=NULL;
 			{
 				if(Ptracing->PprepTCB)
 				{
-				//’†ŠÔ‚É’Ç‰Á‚·‚é
+				//ä¸­é–“ã«è¿½åŠ ã™ã‚‹
 					Ptmp->PprepTCB = Ptracing->PprepTCB;
 					Ptmp->PnextTCB = Ptracing;
 					Ptracing->PprepTCB->PnextTCB = Ptmp;
@@ -176,7 +176,7 @@ TCB *PbefTCB=NULL;
 				}
 				else
 				{
-				//æ“ª‚É’Ç‰Á‚·‚é
+				//å…ˆé ­ã«è¿½åŠ ã™ã‚‹
 					Ptmp->PprepTCB = NULL;
 					Ptmp->PnextTCB = Ptracing;
 					Ptracing->PprepTCB           = Ptmp;
@@ -188,7 +188,7 @@ TCB *PbefTCB=NULL;
 			Ptracing = Ptracing->PnextTCB;
 		}
 
-		//‚¨K‚É’Ç‰Á‚·‚é
+		//ãŠå°»ã«è¿½åŠ ã™ã‚‹
 		if(!Ptracing)
 		{
 			assert(PbefTCB);
@@ -200,12 +200,12 @@ TCB *PbefTCB=NULL;
 		}
 	}
 
-	//eqŠÔ•`‰æƒ^ƒCƒ~ƒ“ƒO‰Šú‰»
+	//è¦ªå­é–“æç”»ã‚¿ã‚¤ãƒŸãƒ³ã‚°åˆæœŸåŒ–
 	SetDrawOrderPandC( Ptmp , false , true ) ;
-	//eqŠÔˆ—ƒ^ƒCƒ~ƒ“ƒO‰Šú‰»
+	//è¦ªå­é–“å‡¦ç†ã‚¿ã‚¤ãƒŸãƒ³ã‚°åˆæœŸåŒ–
 	SetProcessOrderPandC( Ptmp , true , false ) ;
 
-	//ƒtƒ@[ƒXƒgƒR[ƒ‹
+	//ãƒ•ã‚¡ãƒ¼ã‚¹ãƒˆã‚³ãƒ¼ãƒ«
 	if(Ptmp->Pfunc)
 	{
 		Ptmp->calltiming    =  0;
@@ -247,13 +247,13 @@ TCB **PPheadTCB;
 TCB **PPtailTCB;
 		if(targ->PmotherTCB)
 		{
-		//e‚¿
+		//è¦ªæŒã¡
 			PPheadTCB = &targ->PmotherTCB->PCheadTCB;
 			PPtailTCB = &targ->PmotherTCB->PCtailTCB;	
 		}
 		else
 		{
-		//ƒ‹[ƒg‚Écc
+		//ãƒ«ãƒ¼ãƒˆã«â€¦â€¦
 			PPheadTCB = &PheadTCB;
 			PPtailTCB = &PtailTCB;
 		}
@@ -261,20 +261,20 @@ TCB **PPtailTCB;
 		{
 			if(!targ->PnextTCB)
 			{
-			//’P‘Ì
+			//å˜ä½“
 				*PPheadTCB = NULL;
 				*PPtailTCB = NULL;
 			}
 			else
 			{
-			//æ“ª
+			//å…ˆé ­
 				*PPheadTCB = targ->PnextTCB;
 				targ->PnextTCB->PprepTCB = NULL;
 			}
 		}
 		else if(!targ->PnextTCB)
 		{
-		//‚¨K
+		//ãŠå°»
 			*PPtailTCB = targ->PprepTCB;
 			targ->PprepTCB->PnextTCB = NULL;
 		}
@@ -334,16 +334,16 @@ TCB *Ptmp;
 
 
 /*
-@TCBŠÖ”‚Ì½‚ğÀs‚µ‚Ä‚¢‚­‚Ì‚¾‚ªAŒp‘±‚Æ‚¢‚¤§“xH‚ª‚ ‚èA‚±‚ê‚ª‚©‚È‚è•Ï‘Ôd—lB
-@TCBŠÖ”“à‚ÅAContinueTFŠÖ”‚ğŒÄ‚ñ‚¾‚ ‚ÆATCBŠÖ”‚ğI‚¦‚é‚ÆA‚»‚Ì‘¼‚Ì‘±‚­TCBŠÖ”‚Í‘S‚Ä–³‹‚³‚êƒŠƒ^[ƒ“
-@‚ÅAŸƒtƒŒ[ƒ€ƒRƒR‚É—ˆ‚½‚Æ‚«‚ÍAŠÖ”ƒlƒXƒg‚ğ•œŒ³‚µ‚Â‚ÂAæ‚Ù‚Ç‚ÌŠÖ”‚ªŒÄ‚Î‚ê‚éB
-@‚±‚Ìó‘Ô‚ÍADiscontinueTFŠÖ”‚ğŒÄ‚Ô‚Ü‚Å‘±‚­B
-@—v‚ÍADiscontinueTF‚ğŒÄ‚Ô‚Ü‚ÅAƒEƒFƒCƒg‚ğ“ü‚ê‚½‚Æ‚àl‚¦‚ç‚ê‚é‚Ì‚¾‚ªA
-@‚»‚ê‚ğÀ‘•‚·‚é‚½‚ß‚ÉAgotog‚¢‚Ü‚­‚è‚ÌƒXƒpƒQƒbƒeƒB‚É‚È‚Á‚¿‚á‚Á‚½cc
+ã€€TCBé–¢æ•°ã®é–ã‚’å®Ÿè¡Œã—ã¦ã„ãã®ã ãŒã€ç¶™ç¶šã¨ã„ã†åˆ¶åº¦ï¼ŸãŒã‚ã‚Šã€ã“ã‚ŒãŒã‹ãªã‚Šå¤‰æ…‹ä»•æ§˜ã€‚
+ã€€TCBé–¢æ•°å†…ã§ã€ContinueTFé–¢æ•°ã‚’å‘¼ã‚“ã ã‚ã¨ã€TCBé–¢æ•°ã‚’çµ‚ãˆã‚‹ã¨ã€ãã®ä»–ã®ç¶šãTCBé–¢æ•°ã¯å…¨ã¦ç„¡è¦–ã•ã‚Œãƒªã‚¿ãƒ¼ãƒ³
+ã€€ã§ã€æ¬¡ãƒ•ãƒ¬ãƒ¼ãƒ ã‚³ã‚³ã«æ¥ãŸã¨ãã¯ã€é–¢æ•°ãƒã‚¹ãƒˆã‚’å¾©å…ƒã—ã¤ã¤ã€å…ˆã»ã©ã®é–¢æ•°ãŒå‘¼ã°ã‚Œã‚‹ã€‚
+ã€€ã“ã®çŠ¶æ…‹ã¯ã€DiscontinueTFé–¢æ•°ã‚’å‘¼ã¶ã¾ã§ç¶šãã€‚
+ã€€è¦ã¯ã€DiscontinueTFã‚’å‘¼ã¶ã¾ã§ã€ã‚¦ã‚§ã‚¤ãƒˆã‚’å…¥ã‚ŒãŸã¨ã‚‚è€ƒãˆã‚‰ã‚Œã‚‹ã®ã ãŒã€
+ã€€ãã‚Œã‚’å®Ÿè£…ã™ã‚‹ãŸã‚ã«ã€gotoä½¿ã„ã¾ãã‚Šã®ã‚¹ãƒ‘ã‚²ãƒƒãƒ†ã‚£ã«ãªã£ã¡ã‚ƒã£ãŸâ€¦â€¦
 
-  ‚±‚êg‚¤‚ÆA—á‚¦‚ÎAUŒ‚ƒqƒbƒg‚ÉA‚PƒtƒŒ[ƒ€—‚Æ‚·‚Æ‚¢‚Á‚½‚±‚Æ‚ªŠÈ’P‚É‚Å‚«‚é‚Ì‚¾‚ªA
-  ƒVƒXƒeƒ€ƒƒ“ƒeƒiƒ“ƒX—pƒ^ƒXƒN‚àÀs‚³‚ê‚È‚­‚È‚é‚©‚çA
-  Œp‘±‚µ‚Ä‚¢‚éŠÖ”‚ªA©•ª‚Åˆ—‚·‚é‚È‚èŒÄ‚Ô‚È‚è‚µ‚È‚¢‚Æ‚¢‚¯‚È‚­‚È‚éB
+  ã“ã‚Œä½¿ã†ã¨ã€ä¾‹ãˆã°ã€æ”»æ’ƒãƒ’ãƒƒãƒˆæ™‚ã«ã€ï¼‘ãƒ•ãƒ¬ãƒ¼ãƒ è½ã¨ã™ã¨ã„ã£ãŸã“ã¨ãŒç°¡å˜ã«ã§ãã‚‹ã®ã ãŒã€
+  ã‚·ã‚¹ãƒ†ãƒ ãƒ¡ãƒ³ãƒ†ãƒŠãƒ³ã‚¹ç”¨ã‚¿ã‚¹ã‚¯ã‚‚å®Ÿè¡Œã•ã‚Œãªããªã‚‹ã‹ã‚‰ã€
+  ç¶™ç¶šã—ã¦ã„ã‚‹é–¢æ•°ãŒã€è‡ªåˆ†ã§å‡¦ç†ã™ã‚‹ãªã‚Šå‘¼ã¶ãªã‚Šã—ãªã„ã¨ã„ã‘ãªããªã‚‹ã€‚
 */
 void Task0702Manager :: DoTaskFunctionChain(TCB *Pifrom)
 {
@@ -356,13 +356,13 @@ TCB *Pmtmp ;
 	if( TFcontinueTCB )
 	{
 		if( Pifrom->PmotherTCB == TFcontinueTCB->PmotherTCB )
-		{//“¯‚¶ŠK‘w‚É“’…
+		{//åŒã˜éšå±¤ã«åˆ°ç€
 			Ppre   = TFcontinueTCB->PnextTCB ;
 			Pifrom = TFcontinueTCB ;
 			if( TFcontinue_BC )goto PbeforeC;
 			goto PafterC ;
 		}
-		//ƒV[ƒN—p
+		//ã‚·ãƒ¼ã‚¯ç”¨
 		Pseek = TFcontinueTCB->PmotherTCB ;
 		for(;;)
 		{
@@ -415,10 +415,10 @@ PafterC:
 					Pifrom->calltiming    =  3;
 				}
 			}
-			else//‚s‚b‚a‚ÍŠÖ”‚ğ‚Á‚Ä‚È‚¢
+			else//ï¼´ï¼£ï¼¢ã¯é–¢æ•°ã‚’æŒã£ã¦ãªã„
 			{
 PintoC:
-				//q‹Ÿ‚ÌŠÖ”‚ğŒÄ‚Ô
+				//å­ä¾›ã®é–¢æ•°ã‚’å‘¼ã¶
 				DoTaskFunctionChain(Pifrom->PCheadTCB);
 				if( TFcontinueTCB )return ;
 			}
@@ -429,8 +429,8 @@ TASK_PROCESS_CONTINUE:
 
 }
 /*
-NULL‚Ìˆµ‚¢‚ª‘S‘Rˆá‚¤‚Ì‚Å‹C‚ğ‚Â‚¯‚éB
-‚±‚ê‚ÍANULL‚ğ“n‚·‚ÆAu‘S‚Äv‚Å‚ ‚é
+NULLã®æ‰±ã„ãŒå…¨ç„¶é•ã†ã®ã§æ°—ã‚’ã¤ã‘ã‚‹ã€‚
+ã“ã‚Œã¯ã€NULLã‚’æ¸¡ã™ã¨ã€ã€Œå…¨ã¦ã€ã§ã‚ã‚‹
 */
 void Task0702Manager :: DoDrawFunctionChain(TCB *Pifrom)
 {

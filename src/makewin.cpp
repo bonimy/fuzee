@@ -14,7 +14,7 @@ int WINAPI WinMain(HINSTANCE hinstance,HINSTANCE hpinstance,
 {
 #ifndef ENABLE_MULTIPLE_RUN
 HWND tmpwnd;
-	//ŠÈˆÕ“ñd‹N“®‹Ö~
+	//ç°¡æ˜“äºŒé‡èµ·å‹•ç¦æ­¢
 	if((tmpwnd=FindWindow( COMMON_CONST_WINDOW_CLASS_NAME , NULL )) != NULL)
 	{
 	    ShowWindow( tmpwnd , SW_RESTORE );

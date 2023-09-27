@@ -1,13 +1,13 @@
 /*
-	���낢��j�]�����A���̃^�X�N�V�X�e���̃��[�`���B
-	�{���Ƀ^�X�N�V�X�e���Ȃ񂾂��悭�킩��Ȃ��B
+	いろいろ破綻した、自称タスクシステムのルーチン。
+	本当にタスクシステムなんだかよくわからない。
 */
 
 
 /*
-�@���̃w�b�_��taskpriority.h���C���N���[�h����B���炩���ߍ쐬���Ă������ƁB
-�@taskpriority.h�ł́Aenum TaskP���`����B
-//////////////�ȉ��Ataskpriority.h�̐��`//////////////////////
+　このヘッダはtaskpriority.hをインクルードする。あらかじめ作成しておくこと。
+　taskpriority.hでは、enum TaskPを定義する。
+//////////////以下、taskpriority.hの雛形//////////////////////
 #ifndef TASKPRIORITY_HEADER_INCLUDED
 #define TASKPRIORITY_HEADER_INCLUDED
 enum TaskP
@@ -21,10 +21,10 @@ enum TaskP
 	TP_LOWEST=0x7FFF,
 };
 #endif /* TASKPRIORITY_HEADER_INCLUDED */
-//////////////�����܂�/////////////////^����A���p�ɂȂ��Ă܂�//
+//////////////ここまで/////////////////^これ、兼用になってます//
 /*
-�@��́A//////�`//////�ԂɁA�C�ӂ̃^�X�N�D��x��\���萔��ǉ�����B
-�@TP_�Ŏn�܂�̂��������������K���H�炵���A��i�l���Ⴂ�j�قǗD��x�͍����B
+　上の、//////～//////間に、任意のタスク優先度を表す定数を追加する。
+　TP_で始まるのがいちおう命名規則？らしく、上（値が低い）ほど優先度は高い。
 */
 
 #ifndef TASK0702_HEADER_INCLUDED
@@ -35,16 +35,16 @@ enum TaskP
 
 
 /*
-	������`����ƁA�ǂ�TCB�ɂ��A����������Task0702Manager�ւ̃|�C���^���t�������
-	�O���[�o����Task0702Manager�Ƀ`�}�`�}�A�N�Z�X���鉘�炵���͂Ȃ��Ȃ邪�A�������������炩�H�ׂ�
-	�Ȃ񂩁A�d�l���S�̓I�ɊԈ���Ă���l�ȋC������
+	これを定義すると、どのTCBにも、それを抱えるTask0702Managerへのポインタが付加される
+	グローバルなTask0702Managerにチマチマアクセスする汚らしさはなくなるが、メモリをいくらか食べる
+	なんか、仕様が全体的に間違っている様な気がする
 */
 //#define TM_POINTER_IN_EACH_TCB
 
-//���C���N���X�̃^�O
+//メインクラスのタグ
 class Task0702Manager;
 
-//�^�X�N�̏�������l
+//タスクの所持する値
 typedef struct TCB_tag TCB;
 
 
@@ -67,32 +67,32 @@ union TCBvalue
 	bool (*PTF)(TCB*);
 };
 
-//�^�X�N�R���g���[���u���b�N�H�\����
+//タスクコントロールブロック？構造体
 struct TCB_tag
 {
-	TaskP kind;                 //TCB�̗D�揇�ʁA��ވ������c�c
-	unsigned __int8 calltiming; //Pfunc���ǂ�ȃ^�C�~���O�ŌĂ΂ꂽ�� 0..�쐬���ďo 1..�q���O 2..�q���� 3..���̑�
-	unsigned __int16 flag;      //�t���O
-	unsigned __int32 index;     //TCB������邽�тɈႤ�l���U����C���f�b�N�X�B
-	                            //�[���͐U���Ȃ����ǁA��������������c�c�ǂ����悤�c�c
-	__int32 x;            //���ʈ����̍��W
-	__int32 y;            //������
-	TCB *PprepTCB;        //�O��TCB
-	TCB *PnextTCB;        //����TCB
-	TCB *PCheadTCB;       //�q���̐擪
-	TCB *PCtailTCB;       //�q���̍Ō��
-	TCB *PmotherTCB;      //�e
-	TCBvalue *Pv;         //�^�X�N�l
-	bool (*Pfunc)(TCB *); //�^�X�N�֐�
-	void (*Pdest)(TCB *); //�f�X�g���N�^�֐�
-	void (*Pdraw)(TCB *); //�`��֐�
+	TaskP kind;                 //TCBの優先順位、種類扱いも……
+	unsigned __int8 calltiming; //Pfuncがどんなタイミングで呼ばれたか 0..作成時呼出 1..子より前 2..子より後 3..その他
+	unsigned __int16 flag;      //フラグ
+	unsigned __int32 index;     //TCBが作られるたびに違う値が振られるインデックス。
+	                            //ゼロは振られないけど、一周しちゃったら……どうしよう……
+	__int32 x;            //特別扱いの座標
+	__int32 y;            //同じく
+	TCB *PprepTCB;        //前のTCB
+	TCB *PnextTCB;        //次のTCB
+	TCB *PCheadTCB;       //子供の先頭
+	TCB *PCtailTCB;       //子供の最後尾
+	TCB *PmotherTCB;      //親
+	TCBvalue *Pv;         //タスク値
+	bool (*Pfunc)(TCB *); //タスク関数
+	void (*Pdest)(TCB *); //デストラクタ関数
+	void (*Pdraw)(TCB *); //描画関数
 #ifdef TM_POINTER_IN_EACH_TCB
-	Task0702Manager *PTM ; //Task0702Manager�ւ̃|�C���^
+	Task0702Manager *PTM ; //Task0702Managerへのポインタ
 #endif
-//TCB�Ƀ����o��ǉ�����Ƃ��́A�^�X�N�}�l�[�W���̃R���X�g���N�^�ŏ��������邱��
+//TCBにメンバを追加するときは、タスクマネージャのコンストラクタで初期化すること
 };
 
-//TCB�̃t���O
+//TCBのフラグ
 #define	TCBF_SLEEP					0x0001
 #define	TCBF_SLEEP_PROCESS			0x0002
 #define	TCBF_SLEEP_DRAW				0x0004
@@ -103,7 +103,7 @@ struct TCB_tag
 #define	TCBF_DEFAULT				(TCBF_PROCESS_BEFORE_CHILD | TCBF_DRAW_AFTER_CHILD )
 
 /*
-//�������̃G���[�����O�O
+//未実装のエラー処理＾＾
 enum TaskManagerErrorList
 {
 	TME_NONE,
@@ -113,77 +113,77 @@ enum TaskManagerErrorList
 */
 
 
-//���C���̃N���X
+//メインのクラス
 class Task0702Manager
 {
 private:
-	int RotatedIndex ;       //TCB�ǉ��̍������p
+	int RotatedIndex ;       //TCB追加の高速化用
 protected:
-	TCB *TaskBody;           //������TCB���m�ۂ���
-	void (*firstfunc)();     //����Run���ɌĂ΂��
-	int NOTCB;               //TCB�̍ő吔
-	bool isfirst;            //�ŏ�true����Run����false
-	bool onerror;            //�G���[����true�@�����Ȃ�Ɖ�����Ă��������Ȃ��Ȃ�
-	bool draworderissameasTP; //�`��֐����A�������ɌĂԂ��B�f�t�H���g�ł͋t���ɌĂ�
-	unsigned __int32 indexcounter; //TCB�ɐU��C���f�b�N�X�̃J�E���^�B������邱�Ƃ��l������Ă��Ȃ��O�O
-	TCB *TFcontinueTCB;         //TCB�p��
-	bool TFcontinue_BC;      //TCB�p���ݒ�A�q�����O�ɓ����Ă�����
+	TCB *TaskBody;           //ここにTCBを確保する
+	void (*firstfunc)();     //初回Run時に呼ばれる
+	int NOTCB;               //TCBの最大数
+	bool isfirst;            //最初true初回Run時にfalse
+	bool onerror;            //エラー時にtrue　そうなると何やっても応答しなくなる
+	bool draworderissameasTP; //描画関数を、処理順に呼ぶか。デフォルトでは逆順に呼ぶ
+	unsigned __int32 indexcounter; //TCBに振るインデックスのカウンタ。一周することを考慮されていない＾＾
+	TCB *TFcontinueTCB;         //TCB継続
+	bool TFcontinue_BC;      //TCB継続設定、子供より前に動いていたか
 //	TaskManagerErrorList firsterror;
-	int NOTCBValue; //TCB�l�̐�
-	TCB *PheadTCB;  //���[�g�̐擪��TCB
-	TCB *PtailTCB;  //���[�g�̍Ō����TCB
-	void KillTaskChain(TCB *Pifrom);       //�^�X�N�̍�����Ăɍ폜
+	int NOTCBValue; //TCB値の数
+	TCB *PheadTCB;  //ルートの先頭のTCB
+	TCB *PtailTCB;  //ルートの最後尾のTCB
+	void KillTaskChain(TCB *Pifrom);       //タスクの鎖を一斉に削除
 public:
-	//�R���X�g���N�^�@TCB�̍ő吔�@����Run���ɌĂԊ֐��@TCB�l�̐��@��n��
+	//コンストラクタ　TCBの最大数　初回Run時に呼ぶ関数　TCB値の数　を渡す
 	Task0702Manager(int iNOTCB , void (*ifirstfunc)() = NULL , int iNOTCBValue = 20 );
-	//�f�X�g���N�^�@����ɔC���Ė��Ȃ��d�l�ȃn�Y�c�c
+	//デストラクタ　これに任せて問題ない仕様なハズ……
 	~Task0702Manager();
 
-	//iPmotherTCB��iNULL�Ń��[�g��j�@�ɁA�D��xitaskp��TCB���쐬
+	//iPmotherTCB上（NULLでルート上）　に、優先度itaskpのTCBを作成
 	TCB *AddTask(TCB *iPmotherTCB , TaskP itaskp , 
 					bool (*ifunc)(TCB *) = NULL , void (*idest)(TCB *) = NULL , void (*idraw)(TCB *) = NULL );
-	//�^�X�N�폜
+	//タスク削除
 	void KillTask(TCB *targ);
-	//PmotherTCB��iNULL�Ń��[�g��j�̈��͈͗D��x��TCB�𑍍폜
+	//PmotherTCB上（NULLでルート上）の一定範囲優先度のTCBを総削除
 	void KillP(TCB *PmotherTCB , TaskP ifrom , TaskP ifor = TP_NOVALUE);
 
-	//�^�X�N��Q����
+	//タスクを寝かす
 	void SleepTask(TCB *dest){if(dest)dest->flag|=TCBF_SLEEP;};
-	//�^�X�N���N����
+	//タスクを起こす
 	void WakeTask(TCB *dest){if(dest)dest->flag&=~TCBF_SLEEP;};
-	//�^�X�N������Q����
+	//タスク処理を寝かす
 	void SleepTaskProcess(TCB *dest){if(dest)dest->flag|=TCBF_SLEEP_PROCESS;};
-	//�^�X�N�������N����
+	//タスク処理を起こす
 	void WakeTaskProcess(TCB *dest){if(dest)dest->flag&=~TCBF_SLEEP_PROCESS;};
-	//�^�X�N�`���Q����
+	//タスク描画を寝かす
 	void SleepTaskDraw(TCB *dest){if(dest)dest->flag|=TCBF_SLEEP_DRAW;};
-	//�^�X�N�`����N����
+	//タスク描画を起こす
 	void WakeTaskDraw(TCB *dest){if(dest)dest->flag&=~TCBF_SLEEP_DRAW;};
-	//�^�X�N�֐��p���i����Ƃ������A�ϑԎd�l�j
+	//タスク関数継続（難解というか、変態仕様）
 	void ContinueTF(TCB *dest , bool ReturnBeforeChild)
 	{
 		TFcontinueTCB = dest ;
 		TFcontinue_BC = ReturnBeforeChild ;
 	}
-	//�^�X�N�֐��p������
+	//タスク関数継続解除
 	void DiscontinueTF()
 	{
 		TFcontinueTCB = NULL ;
 	}
 
-	//PmotherTCB��iNULL�Ń��[�g��j�@�́A�D��xifrom�`ifor��TCB��T��
+	//PmotherTCB上（NULLでルート上）　の、優先度ifrom～iforのTCBを探す
 	TCB *SearchTask(TCB *PmotherTCB , TaskP ifrom , TaskP ifor = TP_NOVALUE);
 
-	//�P�t���[���Ɉ�񂱂���Ă�
+	//１フレームに一回これを呼ぶ
 	bool Run();
-	//PmotherTCB��iNULL�Ń��[�g��j�@�́A�D��xifrom�`ifor��TCB�̐��𐔂���
+	//PmotherTCB上（NULLでルート上）　の、優先度ifrom～iforのTCBの数を数える
 	int  CountP(TCB *PmotherTCB , TaskP ifrom , TaskP ifor = TP_NOVALUE);
-	//�`��֐����Ă�
+	//描画関数を呼ぶ
 	void DoDrawFunctionChain(TCB *Pifrom=NULL);
-	//�`��Ə���������v�����邩�A�t���ɂ��邩���Z�b�g
+	//描画と処理順を一致させるか、逆順にするかをセット
 	void SetDrawOrder(bool sameTP=false){draworderissameasTP = sameTP;};
-	//�e�q�ԂŁA�������ǂ��炪�������邩���Z�b�g
-	//����true�ɂ���ƁA�q���������O��ɐe��������
+	//親子間で、処理をどちらが早くするかをセット
+	//両方trueにすると、子供が動く前後に親が動ける
 	void SetProcessOrderPandC(TCB *dest , bool ProcessBeforeChild , bool ProcessAfterChild )
 	{
 		if(dest)
@@ -192,7 +192,7 @@ public:
 			dest->flag |= (ProcessBeforeChild*TCBF_PROCESS_BEFORE_CHILD)|(ProcessAfterChild*TCBF_PROCESS_AFTER_CHILD ) ;
 		}
 	}
-	//�e�q�ԂŁA�`����ǂ��炪�������邩���Z�b�g
+	//親子間で、描画をどちらが早くするかをセット
 	void SetDrawOrderPandC(TCB *dest , bool DrawBeforeChild , bool DrawAfterChild )
 	{
 		if(dest)
@@ -201,8 +201,8 @@ public:
 			dest->flag |= (DrawBeforeChild*TCBF_DRAW_BEFORE_CHILD)|(DrawAfterChild*TCBF_DRAW_AFTER_CHILD ) ;
 		}
 	}
-	//�e�����ǂ��Ă����Ax,y�𑫂������邾��
-	//���ǂ�񐔂��w�肵�����Ƃ��́Adepth��^����i�f�t�H���g�ł́A���[�g�܂Łj
+	//親をたどっていき、x,yを足し続けるだけ
+	//たどる回数を指定したいときは、depthを与える（デフォルトでは、ルートまで）
 	void GetGlobalPosition( TCB *dest , INT32 *Pox , INT32 *Poy , int depth=0 )
 	{
 TCB *Ptmp;
@@ -219,11 +219,11 @@ INT32 tx,ty;
 		*Pox = tx ;
 		*Poy = ty ;
 	}
-	//�^�X�N�̏����֐��̍����ĂԁB�q�����S�ČĂԁB���܂�g��Ȃ��̂��I�X�X���c�c
+	//タスクの処理関数の鎖を呼ぶ。子供も全て呼ぶ。あまり使わないのがオススメ……
 	void DoTaskFunctionChain(TCB *Pifrom); 
-	//TCB�{�̂��擾�c�c�g�������邩��
+	//TCB本体を取得……使い道あるかな
 	TCB *GetTaskBody(){return TaskBody;};
-	//�擪��TCB���擾�c�c������g�������邩��
+	//先頭のTCBを取得……これも使い道あるかな
 	TCB *GetHead(){return PheadTCB;};
 };
 

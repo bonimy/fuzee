@@ -53,10 +53,10 @@
 
 /*
 
-//i‚u‚b{{j
-//__forceinline‚É‚µ‚È‚¢‚ÆƒCƒ“ƒ‰ƒCƒ““WŠJ‚µ‚Ä‚­‚ê‚È‚¢cc
-//‚¯‚ÇA#ifndef __forceinline‚Í”ò‚Î‚µ‚Ä‚­‚ê‚È‚¢cc
-//”ñ‚u‚b‚ÅƒRƒ“ƒpƒCƒ‹‚Å‚«‚é‚æ‚¤‚É‚·‚é‚É‚Í‚Ç[‚µ‚½‚ç‚¢‚¢‚Ì‚æ
+//ï¼ˆï¼¶ï¼£ï¼‹ï¼‹ï¼‰
+//__forceinlineã«ã—ãªã„ã¨ã‚¤ãƒ³ãƒ©ã‚¤ãƒ³å±•é–‹ã—ã¦ãã‚Œãªã„â€¦â€¦
+//ã‘ã©ã€#ifndef __forceinlineã¯é£›ã°ã—ã¦ãã‚Œãªã„â€¦â€¦
+//éï¼¶ï¼£ã§ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã§ãã‚‹ã‚ˆã†ã«ã™ã‚‹ã«ã¯ã©ãƒ¼ã—ãŸã‚‰ã„ã„ã®ã‚ˆ
 
 #ifndef __forceinline
 #define __forceinline inline
@@ -68,7 +68,7 @@
 */
 
 
-//ì‚Á‚½‚ªAg‚¢•û‚ğŠÔˆá‚¦‚Ä‘å•Ï‚È‚±‚Æ‚É‚È‚Á‚½
+//ä½œã£ãŸãŒã€ä½¿ã„æ–¹ã‚’é–“é•ãˆã¦å¤§å¤‰ãªã“ã¨ã«ãªã£ãŸ
 inline static int TAdr2Mem( int adr )
 {
 	if((adr&0xFF0000) == 0x7E0000){return adr&0x00FFFF;}
@@ -158,7 +158,7 @@ int bank,loadr , pro ;
 			if( (adr & 0x00FFFF) < 0x2000)return Pd->Pram[adr & 0x00FFFF];
 		}
 	}
-	return 0;//‚µ‚ç‚ñ
+	return 0;//ã—ã‚‰ã‚“
 }
 inline static WORD READW( DataSet *Pb , int adr )
 {
@@ -254,10 +254,10 @@ int bank,loadr , pro ;
 		else if((adr&0xFF0000) == 0x7F0000){Pd->Pram[(adr&0x00FFFF)|0x010000] = data;return;}
 		if( adr%0x800000 < 0x400000 )
 		{
-			adr %= 0x010000 ;//ƒ~ƒ‰[‚¾‚©‚ç‚ÆA‚ ‚ÆAƒoƒ“ƒN‚É‚©‚©‚í‚è‚È‚¢‚ç‚µ‚¢‚©‚ç
+			adr %= 0x010000 ;//ãƒŸãƒ©ãƒ¼ã ã‹ã‚‰ã¨ã€ã‚ã¨ã€ãƒãƒ³ã‚¯ã«ã‹ã‹ã‚ã‚Šãªã„ã‚‰ã—ã„ã‹ã‚‰
 			//lo ram
 			if( adr < 0x2000){Pd->Pram[adr]=data;return;}
-			//DMAŠÖ˜A
+			//DMAé–¢é€£
 			if( adr >= 0x4300 && adr < 0x4380 )
 			{
 				Pd->AADMA[(adr&0x0070)>>4][adr&0x000F] = data ;
@@ -271,7 +271,7 @@ int bank,loadr , pro ;
 				{
 					if( bittable[i]&data )
 					{
-						//•K—v‚É‰‚¶‚Äì‚Á‚½‚¾‚¯‚È‚Ì‚ÅAƒ{ƒƒ{ƒ
+						//å¿…è¦ã«å¿œã˜ã¦ä½œã£ãŸã ã‘ãªã®ã§ã€ãƒœãƒ­ãƒœãƒ­
 						if( Pd->AADMA[i][0] & 0x80 )return;//reg->mem
 						if( Pd->AADMA[i][0] & 0x08 )return;//decrement
 						end = Pd->AADMA[i][5]|(Pd->AADMA[i][6]<<8);
@@ -306,7 +306,7 @@ int bank,loadr , pro ;
 			static BYTE inc_size_table[16] = {1,32,64,128,8,0,0,0,8,0,0,0,8,0,0,0};
 			switch ( adr )
 			{
-			case 0x2115://VRAM ƒCƒ“ƒNƒŠƒƒ“ƒgƒTƒCƒY
+			case 0x2115://VRAM ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆã‚µã‚¤ã‚º
 				Pd->render_inc_size = inc_size_table[data&0x0F];
 				Pd->render_inc_timing = 0;
 				if(data&0x80)Pd->render_inc_timing = 1;

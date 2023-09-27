@@ -5,20 +5,20 @@
 #define		PI		3.1415926535897932384626433832795
 #endif
 
-#define D2R(ang)		((ang) * PI / 180)//“x”–@toƒ‰ƒWƒAƒ“
-#define R2D(ang)		((ang) * 180 / PI)//ƒ‰ƒWƒAƒ“to“x”–@
+#define D2R(ang)		((ang) * PI / 180)//åº¦æ•°æ³•toãƒ©ã‚¸ã‚¢ãƒ³
+#define R2D(ang)		((ang) * 180 / PI)//ãƒ©ã‚¸ã‚¢ãƒ³toåº¦æ•°æ³•
 
 
 ////////////////////////////////
-//©ì•Ö—˜i‚©‚à‚µ‚ê‚È‚¢jŠÖ”ŒS
+//è‡ªä½œä¾¿åˆ©ï¼ˆã‹ã‚‚ã—ã‚Œãªã„ï¼‰é–¢æ•°éƒ¡
 ////////////////////////////////
 
 /*
-ŒöŠJ—p‚Éì‚è’¼‚µ‚Ä‚¢‚½‚çAinline‚¾‚ç‚¯‚É‚È‚Á‚Ä‚µ‚Ü‚Á‚½B
+å…¬é–‹ç”¨ã«ä½œã‚Šç›´ã—ã¦ã„ãŸã‚‰ã€inlineã ã‚‰ã‘ã«ãªã£ã¦ã—ã¾ã£ãŸã€‚
 */
 
-//ŒÅ’è¬”ŠÖ˜A
-/*ƒ}ƒNƒ‰»—pƒeƒ“ƒvƒŒ
+//å›ºå®šå°æ•°é–¢é€£
+/*ãƒã‚¯ãƒ­åŒ–ç”¨ãƒ†ãƒ³ãƒ—ãƒ¬
 #define	DBITS			16
 #define	I2F(i)			I2F(DBITS,i)
 #define	F2I(f)			F2I(DBITS,f)
@@ -44,7 +44,7 @@ inline double F2D(int db,__int32 f)
 	return (double)f/(1<<db) ;
 }
 inline __int32 FMulti( int db , __int32 a , __int32 b )
-{//áŠ±a‚Ì‚Ù‚¤‚ª¸“x‚ª‚‚¢‚±‚Æ‚ª
+{//è‹¥å¹²aã®ã»ã†ãŒç²¾åº¦ãŒé«˜ã„ã“ã¨ãŒ
 	return (a>>((db  )/2))*(b>>((db+1)/2)) ;
 }
 inline __int32 FDivide( int db , __int32 a , __int32 b )
@@ -52,7 +52,7 @@ inline __int32 FDivide( int db , __int32 a , __int32 b )
 	return D2F( db , (double)a/b ) ;
 }
 
-//(x,y)‚ªA(srcx,srcy)-(srcx+width,srcy+height),b‚Ì“à•”‚É‘¶İ‚·‚é‚©B’n–¡‚É•Ö—˜
+//(x,y)ãŒã€(srcx,srcy)-(srcx+width,srcy+height),bã®å†…éƒ¨ã«å­˜åœ¨ã™ã‚‹ã‹ã€‚åœ°å‘³ã«ä¾¿åˆ©
 inline bool RectIn(int x,int y,int srcx,int srcy,int width,int height)
 {
 	if((srcx <= x) & (srcy <= y) & (srcx + width > x) & (srcy + height > y))return true; 
@@ -64,8 +64,8 @@ inline bool RectIn(double x,double y,double srcx,double srcy,double width,double
 	return false;
 }
 
-//double‚ÈŠp“x‚ğ‚Pü“à‚É•â³
-//‚È‚ñ‚©ê‡‚É‚æ‚Á‚Ä‚â‚½‚çd‚»‚¤‚¾cc
+//doubleãªè§’åº¦ã‚’ï¼‘å‘¨å†…ã«è£œæ­£
+//ãªã‚“ã‹å ´åˆã«ã‚ˆã£ã¦ã‚„ãŸã‚‰é‡ãã†ã â€¦â€¦
 inline void AngleFixPlus(double *Pangle)
 {
 	while(*Pangle < 0){*Pangle += 2*PI;}
@@ -76,7 +76,7 @@ inline void AngleFixEven(double *Pangle)
 	while(*Pangle < -PI){*Pangle += 2*PI;}
 	while(*Pangle >= PI){*Pangle -= 2*PI;}
 }
-//wayƒEƒFƒC‚Ì•ûŒü‚É‹ß‚¢‚Ù‚¤‚ÉAangle‚ğ•â³‚µ‚½‚à‚Ì‚ğ•Ô‚·
+//wayã‚¦ã‚§ã‚¤ã®æ–¹å‘ã«è¿‘ã„ã»ã†ã«ã€angleã‚’è£œæ­£ã—ãŸã‚‚ã®ã‚’è¿”ã™
 inline double AboutAngle( double angle , double a0 , int way )
 {
 double eangle = 2*PI/way;
@@ -84,16 +84,16 @@ double eangle = 2*PI/way;
 }
 
 
-//³Œ·ƒe[ƒuƒ‹‚ğì‚è‚‘¬‰»‚ğ‚Í‚©‚Á‚½‚ç‚µ‚¢‚Ì‚¾‚ªcc
-//ƒ}ƒ‹ƒ`ƒXƒŒƒbƒh‚Å‚Íg‚¦‚È‚¢
+//æ­£å¼¦ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½œã‚Šé«˜é€ŸåŒ–ã‚’ã¯ã‹ã£ãŸã‚‰ã—ã„ã®ã ãŒâ€¦â€¦
+//ãƒãƒ«ãƒã‚¹ãƒ¬ãƒƒãƒ‰ã§ã¯ä½¿ãˆãªã„
 extern void MakeSinTable(int sintablesenv);
 extern double ESin(int angle);
 extern double ECos(int angle);
 extern int GetSinTableSenv();
 
 
-//sscanf‚Æ‚©sprintf‚Æ‚©’m‚ç‚È‚©‚Á‚½‚Ì‚æcc–{“–‚ÉB
-//ƒ}ƒ‹ƒ`ƒXƒŒƒbƒh‚Å‚Íg‚¦‚È‚¢
+//sscanfã¨ã‹sprintfã¨ã‹çŸ¥ã‚‰ãªã‹ã£ãŸã®ã‚ˆâ€¦â€¦æœ¬å½“ã«ã€‚
+//ãƒãƒ«ãƒã‚¹ãƒ¬ãƒƒãƒ‰ã§ã¯ä½¿ãˆãªã„
 extern char* Int2Char(int num,int place=5,bool issignadd=true,int buf=0);
 extern char* Int2CharEX(int num , int buf = 0 );
 extern char* CAC(char* str1 , char* str2 , int buf=-1);
@@ -107,10 +107,10 @@ extern char *Byte2Hex(unsigned char data,int ub=0);
 extern char *Int2Hex16(unsigned short data,int ub=0);
 extern char *Int2Hex32(unsigned int data,int ub=0);
 
-//atan2‚ğ’m‚ç‚È‚©‚Á‚½ ‚Éì‚Á‚½“z
-extern double AimAngle(double,double,double,double);//‚Q“_ŠÔ‚ÌŠp“x
+//atan2ã‚’çŸ¥ã‚‰ãªã‹ã£ãŸé ƒã«ä½œã£ãŸå¥´
+extern double AimAngle(double,double,double,double);//ï¼’ç‚¹é–“ã®è§’åº¦
 
-//—”‚à‚Ç‚«
+//ä¹±æ•°ã‚‚ã©ã
 typedef struct MYRND_PARAM_tag MYRND_PARAM ;
 struct MYRND_PARAM_tag
 {
@@ -118,22 +118,22 @@ struct MYRND_PARAM_tag
 	int rndptr;
 	unsigned char *Pex_rnd ;
 };
-extern unsigned int mrnd();//0`0xFFFFFFFF‚Ü‚Å‚Ì®”‚ğ•Ô‚·
-extern double dmrnd();//[0,1)‚Ì¬”‚ğ•Ô‚·
-extern void smrnd( int seed , unsigned char *Pes=NULL );//“K“–‚ÈƒV[ƒh‚ÆwŠO—x‚Ö‚Ìƒ|ƒCƒ“ƒ^iNULL‰Âj‚ğ“ü‚ê‚é
-extern unsigned int mrnd(MYRND_PARAM *Pmrp);//0`0xFFFFFFFF‚Ü‚Å‚Ì®”‚ğ•Ô‚·
-extern double dmrnd(MYRND_PARAM *Pmrp);//[0,1)‚Ì¬”‚ğ•Ô‚·
-extern void smrnd( MYRND_PARAM *Pmrp , int seed , unsigned char *Pes=NULL );//“K“–‚ÈƒV[ƒh‚ÆwŠO—x‚Ö‚Ìƒ|ƒCƒ“ƒ^iNULL‰Âj‚ğ“ü‚ê‚é
-extern unsigned int EHash( unsigned char *Pd , int length ) ;//‚©‚È‚èƒeƒLƒg[‚È‚Q‚SƒrƒbƒgƒnƒbƒVƒ…iHj’lì¬
+extern unsigned int mrnd();//0ï½0xFFFFFFFFã¾ã§ã®æ•´æ•°ã‚’è¿”ã™
+extern double dmrnd();//[0,1)ã®å°æ•°ã‚’è¿”ã™
+extern void smrnd( int seed , unsigned char *Pes=NULL );//é©å½“ãªã‚·ãƒ¼ãƒ‰ã¨ã€å¤–ä¹±ã€ã¸ã®ãƒã‚¤ãƒ³ã‚¿ï¼ˆNULLå¯ï¼‰ã‚’å…¥ã‚Œã‚‹
+extern unsigned int mrnd(MYRND_PARAM *Pmrp);//0ï½0xFFFFFFFFã¾ã§ã®æ•´æ•°ã‚’è¿”ã™
+extern double dmrnd(MYRND_PARAM *Pmrp);//[0,1)ã®å°æ•°ã‚’è¿”ã™
+extern void smrnd( MYRND_PARAM *Pmrp , int seed , unsigned char *Pes=NULL );//é©å½“ãªã‚·ãƒ¼ãƒ‰ã¨ã€å¤–ä¹±ã€ã¸ã®ãƒã‚¤ãƒ³ã‚¿ï¼ˆNULLå¯ï¼‰ã‚’å…¥ã‚Œã‚‹
+extern unsigned int EHash( unsigned char *Pd , int length ) ;//ã‹ãªã‚Šãƒ†ã‚­ãƒˆãƒ¼ãªï¼’ï¼”ãƒ“ãƒƒãƒˆãƒãƒƒã‚·ãƒ¥ï¼ˆï¼Ÿï¼‰å€¤ä½œæˆ
 
 
 
 //////////////
-//ƒeƒ“ƒvƒŒ[ƒg
+//ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ
 //////////////
 
-//•„†‚ğˆÛ‚µ‚½‚Ü‚ÜAâ‘Î’l‚ğ‘«‚µ‚½‚èˆø‚¢‚½‚ècc
-//overrun==false‚¾‚ÆAˆø‚¢‚½‚Æ‚«Œ´“_‚ğ’Ê‚è‰ß‚¬‚½‚Æ‚«A‚O‚Å~‚Ü‚é
+//ç¬¦å·ã‚’ç¶­æŒã—ãŸã¾ã¾ã€çµ¶å¯¾å€¤ã‚’è¶³ã—ãŸã‚Šå¼•ã„ãŸã‚Šâ€¦â€¦
+//overrun==falseã ã¨ã€å¼•ã„ãŸã¨ãåŸç‚¹ã‚’é€šã‚ŠéããŸã¨ãã€ï¼ã§æ­¢ã¾ã‚‹
 template <class mtp> void AbsPlus(mtp* dest , mtp value , bool overrun=true)
 {
 	if(*dest > 0)
@@ -147,13 +147,13 @@ template <class mtp> void AbsPlus(mtp* dest , mtp value , bool overrun=true)
 		if(!overrun && *dest > 0)*dest = 0;
 	}
 }
-//•„†‚ğ•Ô‚·
+//ç¬¦å·ã‚’è¿”ã™
 template <class mtp> int sign( mtp dest )
 {
 	if( dest>=0 )return 1 ;
 	return -1 ;
 }
-//‚í‚©‚è‚â‚·‚·‚¬‚éŒğŠ·ŠÖ”
+//ã‚ã‹ã‚Šã‚„ã™ã™ãã‚‹äº¤æ›é–¢æ•°
 template <class mtp> void MYSWAP(mtp* v1 , mtp* v2)
 {
 mtp tmp;
@@ -162,22 +162,22 @@ mtp tmp;
 	*v2  = tmp;
 }
 
-//dest‚ğ[lo,hi]“à‚É•â³‚·‚é
+//destã‚’[lo,hi]å†…ã«è£œæ­£ã™ã‚‹
 template <class mtp> void DurCorrect(mtp* dest , mtp valuelo , mtp valuehi )
 {
 	if( *dest < valuelo ) *dest = valuelo ;
 	if( *dest > valuehi ) *dest = valuehi ;
 }
 
-//®”‚ğA‚O`value-1“à‚É•â³‚·‚éB
-//-1‚¾‚Á‚½‚çAvalue-1‚É‚È‚éB
+//æ•´æ•°ã‚’ã€ï¼ï½value-1å†…ã«è£œæ­£ã™ã‚‹ã€‚
+//-1ã ã£ãŸã‚‰ã€value-1ã«ãªã‚‹ã€‚
 template <class mtp> void RotateCorrect(mtp* dest , mtp value )
 {
 	*dest = (((*dest)%value)+value)%value;
 }
 
-//•‰‚Å‚Ì‹““®‚ª‚½‚¾‚ÌœZ‚Æ­‚µˆÙ‚È‚é®”œZ
-//³•ûŒü‚©‚çŠK’i‚ğ‰º‚è‚Ä‚¢‚Á‚½‚Æ‚«AŒ´“_•t‹ß‚ªL‚­‚È‚ç‚È‚¢‚æ‚¤‚É‚È‚Á‚Ä‚¢‚é
+//è² ã§ã®æŒ™å‹•ãŒãŸã ã®é™¤ç®—ã¨å°‘ã—ç•°ãªã‚‹æ•´æ•°é™¤ç®—
+//æ­£æ–¹å‘ã‹ã‚‰éšæ®µã‚’ä¸‹ã‚Šã¦ã„ã£ãŸã¨ãã€åŸç‚¹ä»˜è¿‘ãŒåºƒããªã‚‰ãªã„ã‚ˆã†ã«ãªã£ã¦ã„ã‚‹
 template <class mtp> mtp GaussDivision(mtp dest , mtp value )
 {
 	if( dest >= 0 )return dest/value;
@@ -186,10 +186,10 @@ template <class mtp> mtp GaussDivision(mtp dest , mtp value )
 }
 
 ////////
-//ƒ}ƒNƒ
+//ãƒã‚¯ãƒ­
 ////////
 
-//‚í‚©‚è‚â‚·‚­â‘Î’l‚ğ•Ô‚·
+//ã‚ã‹ã‚Šã‚„ã™ãçµ¶å¯¾å€¤ã‚’è¿”ã™
 #define		MYABS(num)			( (num)<0 ? -(num) : (num) )
 
 

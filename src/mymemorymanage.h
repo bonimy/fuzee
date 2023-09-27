@@ -1,8 +1,8 @@
 /*
-	�悭�Ӑ}�̂킩��Ȃ��������Ǘ����[�`���B
+	よく意図のわからないメモリ管理ルーチン。
 
-	�t�@�C������K�o���Ɠǂݍ��݂�������A�������񂾂�B�_���v���Ă�B
-	���̑��A�����ł����̂��߂ɍ�������킩��Ȃ��悤�ȃ��[�`���������B
+	ファイルからガバっと読み込みをしたり、書き込んだり。ダンプってやつ。
+	その他、自分でも何のために作ったかわからないようなルーチンが複数。
 */
 #ifndef MYMEMORYMANAGE_INCLUDED
 #define MYMEMORYMANAGE_INCLUDED
@@ -12,42 +12,42 @@
 
 
 
-/*	�t�@�C��������ptrbuf�Ƀ����������蓖�Ă����[�h�B
-	�t�@�C���T�C�Y��Ԃ��B
-	-1	�o�b�t�@����łȂ�
-	-2�@�ꎞ�o�b�t�@���m�ۂł��Ȃ�
-	-3�@�t�@�C�����I�[�v���ł��Ȃ�
-	-4�@�t�@�C�����ǂ߂Ȃ�
-	-5�@�ꎞ�o�b�t�@���g���ł��Ȃ�
-	-6�@�Ԃ��ׂ��o�b�t�@���m�ۂł��Ȃ�
+/*	ファイルから空のptrbufにメモリを割り当てかつロード。
+	ファイルサイズを返す。
+	-1	バッファが空でない
+	-2　一時バッファが確保できない
+	-3　ファイルがオープンできない
+	-4　ファイルが読めない
+	-5　一時バッファを拡張できない
+	-6　返すべきバッファが確保できない
 */
 extern int LoadMemoryFromFile(char *filename , unsigned char **ptrbuf);
 
 /*
-	���������t�@�C���ɏ����o���B
-	0	����I��
-	-1	�t�@�C�����J���Ȃ�
-	-2	�t�@�C���ɏ����Ȃ�
+	メモリをファイルに書き出す。
+	0	正常終了
+	-1	ファイルが開けない
+	-2	ファイルに書けない
 */
 extern int WriteFileFromMemory(char *filename , unsigned char *data , int length);
 
 
 /*
-�@�@�n�����|�C���^�ɁA���������m�ۂ��āA�����ɂP�s���̋l�߂�B
-�@�@�����ƌĂяo��������free���邱��
-	0...����I��
-	1...�I�[�܂œǂݍ���ŏI��
-	-1..�ǂݍ��ݎ��s
-	-2..�������m�ێ��s
+　　渡したポインタに、メモリを確保して、そこに１行分の詰める。
+　　ちゃんと呼び出した側でfreeすること
+	0...正常終了
+	1...終端まで読み込んで終了
+	-1..読み込み失敗
+	-2..メモリ確保失敗
 */
 extern int ReadALine( int filehand , char **PPreturnbuf);
 
 extern int WriteALine( int filehand , char *Pbuffer );
 
 /*
-�@��{�I�Ɏ蔲���p�B
-�@�I�v�V���i���w�b�_�̑����Ɍ��C������������
-�@Output�́ACREAT,TRUNC�ł���B
+　基本的に手抜き用。
+　オプショナルヘッダの多さに嫌気がさしただけ
+　Outputは、CREAT,TRUNCである。
 */
 extern int MMMOpenForTextInput( char *Pname );
 extern int MMMOpenForTextOutput( char *Pname );
@@ -70,25 +70,25 @@ extern int MMMClose( int filehand ) ;
 
 
 /*
-	�r�b�g�P�ʂœǂݏ�������ۂ̏�����
+	ビット単位で読み書きする際の初期化
 */
 extern void BitControlStart(unsigned char *headbyte);
 /*
-	�r�b�g�J�[�\���Ƀf�[�^��������
-	�r�b�g�J�[�\���͂��̕��i��
+	ビットカーソルにデータを加える
+	ビットカーソルはその分進む
 */
 extern void BitControlAdd(unsigned char data , int nobit , bool isnoproce=false);
 /*
-	�r�b�g�J�[�\������f�[�^�𓾂�
-	�r�b�g�J�[�\���͂��̕��i��
+	ビットカーソルからデータを得る
+	ビットカーソルはその分進む
 */
 extern unsigned char BitControlGet(int nobit , bool isnoproce=false);
 /*
-	�r�b�g�J�[�\���̈ړ���
+	ビットカーソルの移動量
 */
 extern int  BitControlGetIOBit();
 /*
-	�r�b�g�J�[�\���𑀍�
+	ビットカーソルを操作
 */
 extern void BitControlSeek(int nobit);
 

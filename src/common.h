@@ -4,7 +4,7 @@
 #include <assert.h>
 
 #ifdef _ORE_SENYOU
-//���͂������̃\�[�X�����C�u���������Ă���̂Łc�c
+//私はいくつかのソースをライブラリ化しているので……
 #ifdef _DEBUG
 #pragma comment(lib,"gl_d.lib")
 #else
@@ -29,13 +29,13 @@
 #include "_65816m.h"
 #include "SNESsys.h"
 #endif
-//�A�v���P�[�V�����̃E�C���h�E�ւ̃h���b�v��������Ƃ��̓R�����g�A�E�g���O��
+//アプリケーションのウインドウへのドロップを許可するときはコメントアウトを外す
 #define	MY_DROP_ACCEPT
-//�Q�d�N�����i�ȈՁj�}������Ƃ��̓R�����g�A�E�g���O��
+//２重起動を（簡易）抑制するときはコメントアウトを外す
 #define	ENABLE_MULTIPLE_RUN
 
 #define		COMMON_CONST_WINDOW_CLASS_NAME		"FZE_WCN"
-#define		COMMON_CONST_DEFAULT_WINDOW_TEXT	"�e�y�d"
+#define		COMMON_CONST_DEFAULT_WINDOW_TEXT	"ＦＺＥ"
 
 #define		WINWIDTH				780
 #define		WINHEIGHT				600
@@ -98,7 +98,7 @@ extern int  romsize ;
 #define ROM(adr)			(Prom[ROMADR2OFFSET(adr)])
 #define GET_ADR_BY_ROM(adr)	(ROM(adr)|(ROM(adr+1)<<8)|(ROM(adr+2)<<16)|(ROM(adr+3)<<24))
 
-//8�͂Ȃ�ƂȂ��c�c
+//8はなんとなく……
 #define SETROM8(adr,val)	{ROM(adr)=(BYTE)(val);}
 #define SETROM16(adr,val)	{SETROM8(adr,val);SETROM8((adr)+1,(val)>>8);}
 #define SETROM24(adr,val)	{SETROM16(adr,val);SETROM8((adr)+2,(val)>>16);}

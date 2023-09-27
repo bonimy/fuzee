@@ -33,7 +33,7 @@ void RenderMINIMAP()
 
 
 		if( ic )
-		{//Œq‚¬Š·‚¦—L‚è
+		{//ç¹‹ãæ›ãˆæœ‰ã‚Š
 			for( int i=0 ; i<FZCD_CHIP_P_MAP_H*FZCD_CHIP_P_MAP_W ; i++ )
 			{
 				BYTE *Ptmp ;
@@ -185,7 +185,7 @@ void RenderMINIMAP()
 void CWT_common( char *Pdest )
 {
 	Pdest[0] = '\0' ;
-	sprintf( &Pdest[strlen(Pdest)] , "’nˆæ%d-%d   " , editingre , editingcn ) ;
+	sprintf( &Pdest[strlen(Pdest)] , "åœ°åŸŸ%d-%d   " , editingre , editingcn ) ;
 }
 
 #define	NO_MAIN_MODE	2
@@ -220,10 +220,10 @@ double pro;
 void TV_main(TCB *caller)
 {
 	ALIAS_MAIN(caller,main) ;
-	{//Šî–{ƒŒƒCƒ„[‚Ì•`‰æ
+	{//åŸºæœ¬ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æç”»
 	for( int ibl=0 ; ibl<32*16 ; ibl++ )
 	{
-		{//‚‘¬‰»
+		{//é«˜é€ŸåŒ–
 int px,py ;
 int tx,ty;
 			px = (ibl%32*32) ;
@@ -271,10 +271,10 @@ BYTE *Pr = &working.exptile[0][(px/2+py/2*FZCD_CHIP_P_MAP_W)*FZCD_SOE_CHIP] ;
 
 
 	if( editingcn!=0 )
-	{//Œq‚¬Š·‚¦ƒŒƒCƒ„[‚Ì•\¦
+	{//ç¹‹ãæ›ãˆãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è¡¨ç¤º
 	for( int ibl=0 ; ibl<32*16 ; ibl++ )
 	{
-		{//‚‘¬‰»
+		{//é«˜é€ŸåŒ–
 int px,py ;
 int tx,ty;
 			px = (ibl%32*32) ;
@@ -289,7 +289,7 @@ int tx,ty;
 			if( tx<0 || ty<0 )continue ;
 		}
 		/*
-		{//•\¦‚·‚é‚©‚Ç‚¤‚©”»’è
+		{//è¡¨ç¤ºã™ã‚‹ã‹ã©ã†ã‹åˆ¤å®š
 			for( int iba=0 ; iba<16 ; iba++ )
 			{
 				for( int ich=0 ; ich<16 ; ich++ )
@@ -336,7 +336,7 @@ BYTE *Pr = &working.exptile[editingcn][(px/2+py/2*FZCD_CHIP_P_MAP_W)*FZCD_SOE_CH
 	}
 	}
 
-	//ƒOƒŠƒbƒh
+	//ã‚°ãƒªãƒƒãƒ‰
 	{
 		{for( int i=0 ; i<FZCD_BLOCK_P_MAP_W+1 ; i++ )
 		{
@@ -616,7 +616,7 @@ int tmp ;
 	{
 //*
 //		mainregion_pre = editingre ;
-//‰º‚Å
+//ä¸‹ã§
 
 		/*LABEL_YOMIKOMI*/
 
@@ -624,10 +624,10 @@ int tmp ;
 	}
 
 	{
-//‚±‚±‚©‚çƒOƒ‰ƒtƒBƒbƒN“WŠJ
+//ã“ã“ã‹ã‚‰ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯å±•é–‹
 		if(editingre != mainregion_pre)
 		{
-			//pre‚ÌXV‚Í‰º‚Å
+			//preã®æ›´æ–°ã¯ä¸‹ã§
 EmuCoreMinus tem ;
 			tem.SetRomData( Prom ) ;
 			tem.SetBankSize( false ) ;
@@ -639,7 +639,7 @@ EmuCoreMinus tem ;
 	//		tem.WriteAdrW( 0x0052 , 0x0000 ) ;
 	//		tem.WriteAdrW( 0x0CF3 , 0x0000 ) ;
 			
-			//ƒpƒŒƒbƒg
+			//ãƒ‘ãƒ¬ãƒƒãƒˆ
 			tem.EasyInitialize( 0x00A10D , 0x30 ) ;
 			tem.OperateUntilRTS( 1000000 ) ;
 static UINT colortable[256] ;
@@ -658,7 +658,7 @@ BYTE *Pram ;
 				colortable[i] = myRGB(r,g,b) ;
 			}}
 			SetSNESPalette( NULL , NULL , colortable ) ;
-			//ƒOƒ‰ƒtƒBƒbƒN
+			//ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯
 			tem.EasyInitialize( 0x00A0B0 , 0x30 ) ;
 			tem.OperateUntilRTS( 1000000 ) ;
 BYTE *Pvram ;
@@ -673,7 +673,7 @@ BYTE *Pvram ;
 			}
 {
 #ifdef MOSAIC_ENABLED
-//à–¾—pƒ‚ƒUƒCƒN
+//èª¬æ˜ç”¨ãƒ¢ã‚¶ã‚¤ã‚¯
 	{
 BMPD *Pb ;
 		Pb = mdo.GetSurfacePointer( SFC_BG ) ;
@@ -703,14 +703,14 @@ BMPD tmp ;
 	}
 #endif
 }
-			mdo.Text( SFC_BG , "‚l" , 0 , 96 , 8 , 4 ) ;
-			mdo.Text( SFC_BG , "‚a" , 8 , 96 , 8 , 4 ) ;
+			mdo.Text( SFC_BG , "ï¼­" , 0 , 96 , 8 , 4 ) ;
+			mdo.Text( SFC_BG , "ï¼¢" , 8 , 96 , 8 , 4 ) ;
 			mdo.Text( SFC_BG , ">>" , 0 , 80 , 8 , 4 ) ;
 			mdo.Text( SFC_BG , "<<" , 8*12 , 72 , 8 , 4 ) ;
 			mdo.Text( SFC_BG , " " , 8*10 , 72 , 8 , 4 ) ;
 			mdo.Text( SFC_BG , " " , 0x9*8 , 0x6*8 , 8 , 4 , RGB(255,255,255) ) ;
-			mdo.Text( SFC_BG , "‚a" , 0x5*8 , 0xA*8 , 8 , 4 , RGB(255,255,255)  ) ;
-			//ˆÃ‚­ƒRƒs[‚µ‚Ä‚¨‚­
+			mdo.Text( SFC_BG , "ï¼¢" , 0x5*8 , 0xA*8 , 8 , 4 , RGB(255,255,255)  ) ;
+			//æš—ãã‚³ãƒ”ãƒ¼ã—ã¦ãŠã
 			{
 				mdo.Blt( MDO3normal , SFC_BG , 0 , 128 , 128 , 128 , SFC_BG , 0 , 0 ) ;
 				MDO3Opt topt=*MDO3normal ;
@@ -719,7 +719,7 @@ BMPD tmp ;
 			}
 
 			/*
-			//‘‚«o‚µ
+			//æ›¸ãå‡ºã—
 			mdo.SaveBitmap( "tile.bmp" , SFC_BG ) ;
 			//*/
 		}
@@ -759,55 +759,55 @@ int tmp=0 ;
 		bool onerror=false ;
 
 		flog = fopen( "cmplog.txt" , "wt" ) ;
-		fprintf(flog,"«•ïƒƒO\n\n\n") ;
-		fprintf(flog,"œœƒƒ‚ƒŠŠm•Ûœœ\n") ;
+		fprintf(flog,"æ¢±åŒ…ãƒ­ã‚°\n\n\n") ;
+		fprintf(flog,"â—â—ãƒ¡ãƒ¢ãƒªç¢ºä¿â—â—\n") ;
 BYTE *Pexprom ;
 		Pexprom = (BYTE*) malloc( romsize*2 ) ;
 		memcpy( Pexprom , Prom , romsize ) ;
 		memset( Pexprom+romsize , 0 , romsize ) ;
 
-		fprintf(flog,"œœƒvƒƒOƒ‰ƒ€C³œœ\n") ;
+		fprintf(flog,"â—â—ãƒ—ãƒ­ã‚°ãƒ©ãƒ ä¿®æ­£â—â—\n") ;
 		{
 BYTE buf[32] ;
-			//‚q‚n‚lî•ñ’†‚ÌƒTƒCƒY‚ğ•â³
+			//ï¼²ï¼¯ï¼­æƒ…å ±ä¸­ã®ã‚µã‚¤ã‚ºã‚’è£œæ­£
 			SETROME8(Pexprom,romsize*2,0x007FD7, 0x0A ) ;
 
-			//“Ç‚İ‚İƒ‹[ƒ`ƒ“‚ğ•ÏX
+			//èª­ã¿è¾¼ã¿ãƒ«ãƒ¼ãƒãƒ³ã‚’å¤‰æ›´
 			memcpy( Pexprom+ROMADR2OFFSET(0x009F88) , Pexprom+ROMADR2OFFSET(0x009F7E) , 3 ) ;
 
-			//ƒoƒ“ƒNƒe[ƒuƒ‹‚ÌXV
+			//ãƒãƒ³ã‚¯ãƒ†ãƒ¼ãƒ–ãƒ«ã®æ›´æ–°
 			{
 				for( int i=0 ; i<16 ; i++ )buf[i] = 16+i ;
 				memcpy( Pexprom+ROMADR2OFFSET(0x00A006) , buf , 16 ) ;
 			}
 
-			//ƒoƒ“ƒNƒe[ƒuƒ‹‚Ìw‚·êŠ‚Ì•ÏX
+			//ãƒãƒ³ã‚¯ãƒ†ãƒ¼ãƒ–ãƒ«ã®æŒ‡ã™å ´æ‰€ã®å¤‰æ›´
 			Pexprom[ROMADR2OFFSET(0x00A060)+1] = 0x06 ;
 			Pexprom[ROMADR2OFFSET(0x00A060)+2] = 0xA0 ;
 
-			//b’èHƒŠ[ƒWƒ‡ƒ“02‚Æ03‚Ì•ª—£
+			//æš«å®šï¼Ÿãƒªãƒ¼ã‚¸ãƒ§ãƒ³02ã¨03ã®åˆ†é›¢
 			SETROME8 (Pexprom,romsize*2,0x009F76,0xEA ) ;
 
-			//ƒGƒŠƒAî•ñƒoƒ“ƒN‚Ì•ÏX
+			//ã‚¨ãƒªã‚¢æƒ…å ±ãƒãƒ³ã‚¯ã®å¤‰æ›´
 			SETROME8 (Pexprom,romsize*2,0x00D60C,0x10 ) ;
 
-			//ƒvƒ‰ƒNƒeƒBƒX‚ÌƒGƒŠƒAî•ñƒ|ƒCƒ“ƒ^ƒŠƒXƒg
+			//ãƒ—ãƒ©ã‚¯ãƒ†ã‚£ã‚¹æ™‚ã®ã‚¨ãƒªã‚¢æƒ…å ±ãƒã‚¤ãƒ³ã‚¿ãƒªã‚¹ãƒˆ
 			SETROME16(Pexprom,romsize*2,0x00D625+1,0x801E ) ;
 
-			//‚f‚o‚Å‚ÌƒGƒŠƒAî•ñƒ|ƒCƒ“ƒ^ƒŠƒXƒg
+			//ï¼§ï¼°ã§ã®ã‚¨ãƒªã‚¢æƒ…å ±ãƒã‚¤ãƒ³ã‚¿ãƒªã‚¹ãƒˆ
 			SETROME16(Pexprom,romsize*2,0x00D647+1,0x8000 ) ;
 
-			//Œq‚¬Š·‚¦ƒf[ƒ^ƒIƒtƒZƒbƒgƒf[ƒ^‚Ì‚ ‚éƒoƒ“ƒN
+			//ç¹‹ãæ›ãˆãƒ‡ãƒ¼ã‚¿ã‚ªãƒ•ã‚»ãƒƒãƒˆãƒ‡ãƒ¼ã‚¿ã®ã‚ã‚‹ãƒãƒ³ã‚¯
 			SETROME24 (Pexprom,romsize*2,0x009F63+1,0x118000 ) ;
 
-			//Œq‚¬‘Ö‚¦ƒf[ƒ^‚Ì‚ ‚éƒoƒ“ƒN
+			//ç¹‹ãæ›¿ãˆãƒ‡ãƒ¼ã‚¿ã®ã‚ã‚‹ãƒãƒ³ã‚¯
 			SETROME16(Pexprom,romsize*2,0x009F97+1,0x0011 ) ;
-			//Œq‚¬‘Ö‚¦ƒf[ƒ^
+			//ç¹‹ãæ›¿ãˆãƒ‡ãƒ¼ã‚¿
 			SETROME16(Pexprom,romsize*2,0x009FA1+1,0x8100   ) ;
 			SETROME16(Pexprom,romsize*2,0x009FA6+1,0x8100+2 ) ;
 			SETROME16(Pexprom,romsize*2,0x009FAD+1,0x8100+4 ) ;
 		
-			//‹­§‘—ŠÒƒ}ƒVƒ“‚É©d‚µ‚Ä‚à‚ç‚¤
+			//å¼·åˆ¶é€é‚„ãƒã‚·ãƒ³ã«è‡ªé‡ã—ã¦ã‚‚ã‚‰ã†
 			{
 				for( int i=0 ; i<15+7 ; i++ )
 					SETROME8(Pexprom,romsize*2,0x00DAC6+i,0x0C ) ;
@@ -816,7 +816,7 @@ BYTE buf[32] ;
 		}
 
 
-		fprintf(flog,"œœglobalsetting.txt“Ç‚İ‚İœœ\n") ;
+		fprintf(flog,"â—â—globalsetting.txtèª­ã¿è¾¼ã¿â—â—\n") ;
 
 int gplist[15] ;
 int gpcclist[15] ;
@@ -841,12 +841,12 @@ int prlist[7] ;
 				fp = fopen( "working\\globalsetting.txt" , "rt" ) ;
 				if( !fp )
 				{
-					fprintf(flog,"globalsetting.txt–¢‘¶İEƒfƒtƒHƒ‹ƒgg—p‚µ‚Ü‚·\n") ;
+					fprintf(flog,"globalsetting.txtæœªå­˜åœ¨ãƒ»ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆä½¿ç”¨ã—ã¾ã™\n") ;
 					break ;
 				}
 				for(;;)
 				{
-#define ERROR_CONT		{fprintf(flog,"•s©‘R‚È‹Lq\nu%sv\n‚ª‚ ‚è‚Ü‚·‚ª–³‹‚µ‚Ä‘±s‚µ‚Ü‚·B\n" , buf) ;continue ;}
+#define ERROR_CONT		{fprintf(flog,"ä¸è‡ªç„¶ãªè¨˜è¿°\nã€Œ%sã€\nãŒã‚ã‚Šã¾ã™ãŒç„¡è¦–ã—ã¦ç¶šè¡Œã—ã¾ã™ã€‚\n" , buf) ;continue ;}
 					char buf[512+10] ;
 					char buf2[512+10] ;
 					int  rpos ;
@@ -1003,18 +1003,18 @@ int courseno ;
 				break ;
 			}
 
-			fprintf(flog,"œœ«•ïŠJnœœ\n") ;
+			fprintf(flog,"â—â—æ¢±åŒ…é–‹å§‹â—â—\n") ;
 			int wpos  = romsize+0x8000+0x1000 ;
 			int wpose = 0x108100 ;
 			int wposcc = 0 ;
-			//ƒOƒ_ƒOƒ_‚É‚È‚Á‚Ä‚¢‚é‚±‚Æ‚Í©Šo‚µ‚Ä‚¢‚écc
-			//‘‚«‚İˆÊ’uƒpƒ‰ƒ[ƒ^‚Í‚Ü‚Æ‚ß‚ÄŠÇ—‚µ‚½‚Ù‚¤‚ª‚¢‚¢‚¾‚ë‚¤‚È‚Ÿ
+			//ã‚°ãƒ€ã‚°ãƒ€ã«ãªã£ã¦ã„ã‚‹ã“ã¨ã¯è‡ªè¦šã—ã¦ã„ã‚‹â€¦â€¦
+			//æ›¸ãè¾¼ã¿ä½ç½®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã¯ã¾ã¨ã‚ã¦ç®¡ç†ã—ãŸã»ã†ãŒã„ã„ã ã‚ã†ãªã
 			for( int st=0 ; st<9 ; st++ )
 			{
-				fprintf(flog,"’nˆæ%d‚Ì«•ï...\n",st) ;
+				fprintf(flog,"åœ°åŸŸ%dã®æ¢±åŒ…...\n",st) ;
 				static FZCD tmpfzcd ;
 				char buf[64] ;
-				sprintf( buf , "«•ï@...@%d/%d " , st+1 , 9 ) ;
+				sprintf( buf , "æ¢±åŒ…ã€€...ã€€%d/%d " , st+1 , 9 ) ;
 				SetWindowText( hWnd , buf ) ;
 				tmpfzcd.Clear() ;
 				tmpfzcd.Load(st) ;
@@ -1022,18 +1022,18 @@ int courseno ;
 				Perror = tmpfzcd.Write2ROM( Pexprom , romsize*2 , &wpos , &wpose , &wposcc , arealist+3*st ) ;
 				if( Perror[0] != '\0' )
 				{
-					fprintf(flog,"ƒGƒ‰[‚ª”­¶I\n") ;
+					fprintf(flog,"ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿï¼\n") ;
 					fprintf(flog,"%s\n",Perror) ;
 					onerror = true ;
 				}
 			}
 			{
-			fprintf(flog,"šƒTƒCƒYî•ñ\n") ;
-				fprintf(flog,"||ƒ}ƒbƒv@@c‚è—e—Ê %5X/%5X(%f“g—p)\n" , wpos-romsize-0x8000-0x1000 , romsize-0x8000-0x1000 , (double)(wpos-romsize-0x8000-0x1000)/(romsize-0x8000-0x1000)*100 ) ;
-				fprintf(flog,"||ƒGƒŠƒA@@c‚è—e—Ê %4X/%4X(%f“g—p)\n" , wpose&0x7FFF , 0x8000 , (double)(wpose&0x7FFF)/0x8000*100 ) ;
-				fprintf(flog,"||Œq‚¬Š·‚¦@c‚è—e—Ê %3X/%3X(%f“g—p)\n" , wposcc , 0x100 , (double)wposcc/0x100*100 ) ;
+			fprintf(flog,"â˜…ã‚µã‚¤ã‚ºæƒ…å ±\n") ;
+				fprintf(flog,"ï¼ï¼ãƒãƒƒãƒ—ã€€ã€€æ®‹ã‚Šå®¹é‡ %5X/%5X(%fï¼…ä½¿ç”¨)\n" , wpos-romsize-0x8000-0x1000 , romsize-0x8000-0x1000 , (double)(wpos-romsize-0x8000-0x1000)/(romsize-0x8000-0x1000)*100 ) ;
+				fprintf(flog,"ï¼ï¼ã‚¨ãƒªã‚¢ã€€ã€€æ®‹ã‚Šå®¹é‡ %4X/%4X(%fï¼…ä½¿ç”¨)\n" , wpose&0x7FFF , 0x8000 , (double)(wpose&0x7FFF)/0x8000*100 ) ;
+				fprintf(flog,"ï¼ï¼ç¹‹ãæ›ãˆã€€æ®‹ã‚Šå®¹é‡ %3X/%3X(%fï¼…ä½¿ç”¨)\n" , wposcc , 0x100 , (double)wposcc/0x100*100 ) ;
 			}
-			fprintf(flog,"œœƒR[ƒXî•ñ‘‚«‚İœœ\n") ;
+			fprintf(flog,"â—â—ã‚³ãƒ¼ã‚¹æƒ…å ±æ›¸ãè¾¼ã¿â—â—\n") ;
 			{
 				int i ;
 				for( i=0 ; i<15 ; i++ )
@@ -1058,8 +1058,8 @@ int courseno ;
 					int al = arealist[3*gplist[i]+list] ;
 					if( al==-1 )
 					{
-						fprintf(flog,"ƒGƒ‰[\n" ) ;
-						fprintf(flog,"%d-%d(’nˆæ%d-%d) ƒGƒŠƒA–¢İ’è\n" , i/5+1 , i%5+1 , gplist[i] , list ) ;
+						fprintf(flog,"ã‚¨ãƒ©ãƒ¼\n" ) ;
+						fprintf(flog,"%d-%d(åœ°åŸŸ%d-%d) ã‚¨ãƒªã‚¢æœªè¨­å®š\n" , i/5+1 , i%5+1 , gplist[i] , list ) ;
 						onerror = true ;
 					}
 
@@ -1078,7 +1078,7 @@ int courseno ;
 			}
 		}
 		{
-			fprintf(flog,"œœƒ`ƒFƒbƒNƒTƒ€‹¸³œœ\n") ;
+			fprintf(flog,"â—â—ãƒã‚§ãƒƒã‚¯ã‚µãƒ çŸ¯æ­£â—â—\n") ;
 			unsigned int tmp ;
 			tmp=0 ;
 			for( int i=0 ; i<romsize*2 ; i++ )
@@ -1091,20 +1091,20 @@ int courseno ;
 			tmp &= 0xFFFF ;
 			SETROME16( Pexprom , romsize*2 , 0x007FDC , tmp ) ;
 		}
-		fprintf(flog,"œœ‘‚«o‚µœœ\n") ;
+		fprintf(flog,"â—â—æ›¸ãå‡ºã—â—â—\n") ;
 		WriteFileFromMemory( "output.smc" , Pexprom , romsize*2 ) ;
 		free( Pexprom ) ;
 
-		fprintf(flog,"œœ«•ïI—¹œœ\n") ;
+		fprintf(flog,"â—â—æ¢±åŒ…çµ‚äº†â—â—\n") ;
 
 		if( onerror )
 		{
-			SetWindowText( hWnd , "«•ïƒGƒ‰[‚ª”­¶@cmplog.txt@‚ğQl‚É‚µ‚Ä‚­‚¾‚³‚¢" ) ;
-			fprintf(flog,"«•ï‚ÉÛ‚µA‚P‰ñˆÈã‚ÌƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½\n•¡”‰ÓŠ‚ÅƒGƒ‰[‚ªo‚Ä‚¢‚é‚Æ‚«‚ÍAæ‚Éo‚Ä‚¢‚é‚à‚Ì‚©‚ç‰ğŒˆ‚µ‚Ä‚­‚¾‚³‚¢\n") ;
+			SetWindowText( hWnd , "æ¢±åŒ…ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã€€cmplog.txtã€€ã‚’å‚è€ƒã«ã—ã¦ãã ã•ã„" ) ;
+			fprintf(flog,"æ¢±åŒ…ã«éš›ã—ã€ï¼‘å›ä»¥ä¸Šã®ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ\nè¤‡æ•°ç®‡æ‰€ã§ã‚¨ãƒ©ãƒ¼ãŒå‡ºã¦ã„ã‚‹ã¨ãã¯ã€å…ˆã«å‡ºã¦ã„ã‚‹ã‚‚ã®ã‹ã‚‰è§£æ±ºã—ã¦ãã ã•ã„\n") ;
 		}
 		else
 		{
-			SetWindowText( hWnd , "«•ïI—¹" ) ;
+			SetWindowText( hWnd , "æ¢±åŒ…çµ‚äº†" ) ;
 		}
 
 		fclose( flog ) ;

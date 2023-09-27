@@ -3,11 +3,11 @@
 #include "_65816m_local.h"
 
 /*
-@_65816‚©‚çŽn‚Ü‚éƒtƒ@ƒCƒ‹‚ÍA­‚µ‘O‚É–³—‚â‚èì‚Á‚Ä‚Ý‚½ƒGƒ~ƒ…‚à‚Ç‚«B
-@ƒgƒŒƒCƒT[‚Æ‚Å‚à‚¢‚¤H
-@‚È‚ñ‚ÅƒNƒ‰ƒXŒp³‚³‚¹‚Ä‚¢‚é‚Ì‚©‚Æ‚©ˆÓ–¡•s–¾B
-@‚à‚¤A‹°‚ë‚µ‚­‚Ä’†g‚ðŒ©‚é‹C‚à‚µ‚È‚¢B
-@‚ ‚¿‚±‚¿‚Å¦ŽS‚È‚±‚Æ‚É‚È‚Á‚Ä‚¢‚é‚ªA‚à‚¤‹C‚É‚µ‚È‚¢‰½‚àŒ©‚¦‚È‚¢•·‚±‚¦‚È‚¢
+ã€€_65816ã‹ã‚‰å§‹ã¾ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ã¯ã€å°‘ã—å‰ã«ç„¡ç†ã‚„ã‚Šä½œã£ã¦ã¿ãŸã‚¨ãƒŸãƒ¥ã‚‚ã©ãã€‚
+ã€€ãƒˆãƒ¬ã‚¤ã‚µãƒ¼ã¨ã§ã‚‚ã„ã†ï¼Ÿ
+ã€€ãªã‚“ã§ã‚¯ãƒ©ã‚¹ç¶™æ‰¿ã•ã›ã¦ã„ã‚‹ã®ã‹ã¨ã‹æ„å‘³ä¸æ˜Žã€‚
+ã€€ã‚‚ã†ã€æã‚ã—ãã¦ä¸­èº«ã‚’è¦‹ã‚‹æ°—ã‚‚ã—ãªã„ã€‚
+ã€€ã‚ã¡ã“ã¡ã§å‡„æƒ¨ãªã“ã¨ã«ãªã£ã¦ã„ã‚‹ãŒã€ã‚‚ã†æ°—ã«ã—ãªã„ä½•ã‚‚è¦‹ãˆãªã„èžã“ãˆãªã„
 */
 
 static union
@@ -77,7 +77,7 @@ inline static void STY( DataSet *Pd , int adr  )
 inline static void STZ( DataSet *Pd , int adr )
 {
 	WRITEA( Pd , adr , 0 );
-	//‚½‚Ô‚ñAƒAƒLƒ…ƒ€ƒŒ[ƒ^‚Ìƒrƒbƒg”‚ÉŠÖŒW‚·‚é‚ÆŽv‚Á‚½‚Ì‚¾‚ªcc
+	//ãŸã¶ã‚“ã€ã‚¢ã‚­ãƒ¥ãƒ ãƒ¬ãƒ¼ã‚¿ã®ãƒ“ãƒƒãƒˆæ•°ã«é–¢ä¿‚ã™ã‚‹ã¨æ€ã£ãŸã®ã ãŒâ€¦â€¦
 }
 inline static void INC( DataSet *Pd , int adr )
 {
@@ -93,13 +93,13 @@ inline static void INCA( DataSet *Pd )
 	{
 		Pd->reg.a.b.l ++;
 		TESTA();
-		if( Pd->reg.a.b.l == 0x00 )SET_F(FLAG_C);//—v‚ç‚È‚¢‚©‚à
+		if( Pd->reg.a.b.l == 0x00 )SET_F(FLAG_C);//è¦ã‚‰ãªã„ã‹ã‚‚
 	}
 	else
 	{
 		Pd->reg.a.w ++;
 		TESTA();
-		if( Pd->reg.a.b.l == 0x0000 )SET_F(FLAG_C);//—v‚ç‚È‚¢‚©‚à
+		if( Pd->reg.a.b.l == 0x0000 )SET_F(FLAG_C);//è¦ã‚‰ãªã„ã‹ã‚‚
 	}
 }
 
@@ -208,14 +208,14 @@ inline static void ADC( DataSet *Pd , WORD data )
 BYTE fl1=0;
 long tl;
 	if(Pd->reg.p&FLAG_C)fl1=1;
-	//‚±‚±‚ÅƒLƒƒƒŠ[‚ðƒNƒŠƒA‚·‚×‚«‚©H
+	//ã“ã“ã§ã‚­ãƒ£ãƒªãƒ¼ã‚’ã‚¯ãƒªã‚¢ã™ã¹ãã‹ï¼Ÿ
 	CLR_F(FLAG_C);
 	if( IS8A )
 	{
 		tl = (WORD)Pd->reg.a.b.l + data + fl1 ;
 		if( tl >= 0x0100)SET_F(FLAG_C);
 		if( tl==0 )SET_F(FLAG_Z);
-		//ƒI[ƒo[ƒtƒ[‚Í’m‚ç‚È‚¢
+		//ã‚ªãƒ¼ãƒãƒ¼ãƒ•ãƒ­ãƒ¼ã¯çŸ¥ã‚‰ãªã„
 		Pd->reg.a.b.l = (BYTE)tl;
 	}
 	else
@@ -223,7 +223,7 @@ long tl;
 		tl = (WORD)Pd->reg.a.w + data + fl1 ;
 		if( tl >= 0x010000)SET_F(FLAG_C);
 		if( tl==0 )SET_F(FLAG_Z);
-		//ƒI[ƒo[ƒtƒ[‚Í’m‚ç‚È‚¢
+		//ã‚ªãƒ¼ãƒãƒ¼ãƒ•ãƒ­ãƒ¼ã¯çŸ¥ã‚‰ãªã„
 		Pd->reg.a.w = (WORD)tl;
 	}
 }
@@ -238,14 +238,14 @@ BYTE c1;
 	{
 		if(Pd->reg.a.b.l >= data+c1 )SET_F(FLAG_C);
 		if(Pd->reg.a.b.l == data+c1 )SET_F(FLAG_Z);
-		//ƒI[ƒo[ƒtƒ[‚Í’m‚ç‚È‚¢
+		//ã‚ªãƒ¼ãƒãƒ¼ãƒ•ãƒ­ãƒ¼ã¯çŸ¥ã‚‰ãªã„
 		Pd->reg.a.b.l-= (data+c1);
 	}
 	else
 	{
 		if(Pd->reg.a.w >= data+c1 )SET_F(FLAG_C);
 		if(Pd->reg.a.w == data+c1 )SET_F(FLAG_Z);
-		//ƒI[ƒo[ƒtƒ[‚Í’m‚ç‚È‚¢
+		//ã‚ªãƒ¼ãƒãƒ¼ãƒ•ãƒ­ãƒ¼ã¯çŸ¥ã‚‰ãªã„
 		Pd->reg.a.w -= (data+c1);
 	}
 }
@@ -577,7 +577,7 @@ int destl,srcl;
 }
 
 /*
-‚Ç‚¤l‚¦‚Ä‚à‚o‚Æ‚m‚ª‹t‚Ì‹C‚ª‚·‚é‚Ì‚¾‚ªcc
+ã©ã†è€ƒãˆã¦ã‚‚ï¼°ã¨ï¼®ãŒé€†ã®æ°—ãŒã™ã‚‹ã®ã ãŒâ€¦â€¦
 */
 inline static void MVP( DataSet *Pd , BYTE dest , BYTE src )
 {
@@ -597,7 +597,7 @@ inline static void MVN( DataSet *Pd , BYTE dest , BYTE src )
 
 
 
-//A‚ÌƒTƒCƒY‚ÌImmediate’l
+//Aã®ã‚µã‚¤ã‚ºã®Immediateå€¤
 inline static WORD ImmediateA( DataSet *Pd )
 {
 	if( IS8A )
@@ -611,7 +611,7 @@ inline static WORD ImmediateA( DataSet *Pd )
 	}
 	return tmp.w;
 }
-//X‚ÌƒTƒCƒY‚ÌImmediate’l
+//Xã®ã‚µã‚¤ã‚ºã®Immediateå€¤
 inline static WORD ImmediateX( DataSet *Pd )
 {
 	if( IS8X )
@@ -625,7 +625,7 @@ inline static WORD ImmediateX( DataSet *Pd )
 	}
 	return tmp.w;
 }
-//Y‚ÌƒTƒCƒY‚ÌImmediate’liX‚Æ“¯‚¶j
+//Yã®ã‚µã‚¤ã‚ºã®Immediateå€¤ï¼ˆXã¨åŒã˜ï¼‰
 inline static WORD ImmediateY( DataSet *Pd )
 {
 	return ImmediateX( Pd );
@@ -695,7 +695,7 @@ inline static int AbsoluteIndirect( DataSet *Pd , int offset=0 )
 int ti;
 	ti = GetROMinPCinc( Pd ) /*| (Pd->reg.pb<<16)*/;
 	ti |= GetROMinPCinc( Pd ) << 8;
-	return READW( Pd , ti + offset ) | (Pd->reg.pb<<16);//‰ðŽß‚É‚©‚È‚è–â‘è‚ª‚ ‚è‚»‚¤
+	return READW( Pd , ti + offset ) | (Pd->reg.pb<<16);//è§£é‡ˆã«ã‹ãªã‚Šå•é¡ŒãŒã‚ã‚Šãã†
 }
 inline static int AbsoluteIndirectX( DataSet *Pd )
 {

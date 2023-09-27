@@ -1,4 +1,4 @@
-//BRK #**Œ»À“¦”ğ‚¾‚È
+//BRK #**ç¾å®Ÿé€ƒé¿ã ãª
 __forceinline static bool OP00( DataSet* Pd )
 {
 	assert(0);
@@ -12,14 +12,14 @@ __forceinline static bool OP01( DataSet* Pd )
 	return true;
 }
 
-//COP Œ»À“¦”ğ
+//COP ç¾å®Ÿé€ƒé¿
 __forceinline static bool OP02( DataSet* Pd )
 {
 	assert(0);
 	return false;
 }
 
-//OR ,S@‚í‚©‚ç‚ñ
+//OR ,Sã€€ã‚ã‹ã‚‰ã‚“
 __forceinline static bool OP03( DataSet* Pd )
 {
 	assert(0);

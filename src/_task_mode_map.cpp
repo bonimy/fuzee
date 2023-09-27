@@ -12,8 +12,8 @@ static int clipw=1 ;
 static int cliph=1 ;
 
 #define NO_SUBMODE 2
-#define MODE_TITLE			"ƒ}ƒbƒv•ÒW"
-#define SUBMODE_TITLE		"’¼Ú•ÒW","•Ç•ÒW",
+#define MODE_TITLE			"ãƒãƒƒãƒ—ç·¨é›†"
+#define SUBMODE_TITLE		"ç›´æ¥ç·¨é›†","å£ç·¨é›†",
 
 
 
@@ -31,9 +31,9 @@ char *Ptmp ;
 	{
 		Ptmp = "" ;
 		if( submode == i )Ptmp = Pstr[i] ;
-		sprintf( &buf[strlen(buf)] , "y %s z" , Ptmp ) ;
+		sprintf( &buf[strlen(buf)] , "ã€ %s ã€‘" , Ptmp ) ;
 	}
-	sprintf( &buf[strlen(buf)] , "<space‚ÅØ‚è‘Ö‚¦" ) ;
+	sprintf( &buf[strlen(buf)] , "<spaceã§åˆ‡ã‚Šæ›¿ãˆ" ) ;
 
 	ALIAS_MM( caller , mm ) ;
 	if( mmcurrentbandsize == -1 )
@@ -411,7 +411,7 @@ void TV_mm_set( TCB *caller )
 {
 	ALIAS_MAIN(caller->PmotherTCB,main) ;
 	ALIAS_MM(caller , mm ) ;
-	//”ÍˆÍ‘I‘ğ
+	//ç¯„å›²é¸æŠ
 	{
 		int x0,y0,w,h ;
 		x0 = clipx ;
@@ -430,7 +430,7 @@ int tx0,ty0,tx1,ty1 ;
 		mdo.Box( MDO3normal , SFC_BACK , tx0 , ty0 , tx1 , ty1 , myRGB(0,31,0) ) ;
 		mdo.Box( MDO3normal , SFC_BACK , tx0+1 , ty0+1 , tx1-1 , ty1-1 , myRGB(31,31,0) ) ;
 	}
-	//ƒNƒŠƒbƒv‚³‚ê‚½‚à‚Ì
+	//ã‚¯ãƒªãƒƒãƒ—ã•ã‚ŒãŸã‚‚ã®
 	if( Pclip )
 	{
 		MDO3Opt topt=*MDO3normal ;
@@ -509,7 +509,7 @@ bool TF_mode_map(TCB *caller)
 
 	if( !caller->calltiming )return false ;
 
-	//“‚¢ƒR[ƒfƒBƒ“ƒO‚Å‚·‚ªcc
+	//é…·ã„ã‚³ãƒ¼ãƒ‡ã‚£ãƒ³ã‚°ã§ã™ãŒâ€¦â€¦
 	if( KeyPush(KC_F5) )CWT(caller) ;
 	if( KeyPush(KC_F6) )CWT(caller) ;
 

@@ -14,8 +14,8 @@ static int submode = 0 ;
 static int dragging = 0 ;
 static int show_area_scope = 0 ;
 #define NO_SUBMODE 2
-#define MODE_TITLE			"ƒGƒŠƒA•ÒW"
-#define SUBMODE_TITLE		"”z’u","ƒpƒ‰ƒ[ƒ^İ’è",
+#define MODE_TITLE			"ã‚¨ãƒªã‚¢ç·¨é›†"
+#define SUBMODE_TITLE		"é…ç½®","ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿è¨­å®š",
 
 
 #define		ALIAS_ME(ptr,str);	;{\
@@ -35,9 +35,9 @@ char *Ptmp ;
 	{
 		Ptmp = "" ;
 		if( submode == i )Ptmp = Pstr[i] ;
-		sprintf( &buf[strlen(buf)] , "y %s z" , Ptmp ) ;
+		sprintf( &buf[strlen(buf)] , "ã€ %s ã€‘" , Ptmp ) ;
 	}
-	sprintf( &buf[strlen(buf)] , "<space‚ÅØ‚è‘Ö‚¦" ) ;
+	sprintf( &buf[strlen(buf)] , "<spaceã§åˆ‡ã‚Šæ›¿ãˆ" ) ;
 
 	ALIAS_ME( caller , me ) ;
 	ALIAS_END() ;
@@ -83,7 +83,7 @@ double dx,dy ;
 		{
 			if( !working.AreaInsertArea( editingcn , selected ) )
 			{
-				SetWindowText( hWnd , "ƒGƒŠƒA‚Í‚à‚¤”z’u‚Å‚«‚Ü‚¹‚ñ" ) ;
+				SetWindowText( hWnd , "ã‚¨ãƒªã‚¢ã¯ã‚‚ã†é…ç½®ã§ãã¾ã›ã‚“" ) ;
 				return false ;
 			}
 			RequestRedraw() ;
@@ -179,7 +179,7 @@ double dx,dy ;
 			AREA *Pdest = working.AreaAddArea( editingcn , KeyOn( KC_SHIFT ) , &index ) ;
 			if( !Pdest )
 			{
-				SetWindowText( hWnd , "ƒGƒŠƒA‚Í‚à‚¤”z’u‚Å‚«‚Ü‚¹‚ñ" ) ;
+				SetWindowText( hWnd , "ã‚¨ãƒªã‚¢ã¯ã‚‚ã†é…ç½®ã§ãã¾ã›ã‚“" ) ;
 				return false ;
 			}
 			Pdest->isexist = true ;
@@ -408,16 +408,16 @@ static void TV_me_put( TCB *caller )
 		}
 		switch( tdir )
 		{
-		case 0://‰E
+		case 0://å³
 			mdo.Cls( &topt , SFC_BACK , tx , 0 , 0x40000 , WINHEIGHT , color ) ;
 		break ;
-		case 2://‰º
+		case 2://ä¸‹
 			mdo.Cls( &topt , SFC_BACK , 0 , ty , WINWIDTH , 0x40000 , color ) ;
 		break ;
-		case 4://¶
+		case 4://å·¦
 			mdo.Cls( &topt , SFC_BACK , 0, 0 , tx+1 , WINHEIGHT , color ) ;
 		break ;
-		case 6://ã
+		case 6://ä¸Š
 			mdo.Cls( &topt , SFC_BACK , 0 , 0 , WINWIDTH , ty+1 , color ) ;
 		break ;
 		default:
@@ -429,19 +429,19 @@ static void TV_me_put( TCB *caller )
 				int yGTx ;
 				switch( tdir )
 				{
-				case 1://‰E‰º
+				case 1://å³ä¸‹
 					a = -1 ;
 					yGTx  = 0 ;
 				break ;
-				case 3://¶‰º
+				case 3://å·¦ä¸‹
 					a = 1 ;
 					yGTx  = 1 ;
 				break ;
-				case 5://¶ã
+				case 5://å·¦ä¸Š
 					a = -1 ;
 					yGTx  = 1 ;
 				break ;
-				case 7://‰Eã
+				case 7://å³ä¸Š
 					a = 1 ;
 					yGTx  = 0 ;
 				break ;
@@ -461,7 +461,7 @@ static void TV_me_put( TCB *caller )
 				}
 			}
 		}
-//		KAGEMOJI( SFC_BACK , "TabFƒGƒŠƒA”ÍˆÍ•\¦Ø‚è‘Ö‚¦" , 0 , WINHEIGHT-14*2 , 14 , 7 ) ;
+//		KAGEMOJI( SFC_BACK , "Tabï¼šã‚¨ãƒªã‚¢ç¯„å›²è¡¨ç¤ºåˆ‡ã‚Šæ›¿ãˆ" , 0 , WINHEIGHT-14*2 , 14 , 7 ) ;
 	}
 }
 
@@ -469,13 +469,13 @@ static void TV_me_put( TCB *caller )
 	char str[512] = "" ;
 	if( selected!=-1 )
 	{
-		sprintf( &str[strlen(str)] , "Ins:ƒGƒŠƒA‘}“ü@Del:ƒGƒŠƒAíœ@Tab:ƒGƒŠƒA”ÍˆÍ•\¦@" ) ;
+		sprintf( &str[strlen(str)] , "Ins:ã‚¨ãƒªã‚¢æŒ¿å…¥ã€€Del:ã‚¨ãƒªã‚¢å‰Šé™¤ã€€Tab:ã‚¨ãƒªã‚¢ç¯„å›²è¡¨ç¤ºã€€" ) ;
 		if( selected<0x1000 )
-			sprintf( &str[strlen(str)] , "B:•ªŠòŠJnƒGƒŠƒA‚Éİ’è" ) ;
+			sprintf( &str[strlen(str)] , "B:åˆ†å²é–‹å§‹ã‚¨ãƒªã‚¢ã«è¨­å®š" ) ;
 	}
 	KAGEMOJI( SFC_BACK , str , 0 , WINHEIGHT-14*1 , 14 , 7 ) ;
 	str[0] = '\0' ;
-	sprintf( &str[strlen(str)] , "Ctrl+Click:ƒGƒŠƒA”z’u@@Ctrl+Shift+Click:•ªŠòƒGƒŠƒA”z’u" ) ;
+	sprintf( &str[strlen(str)] , "Ctrl+Click:ã‚¨ãƒªã‚¢é…ç½®ã€€ã€€Ctrl+Shift+Click:åˆ†å²ã‚¨ãƒªã‚¢é…ç½®" ) ;
 	KAGEMOJI( SFC_BACK , str , 0 , WINHEIGHT-14*2 , 14 , 7 ) ;
 }
 	ALIAS_END() ;
@@ -518,7 +518,7 @@ bool init = false ;
 
 	if( !caller->calltiming )return false ;
 
-	//“‚¢ƒR[ƒfƒBƒ“ƒO‚Å‚·‚ªcc
+	//é…·ã„ã‚³ãƒ¼ãƒ‡ã‚£ãƒ³ã‚°ã§ã™ãŒâ€¦â€¦
 	if( KeyPush(KC_F5) )CWT(caller) ;
 	if( KeyPush(KC_F6) )CWT(caller) ;
 

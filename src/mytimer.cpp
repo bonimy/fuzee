@@ -1,25 +1,25 @@
 /*
-	��ɃQ�[���p�̂��߂ɍ�����^�C�}�[���[�`���B
+	主にゲーム用のために作ったタイマールーチン。
 */
 
 #include <windows.h>
 #include "mytimer.h"
 
-//winmm.lib���K�v
+//winmm.libが必要
 #pragma comment(lib,"winmm.lib")
 
-//�Œ菬���B
-//timeGetTime�̂Ƃ��Ɏg��
+//固定小数。
+//timeGetTimeのときに使う
 #define		UBITS		24
 #define		DEGMASK		(0xFF000000)
 #define		D2F(num)	(DWORD)((num)*256*256*256)
 #define		F2I(num)	((num)>>UBITS)
 
-//���t���[���x�ꂽ��A�x����l�߂�̂���߂邩
+//何フレーム遅れたら、遅れを詰めるのを諦めるか
 #define		GIVEUPFRAME		3
-//���̃t���[���܂ŁA���̒l�~���b��؂�����A�X���[�v���I����
+//次のフレームまで、この値ミリ秒を切ったら、スリープを終える
 #define		SLEEPEND		2
-//���t���[�����̎��ԁA�������x�ꂽ��A�t���[���X�L�b�v�v���𔭍s���邩
+//何フレーム分の時間、処理が遅れたら、フレームスキップ要求を発行するか
 #define		FSREQFRAME		0.5
 
 MyTimerObj :: MyTimerObj(int ifps)

@@ -2,8 +2,8 @@
 #define MYDIBOBJ3_PRIVATE_HEADER_INCLUDED
 
 /*
-	���낢��j�]�����A�\�t�g�E�F�A�����_�����O���[�`���B
-	�c�c�́A�����ŗp����w�b�_�t�@�C���B
+	いろいろ破綻した、ソフトウェアレンダリングルーチン。
+	……の、内部で用いるヘッダファイル。
 */
 
 #ifndef	PI
@@ -32,24 +32,24 @@ TN tmp;
 #define DEBUG_OUTPUT(str)	;
 #endif
 
-//�T�[�t�F�C�X�ɃG���[���������ǂ����`�F�b�N
+//サーフェイスにエラーが無いかどうかチェック
 inline bool MyDIBObj3 :: SFCCheck(int num)
 {
 	if(sfc == NULL)return false;
 	if(num < 0 || num >= maxsurface){
-		DEBUG_OUTPUT("SFCCheck()�T�[�t�F�C�X�ԍ��ُ�I\n");
+		DEBUG_OUTPUT("SFCCheck()サーフェイス番号異常！\n");
 		return false;
 	}
 	if(sfc[num].data == NULL)
 	{
-		DEBUG_OUTPUT("SFCCheck()�T�[�t�F�C�X�������O�Ɏg���悤�Ƃ��܂����B\n");
+		DEBUG_OUTPUT("SFCCheck()サーフェイスが作られる前に使われようとしました。\n");
 		return false;
 	}
 	return true;
 }
 
-//�N���b�s���O���s��
-//�c�����]�����邹���ŁA�����Ⴎ����Ȃ�ł����c�c���Ԃ񂠂��Ă�Ǝv�����B
+//クリッピングを行う
+//縦横反転があるせいで、ぐちゃぐちゃなんですが……たぶんあってると思うが。
 inline bool MyDIBObj3 :: Clipping( const MDO3Opt *opt , bool srcadjust , int *Px , int *Py , int *Pw , int *Ph , int *Psx , int *Psy  , int sx , int sy , int sw , int sh )
 {
 	if(*Px<sx)
@@ -96,7 +96,7 @@ int tmp=sh - ((*Py) - sy);
 	return true;
 }
 
-//�\�[�X�����͂ݏo�Ȃ��悤�Ɂi�v���O�������~�X��Ȃ�����͕��ʂ͂��肦�Ȃ��j
+//ソース側がはみ出ないように（プログラムをミスらない限りは普通はありえない）
 inline bool MyDIBObj3 :: ReverseClipping( int srcx , int srcy , int width , int height , int src )
 {
 	if( srcx < 0 || srcy < 0 || 
@@ -104,7 +104,7 @@ inline bool MyDIBObj3 :: ReverseClipping( int srcx , int srcy , int width , int 
 		srcy + height > sfc[src].height
 	)
 	{
-		DEBUG_OUTPUT("�\�[�X���N���b�s���O�Ɉ����������Ă��܂�\n") ;
+		DEBUG_OUTPUT("ソース側クリッピングに引っかかっています\n") ;
 		return false;
 	}
 	return true ;
@@ -117,40 +117,40 @@ inline bool MyDIBObj3 :: ReverseClipping( int srcx , int srcy , int width , int 
 #define		Bmask		0x001F
 
 
-//�}�N�����g�Ȏd�l
-//���̂������A�ٗl�Ƀr���h�Ɏ��Ԃ�������̂����c�c
-//���łɁA�t�@�C���T�C�Y���傫���ȁc�c
+//マクロ酷使な仕様
+//そのせいか、異様にビルドに時間がかかるのだが……
+//ついでに、ファイルサイズも大きいな……
 
-//SE�c�c�\�[�X�G�t�F�N�g�c�c������
+//SE……ソースエフェクト……たしか
 #define SE_none(opt,srcd)				(srcd)
 #define SE_and(opt,srcd)				((srcd)&opt->B)
 #define SE_or(opt,srcd)					((srcd)|opt->B)
 #define SE_simple(opt,srcd)				(opt->B)
 #define SE_colortable(opt,srcd)			(opt->PBMPD[srcd])
 
-//CK�c�c�J���[�L�[
+//CK……カラーキー
 #define CK_none(opt,srcd)				(1)
 #define CK_colorkey(opt,srcd)			((srcd)!=colorkey)
 
-//BL�c�c�u�����h
+//BL……ブレンド
 #define BL_none(opt,Psfc,srcd)			(srcd)
 #define BL_or(opt,Psfc,srcd)			(*Psfc|srcd)
 #define BL_and(opt,Psfc,srcd)			(*Psfc&srcd)
 #define BL_lightblend(opt,Psfc,srcd)	( LightBlendAssist(*Psfc,srcd) )
 #define BL_darkblend(opt,Psfc,srcd)		( DarkBlendAssist(*Psfc,srcd) )
 #define BL_blend(opt,Psfc,srcd)			(AT_inv[ *Psfc ] + AT[ srcd ] )
-//AT��AT_inv�́A���[�J���ϐ��Ƃ��ă��[�v�O�Ōv�Z�����
+//ATとAT_invは、ローカル変数としてループ外で計算される
 
-//�P�s�ŕ\���Ȃ������̂����Ԃ��Ԋ֐�����
+//１行で表せなかったのをしぶしぶ関数分け
 
-//���Z�����i�d���j
+//加算合成（重い）
 inline BMPD LightBlendAssist(BMPD sfcd,BMPD srcd)
 {
 BMPD tmp = (sfcd&0x7BDF) + (srcd&0x7BDF) ;
 BMPD mask= (( ( tmp ) >> 5 ) &  0x0421)*0x1F ;
 	return tmp|mask;
 }
-//���Z�����i�����Əd���j
+//減算合成（もっと重い）
 inline BMPD DarkBlendAssist(BMPD sfcd,BMPD srcd)
 {
 BMPD tmp[3] = { 
@@ -164,12 +164,12 @@ BMPD tmp[3] = {
 	return tmp[0] | tmp[1] | tmp[2];
 }
 
-//�����ɁA��̂ق��̃}�N�������蓖�ĂāA�ŏI�I�ɂP�s�N�Z���o�͂����
+//こいつに、上のほうのマクロを割り当てて、最終的に１ピクセル出力される
 #define	PixelSet(opt,Psfc,srcd,BLTYPE,CKTYPE,SETYPE)	if(CKTYPE(opt,srcd))*Psfc=BLTYPE(opt,Psfc,SETYPE( opt , srcd ));
 
-//������ێ�����\����
-//isvertical��false���ƁAX-Y���W�n�Atrue����Y-X���W�n
-//�c�c�ƁA�v�������A�Ȃ񂩈Ⴄ�悤�ȁB��肩���ŁAY-X���W�n�ɑΉ����Ă��Ȃ��H
+//直線を保持する構造体
+//isverticalがfalseだと、X-Y座標系、trueだとY-X座標系
+//……と、思ったが、なんか違うような。作りかけで、Y-X座標系に対応していない？
 typedef struct ELINE_tag
 {
 	double y0;
@@ -177,7 +177,7 @@ typedef struct ELINE_tag
 	bool isvertical;
 }ELINE;
 
-//�Q�_���g���āA��̒����\���̂��Z�b�g����
+//２点を使って、上の直線構造体をセットする
 inline bool ELINE_SET( ELINE *Pdest , double x0 , double y0 , double x1 , double y1 )
 {
 double dx,dy;
@@ -194,7 +194,7 @@ double dx,dy;
 	return true;
 }
 
-//�����\���̂̒����Ay���w��l�̂Ƃ���x���ǂ��ɂ��邩
+//直線構造体の直線、yが指定値のときにxがどこにあるか
 inline double ELINE_GETX( ELINE *Pdest , double y )
 {
 	return Pdest->slope * y + Pdest->y0 ;

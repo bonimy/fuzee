@@ -5,13 +5,13 @@ void DropRoutine(WPARAM wp)
 HDROP hd;
 char fn[512];
 int  NOfile;
-	//ƒnƒ“ƒhƒ‹‚ğ“¾‚é
+	//ãƒãƒ³ãƒ‰ãƒ«ã‚’å¾—ã‚‹
 	hd = (HDROP) wp;
-	//ƒhƒƒbƒv‚³‚ê‚½ƒtƒ@ƒCƒ‹”‚ğæ“¾
+	//ãƒ‰ãƒ­ãƒƒãƒ—ã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«æ•°ã‚’å–å¾—
 	NOfile = DragQueryFile( hd , 0xFFFFFFFF , NULL , 0 );
 	if( NOfile >= 2 )
 	{
-		SetWindowText( hWnd , "ƒhƒƒbƒv‚Í‚P‚Â‚¾‚¯‚Å‚¨Šè‚¢‚µ‚Ü‚·" ) ;
+		SetWindowText( hWnd , "ãƒ‰ãƒ­ãƒƒãƒ—ã¯ï¼‘ã¤ã ã‘ã§ãŠé¡˜ã„ã—ã¾ã™" ) ;
 		DragFinish( hd );
 		return ;
 	}
@@ -76,7 +76,7 @@ static bool cap[2]={false,false};
 	case WM_CLOSE:
 		DestroyWindow(hwnd);
         return 0;
-	break;//”O
+	break;//å¿µ
 	case WM_DESTROY :
 		PostQuitMessage(0);
 	break;

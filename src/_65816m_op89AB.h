@@ -20,7 +20,7 @@ WORD tb=Immediate16(Pd);
 	return true;
 }
 
-//STA ,s ‚µ‚ç‚ñ
+//STA ,s ã—ã‚‰ã‚“
 __forceinline static bool OP83( DataSet* Pd )
 {
 	assert(0);
@@ -146,7 +146,7 @@ __forceinline static bool OP92( DataSet* Pd )
 	STA( Pd , DirectIndirectY( Pd ) ) ;
 	return false;
 }
-//STA (S),y  “¦”ğ
+//STA (S),y  é€ƒé¿
 __forceinline static bool OP93( DataSet* Pd )
 {
 	assert(0);
@@ -204,7 +204,7 @@ __forceinline static bool OP99( DataSet* Pd )
 	return true;
 }
 
-//TXS ƒXƒ^ƒbƒN‚Í‚¢‚¢‰ÁŒ¸‚È‚Ì‚ÅA“®‚©‚È‚¢‰Â”\«‚ª‘å
+//TXS ã‚¹ã‚¿ãƒƒã‚¯ã¯ã„ã„åŠ æ¸›ãªã®ã§ã€å‹•ã‹ãªã„å¯èƒ½æ€§ãŒå¤§
 __forceinline static bool OP9A( DataSet* Pd )
 {
 	Pd->reg.s = Pd->reg.x.w ;

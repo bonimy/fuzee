@@ -3,12 +3,12 @@
 #include "myDIBobj3_p.h"
 
 /*
-	��`�]���̊֐��B
-	���j�́AmyDIBobj3_Cls.cpp�ɏ����Ă݂��B
+	矩形転送の関数。
+	方針は、myDIBobj3_Cls.cppに書いてみた。
 */
 /*
-	�R���p�C���̎��Ԃ���Ԃ�����\�[�X�B
-	���̃\�[�X�̈�ԉ����݂�΁A�ǂ񂾂��������Ă���̂����������ǂˁB
+	コンパイルの時間が一番かかるソース。
+	このソースの一番下をみれば、どんだけ無茶しているのか明白だけどね。
 */
 #define RenderLoopForBlt(opt,x,y,srcx,srcy,lpwidth,lpheight,BLTYPE,CKTYPE,SETYPE)	;\
 {																			\
