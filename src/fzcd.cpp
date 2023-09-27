@@ -486,9 +486,9 @@ int FZCD ::Save(int region) {
     Pstr = "\n#EXPCHIP";
     if (fprintf(fp, "%s\n", Pstr) < 0) ERR_RET;
     WRITE_BLOCK(exptile[0], FZCD_CHIP_P_MAP_W * FZCD_CHIP_P_MAP_H * FZCD_SOE_CHIP);
-    if (fprintf(fp, "\n", Pstr) < 0) ERR_RET;
+    if (fprintf(fp, "%s\n", Pstr) < 0) ERR_RET;
     WRITE_BLOCK(exptile[1], FZCD_CHIP_P_MAP_W * FZCD_CHIP_P_MAP_H * FZCD_SOE_CHIP);
-    if (fprintf(fp, "\n", Pstr) < 0) ERR_RET;
+    if (fprintf(fp, "%s\n", Pstr) < 0) ERR_RET;
     WRITE_BLOCK(exptile[2], FZCD_CHIP_P_MAP_W * FZCD_CHIP_P_MAP_H * FZCD_SOE_CHIP);
 
     Pstr = "\n#AREA";
