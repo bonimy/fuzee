@@ -5,6 +5,13 @@ VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fuzee", "fuzee\fuzee.vcxproj", "{58755CA5-4629-4E4B-9E6E-25B1C534D4FF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8659BB59-3582-46EA-BF48-338BFEEB9933}"
+	ProjectSection(SolutionItems) = preProject
+		..\.clang-format = ..\.clang-format
+		..\.gitignore = ..\.gitignore
+		..\readme.txt = ..\readme.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
