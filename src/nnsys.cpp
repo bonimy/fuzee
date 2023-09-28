@@ -19,12 +19,14 @@ char* Int2Char(int num, int place, bool issignadd, int buf) {
     char* tmp;
     if (issignadd) {
         //先頭に符号をセット
+        // Set the sign at the beginning
         buffer[buf][0] = ' ';
         if (num < 0) {
             buffer[buf][0] = '-';
             num = -num;
         }
         //おしりにヌル文字を入れる
+        // Add a null character to the butt
         buffer[buf][place + 1] = '\0';
 
         for (tmp = &buffer[buf][place]; tmp != &buffer[buf][0]; tmp--) {
@@ -35,6 +37,7 @@ char* Int2Char(int num, int place, bool issignadd, int buf) {
     } else {
         if (num < 0) return &nullbuf;
         //おしりにヌル文字を入れる
+        // Add a null character to the butt
         buffer[buf][place] = '\0';
 
         for (tmp = &buffer[buf][place - 1];; tmp--) {
@@ -162,12 +165,15 @@ char* Int2CharE(char* Pbuf, int buflength, int num, int place, bool issignadd) {
     char* tmp;
     if (issignadd) {
         //先頭に符号をセット
+        // Set the sign at the beginning
         Pbuf[0] = ' ';
         if (num < 0) {
             Pbuf[0] = '-';
             num = -num;
         }
+
         //おしりにヌル文字を入れる
+        // Add a null character to the butt
         Pbuf[place + 1] = '\0';
 
         for (tmp = &Pbuf[place]; tmp != &Pbuf[0]; tmp--) {
@@ -177,7 +183,9 @@ char* Int2CharE(char* Pbuf, int buflength, int num, int place, bool issignadd) {
         }
     } else {
         if (num < 0) return &nullbuf;
+
         //おしりにヌル文字を入れる
+        // Add a null character to the butt
         Pbuf[place] = '\0';
 
         for (tmp = &Pbuf[place - 1];; tmp--) {
@@ -316,8 +324,12 @@ char* Int2Hex32(unsigned int data, int ub) {
 double AimAngle(double EEX, double EEY, double MEX, double MEY) {
     double TX, TY;
     double temp;
-    TX = (MEX - EEX);  //先が右側の時＋
-    TY = (MEY - EEY);  //先が下側の時＋
+    //先が右側の時＋
+    // When the tip is on the right +
+    TX = (MEX - EEX);
+
+    // When the tip is on the bottom +
+    TY = (MEY - EEY);
     if (MYABS(TX) > 0.000001) {
         temp = (double)atan(TY / TX);
         if (TX < 0) temp += PI;
@@ -429,6 +441,7 @@ void smrnd(MYRND_PARAM* Pmrp, int seed, unsigned char* Pes) {
 
 
 //かなりテキトーな２４ビットハッシュ（？）値作成
+// Create a fairly simple 24-bit hash(?) value
 unsigned int EHash(unsigned char* Pd, int length) {
     unsigned int h;
     int i;

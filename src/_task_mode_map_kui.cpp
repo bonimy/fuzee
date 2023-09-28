@@ -51,7 +51,9 @@ static char kuidata[256][4] = {
         {0, 3, 99, 99},
         {4, -1, 99, 99},
         {0, -1, 99, 99},
+
         //複合型
+        // complex type
         {4, 4, 0, -2},
         {0, 4, 4, -2},
         {4, 0, 0, 6},
@@ -82,6 +84,7 @@ static char kuidata[256][4] = {
         {0, 0, 6, 6},
 
         //壁付き
+        // with wall
         {4, 4, 99, 99},
         {0, 4, 99, 99},
         {4, 0, 99, 99},
@@ -107,7 +110,9 @@ static char kuidata[256][4] = {
         {0, 3, 99, 99},
         {4, -1, 99, 99},
         {0, -1, 99, 99},
+
         //複合型
+        // complex type
         {4, 4, 0, -2},
         {0, 4, 4, -2},
         {4, 0, 0, 6},
@@ -138,11 +143,15 @@ static char kuidata[256][4] = {
         {0, 0, 6, 6},
 
         //ど真ん中
+        // Right in the middle
         {2, 2, 99, 99},
+
         //真っ黒
+        // pure black
         {99, 99, 99, 99},
 
         //黒、端っこだけ
+        // black, edges only
         {-3, 4, 99, 99},
         {-3, 0, 99, 99},
         {6, 4, 99, 99},
@@ -170,6 +179,7 @@ static char kuidata[256][4] = {
         {-2, -2, 99, 99},
 
         //白、端っこだけ
+        // white, edges only
         {-3, 4, 99, 99},
         {-3, 0, 99, 99},
         {6, 4, 99, 99},
@@ -198,6 +208,7 @@ static char kuidata[256][4] = {
 
 
         //後はダミー
+        // The rest is dummy
         {99, 99, 99, 99},  //
         {99, 99, 99, 99},  //
         {99, 99, 99, 99},  //
@@ -508,6 +519,7 @@ static int ChainTable0[][2] = {
 };
 
 //β　Ｘ方向に４の倍数
+//β Multiple of 4 in the X direction
 static int ChainTable1[][2] = {
         {8, 0},
         {8, 1},
@@ -543,6 +555,7 @@ static int ChainTable1[][2] = {
 
 //γ　x=4m　y=4n+1
 //左右対称だが上下対称ではない
+// Left-right symmetrical, but not vertically symmetrical
 static int ChainTable2[][2] = {
         {4, -7},  {8, -4},  {8, -3},  {8, -2},  {8, -1},  {8, 0},
         {8, 1},   {8, 2},   {8, 3},   {8, 4},
@@ -639,17 +652,22 @@ static void KuiSearch(TCB* caller) {
     for (int iy = y0; iy <= y1; iy++)
         for (int ix = x0; ix <= x1; ix++) {
             //チップでループ
+            // loop with chip
             BYTE koholist[256][4];
             int kohopos[4];
             kohopos[0] = kohopos[1] = kohopos[2] = kohopos[3] = 0;
 
-            for (int il = 0; il < 4; il++) {  //タイルでループ
+            //タイルでループ
+            // loop on tiles
+            for (int il = 0; il < 4; il++) {
                 int nokui;
                 char kuilist[2][2];
                 nokui = 0;
                 /*
         for( int q=0 ; q<9 ; q++ )
-        {//杭有効圏内の杭を探す
+        {
+            //杭有効圏内の杭を探す
+            //Search for piles within the effective range of piles
                 static BYTE kuimask[9] =
                 {
                         0x40 , 0xF0 , 0xF0 ,
@@ -750,10 +768,7 @@ static void KuiSearch(TCB* caller) {
                         switch (tmp) {
                             case 0x9A:
                                 //						case
-                                // 0x9C: 						case 0xA0:
-                                // case 0xC0: 						case
-                                // 0xC1: 						case
-                                // 0xC2:
+                                // 0x9C: case 0xA0: case 0xC0: case 0xC1: case 0xC2:
                                 ik = -1;
                                 break;
                             default:
@@ -813,8 +828,8 @@ bool TF_mm_kui(TCB* caller) {
     ALIAS_MM_KUI(caller, mmkui);
     if (!caller->calltiming) {
         //		mmkuiPkui = (unsigned __int8*) malloc(
-        //(FZCD_TILE_P_MAP_W+1)*(FZCD_TILE_P_MAP_H+1) ) ; 		memset( mmkuiPkui
-        //, 0 , (FZCD_TILE_P_MAP_W+1)*(FZCD_TILE_P_MAP_H+1) ) ;
+        //(FZCD_TILE_P_MAP_W+1)*(FZCD_TILE_P_MAP_H+1) ) ; 		memset(
+        // mmkuiPkui , 0 , (FZCD_TILE_P_MAP_W+1)*(FZCD_TILE_P_MAP_H+1) ) ;
         mmkuiPkuilog = (__int32*)malloc(sizeof(__int32) * LOG_TIMES * 2);
         {
             for (int i = 0; i < LOG_TIMES * 2; i++) mmkuiPkuilog[i] = -1;
@@ -866,7 +881,9 @@ bool TF_mm_kui(TCB* caller) {
                 }
                 if (i == 8) mmkuipenX = -1;
 
-                if (!MousePush(MB_L) && MousePush(MB_R)) {  //同じ配置の別チップを探す
+                //同じ配置の別チップを探す
+                // Search for another chip with the same arrangement
+                if (!MousePush(MB_L) && MousePush(MB_R)) {
                     BYTE* Ptmp;
                     Ptmp = &working.exptile[editingcn]
                                            [(gmx / 2 + gmy / 2 * FZCD_CHIP_P_MAP_W) *
@@ -892,14 +909,29 @@ bool TF_mm_kui(TCB* caller) {
                                     tmp = GETROM8(ex + 0xCC380 + ill);
                                     if (tmp < 0x9B) continue;
                                     switch (tmp) {
-                                        case 0xC2:  //色違い
+                                        //色違い
+                                        // different colors
+                                        case 0xC2:
                                             break;
-                                        case 0xA5:  // B壁
-                                        case 0xC0:  // M路面
-                                        case 0xC1:  // B路面
+
+                                        // B壁
+                                        // B wall
+                                        case 0xA5:
+
+                                        // M路面
+                                        // M road surface
+                                        case 0xC0:
+
+                                        // B路面
+                                        // B road surface
+                                        case 0xC1:
                                             if (KeyOn(KC_SHIFT)) break;
-                                        case 0x9C:  //<<
-                                        case 0xA0:  //>>
+
+                                        //<<
+                                        case 0x9C:
+
+                                        //>>
+                                        case 0xA0:
                                         default:
                                             ill = -1;
                                     }
@@ -942,7 +974,9 @@ bool TF_mm_kui(TCB* caller) {
 				tx -= mainx*MAP_TILE_SIZE_D*2 ;
 				ty -= mainy*MAP_TILE_SIZE_D*2 ;
 
-				mmkuiarcargy = ty ;//ログの意味無し
+                //ログの意味無し
+                //Log has no meaning
+				mmkuiarcargy = ty ;
 
 				int rad ;
 				rad = MYABS( mmkuiarcargx - tx ) ;
@@ -971,7 +1005,9 @@ bool TF_mm_kui(TCB* caller) {
 
 					int log[512] ;
 					/*static */int movetable[][16] =
-					{/*最初の２つは合計値　それ以降は移動値*/
+					{
+                        /*最初の２つは合計値　それ以降は移動値*/
+                        /*The first two are total values, after that are movement values*/
 						{0,8,0,8,-1},
 						{4,32,1,8,1,8,1,8,1,8,-1},
 						{4,24,1,8,1,8,2,8,-1},
@@ -1043,7 +1079,9 @@ bool TF_mm_kui(TCB* caller) {
             mmkuisel = 0;
             RequestRedraw();
         }
+
         //通過
+        // pass
         case 2:
             if (MousePush(MB_R)) {
                 mmkuistate = 0;

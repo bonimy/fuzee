@@ -2,6 +2,11 @@
         よく意図のわからないメモリ管理ルーチン。
 
         ……の１つの機能の、ビット単位でデータを弄くるためのルーチンらしい。
+
+        Memory management routines whose purpose is often unclear.
+
+        It seems to be a routine for manipulating data bit by bit in one of the
+        functions of...
 */
 #include <assert.h>
 #include <fcntl.h>

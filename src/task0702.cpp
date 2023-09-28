@@ -1,5 +1,6 @@
 /*
         いろいろ破綻した、自称タスクシステムのルーチン。
+        A self-proclaimed task system routine that has broken down in various ways.
 */
 #include "task0702.h"
 
@@ -81,19 +82,27 @@ TCB* Task0702Manager ::AddTask(TCB* iPmotherTCB, TaskP itaskp, bool (*ifunc)(TCB
     if (onerror) return NULL;
     int i;
     //検索開始位置～最後　を検索
+    // Search from search start position to end
     for (i = RotatedIndex; i < NOTCB; i++) {
         if (TaskBody[i].kind == TP_NONE) break;
     }
-    if (i == NOTCB)  //検索開始位置～最後　に見つからなかった
-    {
-        for (i = 0; i < RotatedIndex; i++)  //最初～検索開始位置　を検索
-        {
+
+    //検索開始位置～最後　に見つからなかった
+    // Search start position ~ Last not found
+    if (i == NOTCB) {
+        //最初～検索開始位置　を検索
+        // Search from beginning to search start position
+        for (i = 0; i < RotatedIndex; i++) {
             if (TaskBody[i].kind == TP_NONE) break;
         }
+
         //それでも見つからなかったら帰る
+        // If I still can't find it, I'll return
         if (i == RotatedIndex) return NULL;
     }
+
     //検索開始位置を更新
+    // Update search start position
     RotatedIndex = (i + 1) % NOTCB;
 
     TCB* Ptmp;
@@ -110,7 +119,9 @@ TCB* Task0702Manager ::AddTask(TCB* iPmotherTCB, TaskP itaskp, bool (*ifunc)(TCB
     Ptmp->PCheadTCB = NULL;
     Ptmp->PCtailTCB = NULL;
     Ptmp->PmotherTCB = iPmotherTCB;
+
 //デバッグ時・タスク値のぐちゃぐちゃ化
+// When debugging, task values ​​become messed up
 #ifdef _DEBUG
     { memset(Ptmp->Pv, 0xCC, sizeof(TCBvalue) * NOTCBValue); }
 #endif
@@ -121,6 +132,8 @@ TCB* Task0702Manager ::AddTask(TCB* iPmotherTCB, TaskP itaskp, bool (*ifunc)(TCB
 
     //インデックスを進めるが、１周して０は避ける。
     //というか、１周した時点で、少し破綻するんだが。
+    // Advance the index, but avoid 0 after one round.
+    // Or rather, after one round, it breaks down a bit.
     indexcounter++;
     if (!indexcounter) indexcounter++;
 
@@ -146,12 +159,14 @@ TCB* Task0702Manager ::AddTask(TCB* iPmotherTCB, TaskP itaskp, bool (*ifunc)(TCB
             if (Ptracing->kind >= itaskp) {
                 if (Ptracing->PprepTCB) {
                     //中間に追加する
+                    // Add in the middle
                     Ptmp->PprepTCB = Ptracing->PprepTCB;
                     Ptmp->PnextTCB = Ptracing;
                     Ptracing->PprepTCB->PnextTCB = Ptmp;
                     Ptracing->PprepTCB = Ptmp;
                 } else {
                     //先頭に追加する
+                    // Add to beginning
                     Ptmp->PprepTCB = NULL;
                     Ptmp->PnextTCB = Ptracing;
                     Ptracing->PprepTCB = Ptmp;
@@ -164,6 +179,7 @@ TCB* Task0702Manager ::AddTask(TCB* iPmotherTCB, TaskP itaskp, bool (*ifunc)(TCB
         }
 
         //お尻に追加する
+        // add to butt
         if (!Ptracing) {
             assert(PbefTCB);
             assert(!PbefTCB->PnextTCB);
@@ -175,11 +191,14 @@ TCB* Task0702Manager ::AddTask(TCB* iPmotherTCB, TaskP itaskp, bool (*ifunc)(TCB
     }
 
     //親子間描画タイミング初期化
+    // Initialize parent-child drawing timing
     SetDrawOrderPandC(Ptmp, false, true);
     //親子間処理タイミング初期化
+    // Initialize parent-child processing timing
     SetProcessOrderPandC(Ptmp, true, false);
 
     //ファーストコール
+    // first call
     if (Ptmp->Pfunc) {
         Ptmp->calltiming = 0;
         if (Ptmp->Pfunc(Ptmp)) {
@@ -213,25 +232,30 @@ void Task0702Manager ::KillTask(TCB* targ) {
         TCB** PPtailTCB;
         if (targ->PmotherTCB) {
             //親持ち
+            // parent
             PPheadTCB = &targ->PmotherTCB->PCheadTCB;
             PPtailTCB = &targ->PmotherTCB->PCtailTCB;
         } else {
             //ルートに……
+            // To the root...
             PPheadTCB = &PheadTCB;
             PPtailTCB = &PtailTCB;
         }
         if (!targ->PprepTCB) {
             if (!targ->PnextTCB) {
                 //単体
+                // Single
                 *PPheadTCB = NULL;
                 *PPtailTCB = NULL;
             } else {
                 //先頭
+                // head
                 *PPheadTCB = targ->PnextTCB;
                 targ->PnextTCB->PprepTCB = NULL;
             }
         } else if (!targ->PnextTCB) {
             //お尻
+            // butt
             *PPtailTCB = targ->PprepTCB;
             targ->PprepTCB->PnextTCB = NULL;
         }
@@ -288,6 +312,19 @@ TCB* Task0702Manager ::SearchTask(TCB* PmotherTCB, TaskP ifrom, TaskP ifor) {
   これ使うと、例えば、攻撃ヒット時に、１フレーム落とすといったことが簡単にできるのだが、
   システムメンテナンス用タスクも実行されなくなるから、
   継続している関数が、自分で処理するなり呼ぶなりしないといけなくなる。
+
+  I am going to execute a chain of TCB functions, but is there a system called
+  continuation? There is, and this is a quite perverted specification. After calling the
+  ContinueTF function within the TCB function, when the TCB function ends, all other
+  following TCB functions are ignored and return Then, when the next frame comes here,
+  the function nest is restored and the previous function is called. This state
+  continues until the DiscontinueTF function is called. In short, it can be considered
+  that a wait was added until DiscontinueTF was called. In order to implement it, I
+  ended up using a lot of goto...
+
+  By using this, you can easily drop one frame when an attack hits, for example.
+  System maintenance tasks will no longer be executed.
+  Continuing functions will have to process or call themselves.
 */
 void Task0702Manager ::DoTaskFunctionChain(TCB* Pifrom) {
     if (onerror) return;
@@ -303,7 +340,9 @@ void Task0702Manager ::DoTaskFunctionChain(TCB* Pifrom) {
             if (TFcontinue_BC) goto PbeforeC;
             goto PafterC;
         }
+
         //シーク用
+        // For seek
         Pseek = TFcontinueTCB->PmotherTCB;
         for (;;) {
             Pmtmp = Pseek;
@@ -345,10 +384,12 @@ void Task0702Manager ::DoTaskFunctionChain(TCB* Pifrom) {
                     if (TFcontinueTCB) return;
                     Pifrom->calltiming = 3;
                 }
-            } else  //ＴＣＢは関数を持ってない
-            {
+            } else {
+                //ＴＣＢは関数を持ってない
+                // TCB has no function
             PintoC:
                 //子供の関数を呼ぶ
+                // call child function
                 DoTaskFunctionChain(Pifrom->PCheadTCB);
                 if (TFcontinueTCB) return;
             }
@@ -360,6 +401,8 @@ void Task0702Manager ::DoTaskFunctionChain(TCB* Pifrom) {
 /*
 NULLの扱いが全然違うので気をつける。
 これは、NULLを渡すと、「全て」である
+Be careful as the handling of NULL is completely different.
+This is "all" if you pass NULL
 */
 void Task0702Manager ::DoDrawFunctionChain(TCB* Pifrom) {
     if (onerror) return;

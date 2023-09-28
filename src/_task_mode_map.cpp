@@ -415,6 +415,7 @@ void TV_mm_set(TCB* caller) {
     ALIAS_MAIN(caller->PmotherTCB, main);
     ALIAS_MM(caller, mm);
     //範囲選択
+    // range selection
     {
         int x0, y0, w, h;
         x0 = clipx;
@@ -441,6 +442,7 @@ void TV_mm_set(TCB* caller) {
                 myRGB(31, 31, 0));
     }
     //クリップされたもの
+    // What was clipped
     if (Pclip) {
         MDO3Opt topt = *MDO3normal;
         topt.flag |= MDO3F_BLEND;
@@ -514,6 +516,7 @@ bool TF_mode_map(TCB* caller) {
     if (!caller->calltiming) return false;
 
     //酷いコーディングですが……
+    // This is terrible coding, but...
     if (KeyPush(KC_F5)) CWT(caller);
     if (KeyPush(KC_F6)) CWT(caller);
 

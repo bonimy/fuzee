@@ -1,4 +1,5 @@
 // BRK #**現実逃避だな
+// BRK #**Escape from reality.
 __forceinline static bool OP00(DataSet* Pd) {
     assert(0);
     return false;
@@ -11,12 +12,14 @@ __forceinline static bool OP01(DataSet* Pd) {
 }
 
 // COP 現実逃避
+// COP escapism
 __forceinline static bool OP02(DataSet* Pd) {
     assert(0);
     return false;
 }
 
 // OR ,S　わからん
+// OR ,S I don't know
 __forceinline static bool OP03(DataSet* Pd) {
     assert(0);
     return false;

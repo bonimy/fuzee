@@ -102,6 +102,11 @@
 //けど、#ifndef __forceinlineは飛ばしてくれない……
 //非ＶＣでコンパイルできるようにするにはどーしたらいいのよ
 
+// (VC++)
+// If you don't specify __forceinline, it won't be inline expanded...
+// But #ifndef __forceinline doesn't work...
+// How can I handle this with non-VC?
+
 #ifndef __forceinline
 #define __forceinline inline
 #endif
@@ -113,6 +118,7 @@
 
 
 //作ったが、使い方を間違えて大変なことになった
+// I made it, but I used it incorrectly and ended up in trouble.
 inline static int TAdr2Mem(int adr) {
     if ((adr & 0xFF0000) == 0x7E0000) {
         return adr & 0x00FFFF;
@@ -200,7 +206,9 @@ inline static BYTE READB(DataSet* Pd, int adr) {
             if ((adr & 0x00FFFF) < 0x2000) return Pd->Pram[adr & 0x00FFFF];
         }
     }
-    return 0;  //しらん
+    //しらん
+    // I do not know
+    return 0;
 }
 inline static WORD READW(DataSet* Pb, int adr) {
     return READB(Pb, adr) | (READB(Pb, adr + 1) << 8);
@@ -289,25 +297,29 @@ inline static void WRITEB(DataSet* Pd, int adr, BYTE data) {
             return;
         }
         if (adr % 0x800000 < 0x400000) {
-            adr %= 0x010000;  //ミラーだからと、あと、バンクにかかわりないらしいから
+            //ミラーだからと、あと、バンクにかかわりないらしいから
+            // Because it's a mirror, and because it doesn't seem to be related to banks
+            adr %= 0x010000;
             // lo ram
             if (adr < 0x2000) {
                 Pd->Pram[adr] = data;
                 return;
             }
             // DMA関連
+            // DMA related
             if (adr >= 0x4300 && adr < 0x4380) {
                 Pd->AADMA[(adr & 0x0070) >> 4][adr & 0x000F] = data;
                 return;
             }
-            if (adr == 0x420B)  // DMA start
-            {
+            // DMA start
+            if (adr == 0x420B) {
                 static BYTE bittable[8] = {0x01, 0x02, 0x04, 0x08,
                                            0x10, 0x20, 0x40, 0x80};
                 int q, end;
                 for (int i = 0; i < 8; i++) {
                     if (bittable[i] & data) {
                         //必要に応じて作っただけなので、ボロボロ
+                        // I only made it as needed, so it's falling apart
                         if (Pd->AADMA[i][0] & 0x80) return;  // reg->mem
                         if (Pd->AADMA[i][0] & 0x08) return;  // decrement
                         end = Pd->AADMA[i][5] | (Pd->AADMA[i][6] << 8);
@@ -346,7 +358,9 @@ inline static void WRITEB(DataSet* Pd, int adr, BYTE data) {
             static BYTE inc_size_table[16] = {1, 32, 64, 128, 8, 0, 0, 0,
                                               8, 0,  0,  0,   8, 0, 0, 0};
             switch (adr) {
-                case 0x2115:  // VRAM インクリメントサイズ
+                // VRAM インクリメントサイズ
+                // VRAM increment size
+                case 0x2115:
                     Pd->render_inc_size = inc_size_table[data & 0x0F];
                     Pd->render_inc_timing = 0;
                     if (data & 0x80) Pd->render_inc_timing = 1;

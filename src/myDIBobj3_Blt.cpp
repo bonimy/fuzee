@@ -6,10 +6,14 @@
 /*
         矩形転送の関数。
         方針は、myDIBobj3_Cls.cppに書いてみた。
+        Rectangle transfer function.
+        I wrote the policy in myDIBobj3_Cls.cpp.
 */
 /*
         コンパイルの時間が一番かかるソース。
         このソースの一番下をみれば、どんだけ無茶しているのか明白だけどね。
+        The source that takes the most time to compile.
+        If you look at the bottom of this sauce, it's obvious how ridiculous it is.
 */
 #define RenderLoopForBlt(opt, x, y, srcx, srcy, lpwidth, lpheight, BLTYPE, CKTYPE, \
                          SETYPE)                                                   \

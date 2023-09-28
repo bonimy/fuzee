@@ -31,8 +31,9 @@ void RenderMINIMAP() {
                FZCD_CHIP_P_MAP_W * FZCD_CHIP_P_MAP_H * FZCD_SOE_CHIP);
         memset(flag, 0, FZCD_CHIP_P_MAP_W * FZCD_CHIP_P_MAP_H);
 
-
-        if (ic) {  //繋ぎ換え有り
+        //繋ぎ換え有り
+        // With reconnection
+        if (ic) {
             for (int i = 0; i < FZCD_CHIP_P_MAP_H * FZCD_CHIP_P_MAP_W; i++) {
                 BYTE* Ptmp;
                 Ptmp = working.exptile[ic] + i * FZCD_SOE_CHIP;
@@ -207,9 +208,13 @@ static UINT GetAreaColorUINT(int no) {
 
 void TV_main(TCB* caller) {
     ALIAS_MAIN(caller, main);
-    {  //基本レイヤーの描画
+    {
+        //基本レイヤーの描画
+        // Draw the base layer
         for (int ibl = 0; ibl < 32 * 16; ibl++) {
-            {  //高速化
+            {
+                //高速化
+                // Speeding up
                 int px, py;
                 int tx, ty;
                 px = (ibl % 32 * 32);
@@ -257,9 +262,13 @@ void TV_main(TCB* caller) {
     }
 
 
-    if (editingcn != 0) {  //繋ぎ換えレイヤーの表示
+    if (editingcn != 0) {
+        //繋ぎ換えレイヤーの表示
+        // Display the splicing layer
         for (int ibl = 0; ibl < 32 * 16; ibl++) {
-            {  //高速化
+            {
+                //高速化
+                // Speeding up
                 int px, py;
                 int tx, ty;
                 px = (ibl % 32 * 32);
@@ -274,7 +283,9 @@ void TV_main(TCB* caller) {
                 if (tx < 0 || ty < 0) continue;
             }
             /*
-            {//表示するかどうか判定
+            {
+                //表示するかどうか判定
+                //Determine whether to display
                     for( int iba=0 ; iba<16 ; iba++ )
                     {
                             for( int ich=0 ; ich<16 ; ich++ )
@@ -324,6 +335,7 @@ void TV_main(TCB* caller) {
     }
 
     //グリッド
+    // grid
     {
         {
             for (int i = 0; i < FZCD_BLOCK_P_MAP_W + 1; i++) {
@@ -615,8 +627,10 @@ bool TF_main(TCB* caller) {
 
     {
         //ここからグラフィック展開
+        // Graphic development starts here
         if (editingre != mainregion_pre) {
             // preの更新は下で
+            // Pre update below
             EmuCoreMinus tem;
             tem.SetRomData(Prom);
             tem.SetBankSize(false);
@@ -629,6 +643,7 @@ bool TF_main(TCB* caller) {
             //		tem.WriteAdrW( 0x0CF3 , 0x0000 ) ;
 
             //パレット
+            // palette
             tem.EasyInitialize(0x00A10D, 0x30);
             tem.OperateUntilRTS(1000000);
             static UINT colortable[256];
@@ -649,6 +664,7 @@ bool TF_main(TCB* caller) {
             }
             SetSNESPalette(NULL, NULL, colortable);
             //グラフィック
+            // graphic
             tem.EasyInitialize(0x00A0B0, 0x30);
             tem.OperateUntilRTS(1000000);
             BYTE* Pvram;
@@ -663,6 +679,7 @@ bool TF_main(TCB* caller) {
             {
 #ifdef MOSAIC_ENABLED
                     //説明用モザイク
+                    // Explanatory mosaic
                     {BMPD * Pb;
             Pb = mdo.GetSurfacePointer(SFC_BG);
             for (int i = 0; i < 256; i++) {
@@ -696,6 +713,7 @@ bool TF_main(TCB* caller) {
     mdo.Text(SFC_BG, " ", 0x9 * 8, 0x6 * 8, 8, 4, RGB(255, 255, 255));
     mdo.Text(SFC_BG, "Ｂ", 0x5 * 8, 0xA * 8, 8, 4, RGB(255, 255, 255));
     //暗くコピーしておく
+    // copy darkly
     {
         mdo.Blt(MDO3normal, SFC_BG, 0, 128, 128, 128, SFC_BG, 0, 0);
         MDO3Opt topt = *MDO3normal;
@@ -705,6 +723,7 @@ bool TF_main(TCB* caller) {
 
     /*
     //書き出し
+    // start writing
     mdo.SaveBitmap( "tile.bmp" , SFC_BG ) ;
     //*/
 }
@@ -752,44 +771,57 @@ if (KeyPush(KC_F11)) {
     {
         BYTE buf[32];
         //ＲＯＭ情報中のサイズを補正
+        // Correct the size in ROM information
         SETROME8(Pexprom, romsize * 2, 0x007FD7, 0x0A);
 
         //読み込みルーチンを変更
+        // Change loading routine
         memcpy(Pexprom + ROMADR2OFFSET(0x009F88), Pexprom + ROMADR2OFFSET(0x009F7E), 3);
 
         //バンクテーブルの更新
+        // Update bank table
         {
             for (int i = 0; i < 16; i++) buf[i] = 16 + i;
             memcpy(Pexprom + ROMADR2OFFSET(0x00A006), buf, 16);
         }
 
         //バンクテーブルの指す場所の変更
+        // Change the location pointed to by the bank table
         Pexprom[ROMADR2OFFSET(0x00A060) + 1] = 0x06;
         Pexprom[ROMADR2OFFSET(0x00A060) + 2] = 0xA0;
 
         //暫定？リージョン02と03の分離
+        // preliminary? Separation of regions 02 and 03
         SETROME8(Pexprom, romsize * 2, 0x009F76, 0xEA);
 
         //エリア情報バンクの変更
+        // Change area information bank
         SETROME8(Pexprom, romsize * 2, 0x00D60C, 0x10);
 
         //プラクティス時のエリア情報ポインタリスト
+        // Area information pointer list during practice
         SETROME16(Pexprom, romsize * 2, 0x00D625 + 1, 0x801E);
 
         //ＧＰでのエリア情報ポインタリスト
+        // Area information pointer list in GP
         SETROME16(Pexprom, romsize * 2, 0x00D647 + 1, 0x8000);
 
         //繋ぎ換えデータオフセットデータのあるバンク
+        // Bank with reconnection data offset data
         SETROME24(Pexprom, romsize * 2, 0x009F63 + 1, 0x118000);
 
         //繋ぎ替えデータのあるバンク
+        // Bank with reconnection data
         SETROME16(Pexprom, romsize * 2, 0x009F97 + 1, 0x0011);
+
         //繋ぎ替えデータ
+        // Connection data
         SETROME16(Pexprom, romsize * 2, 0x009FA1 + 1, 0x8100);
         SETROME16(Pexprom, romsize * 2, 0x009FA6 + 1, 0x8100 + 2);
         SETROME16(Pexprom, romsize * 2, 0x009FAD + 1, 0x8100 + 4);
 
         //強制送還マシンに自重してもらう
+        // Let the deportation machine take care of itself
         {
             for (int i = 0; i < 15 + 7; i++)
                 SETROME8(Pexprom, romsize * 2, 0x00DAC6 + i, 0x0C);
@@ -981,6 +1013,8 @@ if (KeyPush(KC_F11)) {
         int wposcc = 0;
         //グダグダになっていることは自覚している……
         //書き込み位置パラメータはまとめて管理したほうがいいだろうなぁ
+        // I am aware that I am feeling exhausted...
+        // It would be better to manage the write position parameters all at once.
         for (int st = 0; st < 9; st++) {
             fprintf(flog, "地域%dの梱包...\n", st);
             static FZCD tmpfzcd;

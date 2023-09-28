@@ -5,8 +5,10 @@ void DropRoutine(WPARAM wp) {
     char fn[512];
     int NOfile;
     //ハンドルを得る
+    // get the handle
     hd = (HDROP)wp;
     //ドロップされたファイル数を取得
+    // Get the number of dropped files
     NOfile = DragQueryFile(hd, 0xFFFFFFFF, NULL, 0);
     if (NOfile >= 2) {
         SetWindowText(hWnd, "ドロップは１つだけでお願いします");
@@ -71,7 +73,7 @@ LRESULT CALLBACK windowproc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lpara
         case WM_CLOSE:
             DestroyWindow(hwnd);
             return 0;
-            break;  //念
+            break;  //念 (thought)
         case WM_DESTROY:
             PostQuitMessage(0);
             break;

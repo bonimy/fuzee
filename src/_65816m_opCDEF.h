@@ -115,7 +115,7 @@ __forceinline static bool OPD3(DataSet* Pd) {
     ti = (READB(Pd, tw + 2) << 16) | READW(Pd, tw);
     return JMP(Pd, ti);
 }
-// PEI ($**)  使わないでしょ
+// PEI ($**)  使わないでしょ (do not use)
 __forceinline static bool OPD4(DataSet* Pd) { return false; }
 
 // CMP $**,X
@@ -252,6 +252,7 @@ __forceinline static bool OPE9(DataSet* Pd) {
 
 __forceinline static bool OPEA(DataSet* Pd) {
     //大好きな、NOP
+    // My favorite, NOP
     return true;
 }
 
@@ -302,6 +303,7 @@ __forceinline static bool OPF3(DataSet* Pd) {
     return false;
 }
 // PEA $****          そのままプッシュするだけらしいよ
+// PEA $**** It seems like you just need to push it.
 __forceinline static bool OPF4(DataSet* Pd) {
     Pd->Pstack[Pd->reg.s + 1] = Immediate8(Pd);
     Pd->Pstack[Pd->reg.s] = Immediate8(Pd);
@@ -352,11 +354,13 @@ __forceinline static bool OPFA(DataSet* Pd) {
 
 
 // XCE 使わないよなぁ
+// I don't use XCE
 __forceinline static bool OPFB(DataSet* Pd) {
     assert(0);
     return false;
 }
 // JSR ($******,x)  よーわからん
+// JSR ($******,x) I don't know
 __forceinline static bool OPFC(DataSet* Pd) {
     assert(0);
     return false;

@@ -18,9 +18,25 @@
 	それだけじゃなく、なんか変な出っ張りが生じる……
 	さらに弄って、縦方向に強制的に１大きくするようにした……
 	あまりに顕著……
+
+    A function that draws a triangle.
+    I wrote the policy in myDIBobj3_Cls.cpp.
+
+    ...If two points are specified at the same coordinates, but only one point is
+    different, the two triangles must be connected exactly. I guess it's dangerous when
+    those two points are close to horizontal... The fact that it's almost horizontal
+    seems like something to be expected from Zara. I mean, I just saw this source, but I
+    had no idea what it was doing...
+
+    I played around with it a little and tried to trick it so that there would be no
+    holes. However, I decided to draw a slightly wider area instead, so when I layered
+    the semi-transparent layer... Not only that, but a strange protrusion appears...
+    I played with it further and forced it to increase by 1 in the vertical direction...
+    Too noticeable...
 */
 
 //固定小数ForTRIangleらしい
+//It seems to be a fixed decimal ForTRIangle
 #define UBITSFTRI 14
 #define D2FFTRI(num) ((INT32)((num) * (1 << UBITSFTRI)))
 #define F2IFTRI(num) ((num) >> UBITSFTRI)
@@ -36,6 +52,8 @@
 
 //２点水平時の穴あき防止用ごまかし拡張幅の遊び
 //（穴が開くよりは重なった方が……という発想）
+//Play with expanded width to prevent holes when two points are horizontal
+//(The idea is that it is better to overlap than to have a hole...)
 #define FILL_WIDTH 0
 
 #define SET_FOR_TRIANGLE(n1, n2, n3)                                               \
@@ -43,24 +61,26 @@
     leng[0] = (int)y##n1;                                                          \
     leng[1] = (int)y##n2;                                                          \
     leng[2] = (int)y##n3;                                                          \
-    if (x##n2 < ELINE_GETX(&line[n2], y##n2)) { /*左向き*/                      \
-        /*傾きをセット*/                                                     \
+    if (x##n2 < ELINE_GETX(&line[n2], y##n2)) { /*左向き (Leftward)*/           \
+        /*傾きをセット (set tilt)*/                                          \
         leftslope[0] = D2FFTRI(line[n3].slope);                                    \
         rightslope[0] = D2FFTRI(line[n2].slope);                                   \
         leftslope[1] = D2FFTRI(line[n1].slope);                                    \
         rightslope[1] = D2FFTRI(line[n2].slope);                                   \
         /*マス目の上はしでの位置に補正しつつセット*/           \
+        /*Set while correcting the position at the top of the grid*/               \
         leftppos[0] = D2FFTRI(x##n1 - line[n3].slope * (y##n1 - (int)y##n1));      \
         rightppos[0] = D2FFTRI(x##n1 - line[n2].slope * (y##n1 - (int)y##n1));     \
         leftppos[1] = D2FFTRI(x##n2 + line[n1].slope * (1 - y##n2 + (int)y##n2));  \
         rightconnect = true;                                                       \
-    } else { /*右向き*/                                                         \
-        /*傾きをセット*/                                                     \
+    } else { /*右向き (facing right)*/                                          \
+        /*傾きをセット (set tilt)*/                                          \
         leftslope[0] = D2FFTRI(line[n2].slope);                                    \
         rightslope[0] = D2FFTRI(line[n3].slope);                                   \
         leftslope[1] = D2FFTRI(line[n2].slope);                                    \
         rightslope[1] = D2FFTRI(line[n1].slope);                                   \
         /*マス目の上はしでの位置に補正しつつセット*/           \
+        /*Set while correcting the position at the top of the grid*/               \
         leftppos[0] = D2FFTRI(x##n1 - line[n2].slope * (y##n1 - (int)y##n1));      \
         rightppos[0] = D2FFTRI(x##n1 - line[n3].slope * (y##n1 - (int)y##n1));     \
         rightppos[1] = D2FFTRI(x##n2 + line[n1].slope * (1 - y##n2 + (int)y##n2)); \
@@ -181,6 +201,7 @@ void MyDIBObj3 :: Triangle( const MDO3Opt *opt , int isfc , double x0 , double y
 ELINE line[3];
 int sameheight=0;
 //マス目のセンターを見る……代わりに、ずらして格子点を見る。
+// Look at the center of the grid... Instead, shift it and look at the grid points.
 	x0 -= 0.5 ;
 	y0 -= 0.5 ;
 	x1 -= 0.5 ;
@@ -188,9 +209,9 @@ int sameheight=0;
 	x2 -= 0.5 ;
 	y2 -= 0.5 ;
 
-	if( !ELINE_SET( &line[0] , x1 , y1 , x2 , y2 ) )sameheight+=1;	
-	if( !ELINE_SET( &line[1] , x2 , y2 , x0 , y0 ) )sameheight+=2;	
-	if( !ELINE_SET( &line[2] , x0 , y0 , x1 , y1 ) )sameheight+=4;	
+	if( !ELINE_SET( &line[0] , x1 , y1 , x2 , y2 ) )sameheight+=1;
+	if( !ELINE_SET( &line[1] , x2 , y2 , x0 , y0 ) )sameheight+=2;
+	if( !ELINE_SET( &line[2] , x0 , y0 , x1 , y1 ) )sameheight+=4;
 INT32 leftslope[2],rightslope[2];
 INT32 leftppos[2],rightppos[2];
 bool leftconnect,rightconnect;
@@ -199,8 +220,11 @@ int leng[3];
 	rightconnect = false;
 	switch( sameheight )
 	{
-	case 0://一致無し
+    //一致無し
+    //No match
+	case 0:
 		//きったねぇやり方……
+        //What a terrible way to do it...
 		if( y0 < y1 )
 		{
 
@@ -220,7 +244,7 @@ int leng[3];
 		else
 		{
 			if( y2 < y1 )
-			{//2 1 0 
+			{//2 1 0
 				SET_FOR_TRIANGLE(2,1,0);
 			}
 			else if( y2 < y0 )
@@ -234,14 +258,22 @@ int leng[3];
 
 		}
 	break;
-/*	case 1://12一致
+    //12一致
+    //12 matches
+/*	case 1:
 
 		SET_FOR_TRIANGLE_MINOR(1,2,0);
 	break;
-	case 2://20一致
+
+    //20一致
+    //20 matches
+	case 2:
 		SET_FOR_TRIANGLE_MINOR(2,0,1);
 	break;
-	case 4://01一致
+
+    //01一致
+    //1 match
+	case 4:
 		SET_FOR_TRIANGLE_MINOR(0,1,2);
 	break;
 */	default:
@@ -257,12 +289,15 @@ for(i=0 ; i<2 ; i++)
 	if(i==1 || !sameheight)
 	{
 //ｙ方向クリッピング
+//y direction clipping
 int ry0,ry1;
 	ry0 = leng[i] +(i==1);
 	ry1 = leng[i+1]+(i==0) ;
 //下のクリッピング（範囲を縮めるだけ！）
+//Clip the bottom (just shorten the range!)
 	ry1 = min( ry1 , sfc[isfc].clipy+sfc[isfc].clipheight ) ;
 //上のクリッピング（左右の現在位置を、補正分×傾き足してやらないといけない）
+//Upper clipping (you have to add the correction amount x tilt to the current left and right positions)
 	if( ry0 < sfc[isfc].clipy )
 	{
 		leftppos[i] += leftslope[i]*( sfc[isfc].clipy-ry0 ) ;
@@ -270,36 +305,46 @@ int ry0,ry1;
 		ry0 = sfc[isfc].clipy ;
 	}
 //結局の、処理高さ
+//The final processing height
 int finexp=ry1-ry0;
 //ごまかし幅拡張
+//extend cheat width
 	rightppos[i]+=FILL_WIDTH ;
 	leftppos[i]+=FILL_WIDTH ;
 //処理を３つに分ける。クリップ必要なし、あり、そして、処理しない、である。
+// Divide the process into three parts. No clip needed, yes, and no processing.
 bool issideclip=false;
 int tmpx ;
 	//左側で、処理終了時の位置
-	tmpx = F2IFTRI(leftppos[i]+leftslope[i]*(finexp-1)) ;//１低い位置
+    //On the left, the position at the end of processing
+	tmpx = F2IFTRI(leftppos[i]+leftslope[i]*(finexp-1)) ;//１低い位置 (1 lower position)
 	//左側の移動前後の両位置が、クリップより右なら処理しない
+    //Do not process if both positions before and after the left movement are to the right of the clip
 	if( min(F2IFTRI(leftppos[i]),tmpx)
 		>= sfc[isfc].clipx+sfc[isfc].clipwidth )continue;
 	//はみだしがあったら、issideclipをtrueに
-	if( 
+    //If there is a protrusion, set issideclip to true
+	if(
 		F2IFTRI(leftppos[i]) < sfc[isfc].clipx ||
 		F2IFTRI(leftppos[i]) >= sfc[isfc].clipx+sfc[isfc].clipwidth ||
 		tmpx < sfc[isfc].clipx ||
-		tmpx >= sfc[isfc].clipx+sfc[isfc].clipwidth 
+		tmpx >= sfc[isfc].clipx+sfc[isfc].clipwidth
 		)issideclip=true;
 	//右側
-	tmpx = F2IFTRI(rightppos[i]+rightslope[i]*(finexp-1)) ;//１低い位置
+    //Right side
+	tmpx = F2IFTRI(rightppos[i]+rightslope[i]*(finexp-1)) ;//１低い位置 (1 lower position)
 	//右翼と、右翼の移動後の位置のより右側が、クリップより左なら処理しない
+    //Do not process if the right wing and the right side of the right wing's position
+    // after moving are to the left of the clip
 	if( max(F2IFTRI(rightppos[i]),tmpx)
 		< sfc[isfc].clipx )continue;
 	//はみだしがあったら、issideclipをtrueに
-	if( 
+    //If there is a protrusion, set issideclip to true
+	if(
 		F2IFTRI(rightppos[i]) < sfc[isfc].clipx ||
 		F2IFTRI(rightppos[i]) >= sfc[isfc].clipx+sfc[isfc].clipwidth ||
 		tmpx < sfc[isfc].clipx ||
-		tmpx >= sfc[isfc].clipx+sfc[isfc].clipwidth 
+		tmpx >= sfc[isfc].clipx+sfc[isfc].clipwidth
 		)issideclip=true;
 
 
@@ -368,9 +413,25 @@ default:return;}
         それだけじゃなく、なんか変な出っ張りが生じる……
         さらに弄って、縦方向に強制的に１大きくするようにした……
         あまりに顕著……
+
+        A function that draws a triangle.
+        I wrote the policy in myDIBobj3_Cls.cpp.
+
+        ...If two points are specified at the same coordinates, but only one point
+        differs, the two triangles must connect exactly. I guess it's dangerous when
+        those two points are close to horizontal... The fact that it's almost horizontal
+        seems like something to be expected from Zara. I mean, I just saw this source,
+        but I had no idea what it was doing...
+
+        I played around with it a little and tried to trick it so that there would be no
+        holes. However, I decided to draw a slightly wider area instead, so when I
+        layered the semi-transparent layer... Not only that, but a strange protrusion
+        appears... I played with it further and forced it to increase by 1 in the
+        vertical direction... Too noticeable...
 */
 
 //固定小数ForTRIangleらしい
+// It seems to be a fixed decimal ForTRIangle
 #define UBITSFTRI 14
 #define D2FFTRI(num) ((INT32)((num) * (1 << UBITSFTRI)))
 #define F2IFTRI(num) ((num) >> UBITSFTRI)
@@ -378,6 +439,8 @@ default:return;}
 
 //２点水平時の穴あき防止用ごまかし拡張幅の遊び
 //（穴が開くよりは重なった方が……という発想）
+// Play with expanded width to prevent holes when two points are horizontal
+//(The idea is that it is better to overlap than to have a hole...)
 #define FILL_WIDTH 0
 
 #define SET_FOR_TRIANGLE(n1, n2, n3)                      \
@@ -548,6 +611,7 @@ void MyDIBObj3 ::Triangle(const MDO3Opt* opt, int isfc, double x0, double y0, do
     int sameheight = 0;
     /*
     //補正したほうが良い？
+    // Should I correct it?
             x0 += 0.5 ;
             y0 += 0.5 ;
             x1 += 0.5 ;
@@ -566,8 +630,11 @@ void MyDIBObj3 ::Triangle(const MDO3Opt* opt, int isfc, double x0, double y0, do
     leftconnect = false;
     rightconnect = false;
     switch (sameheight) {
-        case 0:  //一致無し
+        //一致無し
+        // No match
+        case 0:
             //きったねぇやり方……
+            // What a terrible way to do it...
             if (y0 < y1) {
                 if (y2 < y0) {  // 2 0 1
                     SET_FOR_TRIANGLE(2, 0, 1);
@@ -586,14 +653,20 @@ void MyDIBObj3 ::Triangle(const MDO3Opt* opt, int isfc, double x0, double y0, do
                 }
             }
             break;
-        case 1:  // 12一致
+        // 12一致
+        // 12 matches
+        case 1:
 
             SET_FOR_TRIANGLE_MINOR(1, 2, 0);
             break;
-        case 2:  // 20一致
+        // 20一致
+        // 20 matches
+        case 2:
             SET_FOR_TRIANGLE_MINOR(2, 0, 1);
             break;
-        case 4:  // 01一致
+        // 01一致
+        // 1 match
+        case 4:
             SET_FOR_TRIANGLE_MINOR(0, 1, 2);
             break;
         default:
@@ -606,41 +679,65 @@ void MyDIBObj3 ::Triangle(const MDO3Opt* opt, int isfc, double x0, double y0, do
     for (i = 0; i < 2; i++) {
         if (i == 1 || !sameheight) {
             //ｙ方向クリッピング
+            // y direction clipping
             int ry0, ry1;
             ry0 = leng[i];
             ry1 = leng[i + 1];
             //下のクリッピング（範囲を縮めるだけ！）
+            // Clip the bottom (just shorten the range!)
             ry1 = min(ry1, sfc[isfc].clipy + sfc[isfc].clipheight);
             //上のクリッピング（左右の現在位置を、補正分×傾き足してやらないといけない）
+            // Upper clipping (you have to add the correction amount x tilt to the
+            // current left and right positions)
             if (ry0 < sfc[isfc].clipy) {
                 leftppos[i] += leftslope[i] * (sfc[isfc].clipy - ry0);
                 rightppos[i] += rightslope[i] * (sfc[isfc].clipy - ry0);
                 ry0 = sfc[isfc].clipy;
             }
+
             //結局の、処理高さ
+            // The final processing height
             int finexp = ry1 - ry0;
             //ごまかし幅拡張
+            // extend cheat width
             //	rightppos[i]+=fixfillR ;
             //	leftppos[i]+=fixfillL ;
+
             //処理を３つに分ける。クリップ必要なし、あり、そして、処理しない、である。
+            // Divide the process into three parts. No clip needed, yes, and no
+            // processing.
             bool issideclip = false;
             int tmpx;
+
             //左側
-            tmpx = F2IFTRI(leftppos[i] + leftslope[i] * (finexp - 1));  //１低い位置
+            // left
+            //１低い位置
+            // 1 lower position
+            tmpx = F2IFTRI(leftppos[i] + leftslope[i] * (finexp - 1));
             //左翼と、左翼の移動後の位置のより左側が、クリップより右なら処理しない
+            // Do not process if the left wing and the left side of the left wing's
+            // position after moving are to the right of the clip
             if (min(F2IFTRI(leftppos[i]), tmpx) >=
                 sfc[isfc].clipx + sfc[isfc].clipwidth)
                 continue;
             //はみだしがあったら、issideclipをtrueに
+            // If there is a protrusion, set issideclip to true
             if (F2IFTRI(leftppos[i]) < sfc[isfc].clipx ||
                 F2IFTRI(leftppos[i]) >= sfc[isfc].clipx + sfc[isfc].clipwidth ||
                 tmpx < sfc[isfc].clipx || tmpx >= sfc[isfc].clipx + sfc[isfc].clipwidth)
                 issideclip = true;
+
             //右側
-            tmpx = F2IFTRI(rightppos[i] + rightslope[i] * (finexp - 1));  //１低い位置
+            // Right side
+            //１低い位置
+            // 1 lower position
+            tmpx = F2IFTRI(rightppos[i] + rightslope[i] * (finexp - 1));
             //右翼と、右翼の移動後の位置のより右側が、クリップより左なら処理しない
+            // Do not process if the right wing and the right side of the right wing's
+            // position after moving are to the left of the clip
             if (max(F2IFTRI(rightppos[i]), tmpx) < sfc[isfc].clipx) continue;
             //はみだしがあったら、issideclipをtrueに
+            // If there is a protrusion, set issideclip to true
             if (F2IFTRI(rightppos[i]) < sfc[isfc].clipx ||
                 F2IFTRI(rightppos[i]) >= sfc[isfc].clipx + sfc[isfc].clipwidth ||
                 tmpx < sfc[isfc].clipx || tmpx >= sfc[isfc].clipx + sfc[isfc].clipwidth)

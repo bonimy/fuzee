@@ -1,5 +1,7 @@
 /*
         主にゲーム用のために作ったタイマールーチン。
+
+        A timer routine made mainly for gaming.
 */
 
 #include "mytimer.h"
@@ -7,20 +9,26 @@
 #include <windows.h>
 
 // winmm.libが必要
+// Requires winmm.lib
 #pragma comment(lib, "winmm.lib")
 
 //固定小数。
 // timeGetTimeのときに使う
+// Fixed decimal.
+// Use when timeGetTime
 #define UBITS 24
 #define DEGMASK (0xFF000000)
 #define D2F(num) (DWORD)((num)*256 * 256 * 256)
 #define F2I(num) ((num) >> UBITS)
 
 //何フレーム遅れたら、遅れを詰めるのを諦めるか
+// How many frames should I delay before giving up trying to reduce the delay?
 #define GIVEUPFRAME 3
 //次のフレームまで、この値ミリ秒を切ったら、スリープを終える
+// End sleep if this value of milliseconds passes until the next frame
 #define SLEEPEND 2
 //何フレーム分の時間、処理が遅れたら、フレームスキップ要求を発行するか
+// How many frames should a frame skip request be issued if processing is delayed?
 #define FSREQFRAME 0.5
 
 MyTimerObj ::MyTimerObj(int ifps) {

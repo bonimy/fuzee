@@ -8,6 +8,11 @@
         どの描画関数もですが、ちょい下を見ればわかるとおり、マクロ酷使な仕様です。
         おかげさまで、ビルドに時間がかかり、さらには実行ファイルのサイズは肥大。
         ＶＣ＋＋がコンパイルに際してヒープを使い果たすなど、酷い惨状。
+        Rectangle solid color filling function.
+        As with any drawing function, as you can see if you look just below, it uses a
+        lot of macros. Unfortunately, it took a long time to build, and the size of the
+        executable file became large. VC++ runs out of heap when compiling, causing a
+        terrible situation.
 */
 
 /*
@@ -15,6 +20,11 @@
         今思いついたのだが、比較は『ある値以下』より、『０と比較』の方が速いだろうか……
         ループを逆向きにしたほうがいい？
         （まぁ、速いかどうかなんて環境依存だけどね……でも一般的に０との比較は速かったような……？）
+        Rendering loop. Call this macro under all possible conditions.
+        I just thought of something, but I wonder if comparing ``comparing with 0'' is
+        faster than ``comparing with 0'' than ``within a certain value''... Should I
+        reverse the loop? (Well, whether it's fast or not depends on the environment...
+        but it seems like it was generally faster compared to 0...?)
 */
 
 #define RenderLoopForCls(BLTYPE, CKTYPE, SETYPE)                             \

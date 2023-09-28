@@ -9,6 +9,10 @@
 　なんでクラス継承させているのかとか意味不明。
 　もう、恐ろしくて中身を見る気もしない。
 　あちこちで凄惨なことになっているが、もう気にしない何も見えない聞こえない
+  The file starting with _65816 is similar to an emulator that I tried to create a while
+  ago. Can you call it a tracer? It doesn't make sense why the class is inherited.
+  I'm so scared I don't even feel like looking inside. Horrible things are happening
+  everywhere, but I don't care anymore. I can't see or hear anything.
 */
 
 static union {
@@ -55,6 +59,7 @@ inline static void STY(DataSet* Pd, int adr) { WRITEY(Pd, adr, Pd->reg.y.w); }
 inline static void STZ(DataSet* Pd, int adr) {
     WRITEA(Pd, adr, 0);
     //たぶん、アキュムレータのビット数に関係すると思ったのだが……
+    // I thought it was probably related to the number of bits in the accumulator...
 }
 inline static void INC(DataSet* Pd, int adr) {
     WORD tw;
@@ -67,11 +72,15 @@ inline static void INCA(DataSet* Pd) {
     if (IS8A) {
         Pd->reg.a.b.l++;
         TESTA();
-        if (Pd->reg.a.b.l == 0x00) SET_F(FLAG_C);  //要らないかも
+        //要らないかも
+        // Maybe not needed
+        if (Pd->reg.a.b.l == 0x00) SET_F(FLAG_C);
     } else {
         Pd->reg.a.w++;
         TESTA();
-        if (Pd->reg.a.b.l == 0x0000) SET_F(FLAG_C);  //要らないかも
+        //要らないかも
+        // Maybe not needed.
+        if (Pd->reg.a.b.l == 0x0000) SET_F(FLAG_C);
     }
 }
 
@@ -168,18 +177,21 @@ inline static void ADC(DataSet* Pd, WORD data) {
     long tl;
     if (Pd->reg.p & FLAG_C) fl1 = 1;
     //ここでキャリーをクリアすべきか？
+    // Should I clear carry here?
     CLR_F(FLAG_C);
     if (IS8A) {
         tl = (WORD)Pd->reg.a.b.l + data + fl1;
         if (tl >= 0x0100) SET_F(FLAG_C);
         if (tl == 0) SET_F(FLAG_Z);
         //オーバーフローは知らない
+        // I don't know about overflow
         Pd->reg.a.b.l = (BYTE)tl;
     } else {
         tl = (WORD)Pd->reg.a.w + data + fl1;
         if (tl >= 0x010000) SET_F(FLAG_C);
         if (tl == 0) SET_F(FLAG_Z);
         //オーバーフローは知らない
+        // I don't know about overflow
         Pd->reg.a.w = (WORD)tl;
     }
 }
@@ -193,11 +205,13 @@ inline static void SBC(DataSet* Pd, WORD data) {
         if (Pd->reg.a.b.l >= data + c1) SET_F(FLAG_C);
         if (Pd->reg.a.b.l == data + c1) SET_F(FLAG_Z);
         //オーバーフローは知らない
+        // I don't know about overflow
         Pd->reg.a.b.l -= (data + c1);
     } else {
         if (Pd->reg.a.w >= data + c1) SET_F(FLAG_C);
         if (Pd->reg.a.w == data + c1) SET_F(FLAG_Z);
         //オーバーフローは知らない
+        // I don't know about overflow
         Pd->reg.a.w -= (data + c1);
     }
 }
@@ -452,6 +466,7 @@ inline static void BlockCopy(DataSet* Pd, BYTE dest, BYTE src, int ID) {
 
 /*
 どう考えてもＰとＮが逆の気がするのだが……
+No matter how I look at it, I feel like P and N are opposite...
 */
 inline static void MVP(DataSet* Pd, BYTE dest, BYTE src) {
     BlockCopy(Pd, dest, src, -1);
@@ -464,6 +479,7 @@ inline static void MVN(DataSet* Pd, BYTE dest, BYTE src) {
 
 
 // AのサイズのImmediate値
+// Immediate value of size of A
 inline static WORD ImmediateA(DataSet* Pd) {
     if (IS8A) {
         tmp.b.l = GetROMinPCinc(Pd);
@@ -474,6 +490,7 @@ inline static WORD ImmediateA(DataSet* Pd) {
     return tmp.w;
 }
 // XのサイズのImmediate値
+// Immediate value of size of X
 inline static WORD ImmediateX(DataSet* Pd) {
     if (IS8X) {
         tmp.b.l = GetROMinPCinc(Pd);
@@ -484,6 +501,7 @@ inline static WORD ImmediateX(DataSet* Pd) {
     return tmp.w;
 }
 // YのサイズのImmediate値（Xと同じ）
+// Immediate value of size of Y (same as X)
 inline static WORD ImmediateY(DataSet* Pd) { return ImmediateX(Pd); }
 inline static BYTE Immediate8(DataSet* Pd) { return GetROMinPCinc(Pd); }
 inline static WORD Immediate16(DataSet* Pd) {
@@ -536,7 +554,10 @@ inline static int AbsoluteIndirect(DataSet* Pd, int offset = 0) {
     int ti;
     ti = GetROMinPCinc(Pd) /*| (Pd->reg.pb<<16)*/;
     ti |= GetROMinPCinc(Pd) << 8;
-    return READW(Pd, ti + offset) | (Pd->reg.pb << 16);  //解釈にかなり問題がありそう
+
+    //解釈にかなり問題がありそう
+    // There seems to be a problem with the interpretation
+    return READW(Pd, ti + offset) | (Pd->reg.pb << 16);
 }
 inline static int AbsoluteIndirectX(DataSet* Pd) {
     if (IS8X)

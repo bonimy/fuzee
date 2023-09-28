@@ -372,16 +372,27 @@ static void TV_me_put(TCB* caller) {
                 tdir = (Pdest->dir + 4) % 8;
             }
             switch (tdir) {
-                case 0:  //右
+                //右
+                // Right
+                case 0:
                     mdo.Cls(&topt, SFC_BACK, tx, 0, 0x40000, WINHEIGHT, color);
                     break;
-                case 2:  //下
+
+                //下
+                // Bottom
+                case 2:
                     mdo.Cls(&topt, SFC_BACK, 0, ty, WINWIDTH, 0x40000, color);
                     break;
-                case 4:  //左
+
+                //左
+                // Left
+                case 4:
                     mdo.Cls(&topt, SFC_BACK, 0, 0, tx + 1, WINHEIGHT, color);
                     break;
-                case 6:  //上
+
+                //上
+                // Top
+                case 6:
                     mdo.Cls(&topt, SFC_BACK, 0, 0, WINWIDTH, ty + 1, color);
                     break;
                 default: {
@@ -391,19 +402,30 @@ static void TV_me_put(TCB* caller) {
                     int a;
                     int yGTx;
                     switch (tdir) {
-                        case 1:  //右下
+                        //右下
+                        // Bottom-right
+                        case 1:
                             a = -1;
                             yGTx = 0;
                             break;
-                        case 3:  //左下
+
+                        //左下
+                        // Bottom-left
+                        case 3:
                             a = 1;
                             yGTx = 1;
                             break;
-                        case 5:  //左上
+
+                        //左上
+                        // Top-left
+                        case 5:
                             a = -1;
                             yGTx = 1;
                             break;
-                        case 7:  //右上
+
+                        //右上
+                        // Top-right
+                        case 7:
                             a = 1;
                             yGTx = 0;
                             break;
@@ -471,6 +493,7 @@ bool TF_mode_area(TCB* caller) {
     if (!caller->calltiming) return false;
 
     //酷いコーディングですが……
+    // This is terrible coding, but...
     if (KeyPush(KC_F5)) CWT(caller);
     if (KeyPush(KC_F6)) CWT(caller);
 

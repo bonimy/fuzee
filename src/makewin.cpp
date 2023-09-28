@@ -15,6 +15,7 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hpinstance, LPSTR lpszcmdline,
 #ifndef ENABLE_MULTIPLE_RUN
     HWND tmpwnd;
     //簡易二重起動禁止
+    // Prohibit simple double startup
     if ((tmpwnd = FindWindow(COMMON_CONST_WINDOW_CLASS_NAME, NULL)) != NULL) {
         ShowWindow(tmpwnd, SW_RESTORE);
         SetForegroundWindow(tmpwnd);

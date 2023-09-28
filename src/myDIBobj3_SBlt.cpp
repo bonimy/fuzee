@@ -7,15 +7,20 @@
 /*
         ストレッチ転送の関数。
         方針は、myDIBobj3_Cls.cppに書いてみた。
+        Stretch transfer function.
+        I wrote the policy in myDIBobj3_Cls.cpp.
 */
 
 //固定小数ForStretchらしい
+// It seems to be a fixed decimal ForStretch
 #define UBITSFS 14
 #define D2FFS(num) ((INT32)((num) * (1 << UBITSFS)))
 #define F2IFS(num) ((num) >> UBITSFS)
 
 //こんくらいになると、ループ展開が果たして速いのかどうか疑わしい。
 //たしか、テストしてみたら速かったから、こうなってるんじゃないかな……
+// At this point, I doubt whether loop unrolling is really fast.
+// If I remember correctly, it was fast when I tested it, so I guess it's like this...
 #define RenderLoopForSBlt(BLTYPE, CKTYPE, SETYPE)                                   \
     ;                                                                               \
     for (iy = 0; iy < height; iy++) {                                               \
@@ -64,50 +69,83 @@ void MyDIBObj3 ::SBlt(const MDO3Opt* opt, int isfc, int x, int y, int width, int
     if (!SFCCheck(isrc)) return;
 
     //幅と高さのスケール
+    // width and height scale
     double scalex, scaley;
     scalex = (double)srcwidth / width;
     scaley = (double)srcheight / height;
+
     //クリップされた後の、srcの座標を浮動小数で
+    // Coordinates of src after being clipped as a floating point number
     double srcxd, srcyd;
     //Ｘ方向クリッピング
+    // X direction clipping
     srcxd = srcx;
-    if (x < sfc[isfc].clipx) {  //左にはみ出ている
+    if (x < sfc[isfc].clipx) {
+        //左にはみ出ている
+        // Protrudes to the left
         width -= (sfc[isfc].clipx - x);
         srcxd += (sfc[isfc].clipx - x) * scalex;
         x = sfc[isfc].clipx;
     }
-    if (x + width > sfc[isfc].clipx + sfc[isfc].clipwidth) {  //右にはみ出している
+
+    //右にはみ出している
+    // Protrudes to the right
+    if (x + width > sfc[isfc].clipx + sfc[isfc].clipwidth) {
         width = sfc[isfc].clipx + sfc[isfc].clipwidth - x;
     }
+
     //Ｘ方向クリッピング
+    // X direction clipping
     srcyd = srcy;
-    if (y < sfc[isfc].clipy) {  //上にはみ出ている
+
+    //上にはみ出ている
+    // Protrudes above
+    if (y < sfc[isfc].clipy) {
         height -= (sfc[isfc].clipy - y);
         srcyd += (sfc[isfc].clipy - y) * scaley;
         y = sfc[isfc].clipy;
     }
-    if (y + height > sfc[isfc].clipy + sfc[isfc].clipheight) {  //下にはみ出している
+
+    //下にはみ出している
+    // Protrudes below
+    if (y + height > sfc[isfc].clipy + sfc[isfc].clipheight) {
         height = sfc[isfc].clipy + sfc[isfc].clipheight - y;
     }
+
     // src位置、ｘ位置の記憶
+    // Store src position and x position
     INT32 psx, psy, prepsx;
     psx = D2FFS(srcxd);
     psy = D2FFS(srcyd);
     prepsx = psx;
+
     //ベクトルじゃないけどさ……移動量
+    // It's not a vector though...the amount of movement
     INT32 vx, vy;
     vx = D2FFS(scalex);
     vy = D2FFS(scaley);
+
     //速くなるのかわからんが、列の読み書き位置先頭のポインタ
+    // I don't know if it will be faster, but pointer to the beginning of the read/write
+    // position of the column
     BMPD *Pwline, *Prline;
+
     //その、進歩値の退避
+    // Save the progress value
     int prowline, prorline;
+
     //カウンタ……素朴すぎか？
+    // Counter...is it too simple?
     int ix, iy;
+
     //アンロールに使う、幅の限界値
+    // Width limit value used for unrolling
     int tw = width - 7;
     Pwline = &sfc[isfc].data[x | (y << sfc[isfc].width_bits)];
-    if (opt->flag & MDO3F_Y_MIRROR) {  //こんな程度で問題ないみたい
+
+    //こんな程度で問題ないみたい
+    // There seems to be no problem with this level
+    if (opt->flag & MDO3F_Y_MIRROR) {
         Prline = &sfc[isrc].data[(srcheight - F2IFS(psy) - 1) << sfc[isrc].width_bits];
         psy %= D2FFS(1);
         prorline = -sfc[isrc].width;
@@ -552,6 +590,7 @@ void MyDIBObj3 ::SBlt(const MDO3Opt* opt, int isfc, int x, int y, int width, int
     return;
 #if 0
 //テスト
+//test
 	for( iy=0 ; iy<height ; iy++ )
 	{
 		psx = prepsx ;
@@ -574,7 +613,7 @@ void MyDIBObj3 ::SBlt(const MDO3Opt* opt, int isfc, int x, int y, int width, int
 			Pwline[ix+7] = Prline[F2IFS(psx)] ;
 			psx += vx ;
 		}
-		for(  ; ix<width ; ix++ )										
+		for(  ; ix<width ; ix++ )
 		{
 			Pwline[ix] = Prline[F2IFS(psx)] ;
 			psx += vx ;
@@ -585,6 +624,8 @@ void MyDIBObj3 ::SBlt(const MDO3Opt* opt, int isfc, int x, int y, int width, int
 #if 0
 //どう比較したら、値を下げたら早いかをテスト。
 //結論は５０歩１００歩。かっこつけて、＆を採用する
+//Test how to compare and see if lowering the value is faster.
+//The conclusion is 50 steps and 100 steps. Play it cool and adopt &.
 //*
 		if(psy&D2FFS(1))
 /*/
@@ -602,6 +643,7 @@ void MyDIBObj3 ::SBlt(const MDO3Opt* opt, int isfc, int x, int y, int width, int
 		if(psy&((~0)<<UBITSFS))
 		{
 			//最後に、ちょぉぉっと、ポインタ、領域の先を指すんですけど……ＣＰＵが例外出しませんように。
+            //Finally, the pointer points to the end of the area...I hope the CPU doesn't throw an exception.
 			Prline += prorline*(F2IFS(psy)) ;
 			psy &= ~((~0)<<UBITSFS);
 		}

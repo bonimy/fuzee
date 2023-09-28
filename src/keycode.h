@@ -3,6 +3,7 @@
 
 /*
         半端なキーコード定数。
+        An odd key code constant.
 */
 
 enum KeyCode {

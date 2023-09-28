@@ -1,4 +1,5 @@
 // RTI とりあえず、RTL呼んで置く
+// RTI For now, call RTL
 __forceinline static bool OP40(DataSet* Pd) {
     RTL(Pd);
     return true;
@@ -17,12 +18,14 @@ __forceinline static bool OP42(DataSet* Pd) {
 }
 
 // EOR ,s  わからん
+// EOR ,s I don't know
 __forceinline static bool OP43(DataSet* Pd) {
     assert(0);
     return false;
 }
 
 // MVP　ブロック転送ポジティブ
+// MVP block transfer positive
 __forceinline static bool OP44(DataSet* Pd) {
     BYTE tb = Immediate8(Pd);
     MVP(Pd, tb, Immediate8(Pd));
@@ -128,6 +131,7 @@ __forceinline static bool OP53(DataSet* Pd) {
 }
 
 // MVN:ブロック転送ネガティブ
+// MVN: Block transfer negative
 __forceinline static bool OP54(DataSet* Pd) {
     BYTE dest = Immediate8(Pd);
     MVN(Pd, dest, Immediate8(Pd));
@@ -225,6 +229,7 @@ __forceinline static bool OP62(DataSet* Pd) {
 }
 
 // ADC ,s 無視
+// ADC ,s ignored
 __forceinline static bool OP63(DataSet* Pd) {
     assert(0);
     return false;
@@ -278,6 +283,7 @@ __forceinline static bool OP6B(DataSet* Pd) {
 }
 
 // JMP ($****)わかんない
+// JMP ($****)I don't know
 __forceinline static bool OP6C(DataSet* Pd) {
     assert(0);
     return false;
@@ -318,6 +324,7 @@ __forceinline static bool OP72(DataSet* Pd) {
     return true;
 }
 // ADC (S),y  しらない
+// ADC (S),y I don't know
 __forceinline static bool OP73(DataSet* Pd) {
     assert(0);
     return false;
@@ -374,6 +381,7 @@ __forceinline static bool OP7B(DataSet* Pd) {
     return true;
 }
 // JMP ($nn****,x)  放置
+// JMP ($nn****,x) Leave it alone
 __forceinline static bool OP7C(DataSet* Pd) {
     assert(0);
     return false;

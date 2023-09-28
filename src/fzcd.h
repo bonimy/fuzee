@@ -6,22 +6,28 @@
 #define FZCD_HEADER_INCLUDED
 
 //マップのサイズ（ブロック数）
+// Map size (number of blocks)
 #define FZCD_BLOCK_P_MAP_W 32
 #define FZCD_BLOCK_P_MAP_H 16
 #define FZCD_BLOCK_P_MAP (FZCD_BLOCK_P_MAP_W * FZCD_BLOCK_P_MAP_H)
 
 //ブロックのサイズ（バンド数）
+// Block size (number of bands)
 #define FZCD_BAND_P_BLOCK_W 1
 #define FZCD_BAND_P_BLOCK_H 16
 //１つのブロックをさすのに必要なバイト数
+// Number of bytes required to point one block
 #define FZCD_SOE_BLOCK 1
 //１つのブロックに含まれるバンド数
+// Number of bands included in one block
 #define FZCD_BAND_P_BLOCK (FZCD_BAND_P_BLOCK_W * FZCD_BAND_P_BLOCK_H)
 //１つのブロックのバイト数（バンド数×バンド１つ）
+// Number of bytes in one block (number of bands x one band)
 #define FZCD_SOA_BLOCK (FZCD_BAND_P_BLOCK * FZCD_SOE_BAND)
 
 
 //バンドのサイズ（チップ数）
+// Band size (number of chips)
 #define FZCD_CHIP_P_BAND_W 16
 #define FZCD_CHIP_P_BAND_H 1
 #define FZCD_SOE_BAND 2
@@ -29,6 +35,7 @@
 #define FZCD_SOA_BAND (FZCD_CHIP_P_BAND * FZCD_SOE_CHIP)
 
 //チップのサイズ（８×８の数）
+// Chip size (8x8 number)
 #define FZCD_TILE_P_CHIP_W 2
 #define FZCD_TILE_P_CHIP_H 2
 #define FZCD_SOE_CHIP 2
@@ -38,6 +45,8 @@
 
 //別にこんなの準備する必要ないのだが、
 //頭がこんがらがってしまった……
+// There is no need to prepare anything like this,
+// My head is confused...
 
 #define FZCD_BAND_P_MAP_W (FZCD_BAND_P_BLOCK_W * FZCD_BLOCK_P_MAP_W)
 #define FZCD_CHIP_P_MAP_W (FZCD_CHIP_P_BAND_W * FZCD_BAND_P_MAP_W)

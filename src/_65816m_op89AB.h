@@ -127,7 +127,7 @@ __forceinline static bool OP92(DataSet* Pd) {
     STA(Pd, DirectIndirectY(Pd));
     return false;
 }
-// STA (S),y  逃避
+// STA (S),y  逃避 (escape)
 __forceinline static bool OP93(DataSet* Pd) {
     assert(0);
     return false;
@@ -180,6 +180,7 @@ __forceinline static bool OP99(DataSet* Pd) {
 }
 
 // TXS スタックはいい加減なので、動かない可能性が大
+// TXS stack is sloppy, so there's a good chance it won't work
 __forceinline static bool OP9A(DataSet* Pd) {
     Pd->reg.s = Pd->reg.x.w;
     TESTX16();

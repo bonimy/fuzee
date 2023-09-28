@@ -6,6 +6,7 @@
 
 /*
         キーボード・マウス入力情報管理ルーチン。
+        Keyboard/mouse input information management routine.
 */
 
 #define MAXKEY 256

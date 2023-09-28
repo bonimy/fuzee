@@ -79,6 +79,7 @@ const char* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffset
             isprocess = true;
 
             //もし、繋ぎ換えレイヤーのブロックが全てFFFFなら処理をスキップ
+            // If all blocks in the connection layer are FFFF, skip processing
             if (icn) {
                 isprocess = false;
                 for (int q = 0; q < FZCD_BAND_P_BLOCK; q++) {
@@ -192,6 +193,7 @@ const char* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffset
     if (region_pre < 0) return "ソフトの不具合";
 
     //繋ぎ替え
+    // Reconnect
     {
         for (int icn = 1; icn < 2 + (region_pre == 7); icn++) {
             SETROME8(Prom, romsize, 0x118000 + region_pre + (icn == 2) * 2, *Poffsetcc);
@@ -280,6 +282,7 @@ const char* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffset
 
 
     //エリア
+    // Reconnect
     for (int cc = 0; cc < 2 + (region_pre == 7); cc++) {
         int noarea = -1;
         int noarea_sub = -1;
@@ -296,15 +299,28 @@ const char* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffset
         if (noarea < 0) continue;
         //エリア数オーバー
         //よくわからんが、分岐道があると、一つメモリ上にスキマを作って展開するらしいので１を足す
+        // The number of areas exceeded
+        // I don't really understand, but if there is a branching path, it seems that
+        // one space is created in memory and expanded, so add 1
         if ((noarea + 1) + (noarea_sub + 1) + (noarea_sub != -1) > FZCD_MAX_AREA) {
             return "エリア・分岐エリアをあわせると、限界数(254個くらい)を越えています";
         }
         //容量不足
-        if ((*Poffsete) +                               //開始位置
-                    (9 + (noarea_sub != -1) * 9 + 1) +  //エリアヘッダ（？）
-                    12 * (1 + (noarea_sub != -1)) +  //エリア情報のアドレスリスト
-                    noarea * 6 + (noarea_sub + 1) * 6  //情報実体
-            >= 0x110000)
+        // Capacity shortage
+        if (
+                //開始位置
+                // starting position
+                (*Poffsete) +
+                        //エリアヘッダ（？）
+                        // Area header (?)
+                        (9 + (noarea_sub != -1) * 9 + 1) +
+                        //エリア情報のアドレスリスト
+                        // Area information address list
+                        12 * (1 + (noarea_sub != -1)) +
+                        //情報実体
+                        // information entity
+                        noarea * 6 + (noarea_sub + 1) * 6 >=
+                0x110000)
             return "エリアを書き込むスペースが足りません";
         Pareaadrlist[cc] = (*Poffsete);
 
@@ -322,7 +338,10 @@ const char* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffset
         SETROME16(Prom, romsize, adr + 7, (area[cc][0].y));
         (*Poffsete) += 9;
         adr += 9;
-        if (noarea_sub != -1) {  //分岐エリアあり
+
+        //分岐エリアあり
+        // With branch area
+        if (noarea_sub != -1) {
             SETROME8(Prom, romsize, adr + 0, 0xFF);
             SETROME16(Prom, romsize, adr + 1, (*Poffsete) + 10 + 2 * 6);
             SETROME8(Prom, romsize, adr + 3, 0);
@@ -332,12 +351,15 @@ const char* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffset
             (*Poffsete) += 9;
             adr += 9;
         }
+
         //終端コード
+        // terminal code
         SETROME8(Prom, romsize, adr, 0);
         (*Poffsete) += 1;
         adr += 1;
 
         //各データのアドレスのリスト書き出し
+        // Write out a list of addresses for each data
         {
             int listsize = 2 * 6;
             if (noarea_sub != -1) listsize *= 2;
@@ -359,6 +381,7 @@ const char* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffset
         }
 
         //データの実体
+        // data entity
         {
             for (int k = 0; k < 1 + (noarea_sub != -1); k++) {
                 int llen = noarea;
@@ -403,7 +426,9 @@ const char* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffset
                         offset = 0;
                         Pdest = &area_sub;
                     }
+
                     //パラメータ
+                    // parameter
                     BYTE bval = 0x00;
                     if (k)
                         bval = 0x20;
@@ -420,6 +445,7 @@ const char* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffset
                         SETROME8(Prom, romsize, tadr + shift * 2, val);
                     }
                     //ＣＰＵ挙動情報
+                    // CPU behavior information
                     SETROME8(Prom, romsize, tadr + shift * 3,
                              (*Pdest)[cc][q + offset].arg[1]);
                     SETROME8(Prom, romsize, tadr + shift * 4,
@@ -633,11 +659,15 @@ int FZCD ::Load(int region) {
     fclose(fp);
 #undef ERR_RET
 
-    if (FZCDversion != FZCD_VERSION) {  // FZCDバージョンコンバート
+    // FZCDバージョンコンバート
+    // FZCD version conversion
+    if (FZCDversion != FZCD_VERSION) {
         switch (FZCDversion) {
-            case 0x0000:  //バージョン無し
-            {
+            //バージョン無し
+            // No version
+            case 0x0000: {
                 //エリアパラメータをセットしてやる
+                // Set area parameters
                 for (int q = 0; q < 3; q++)
                     for (int i = 0; i < FZCD_MAX_AREA; i++) {
                         area[q][i].arg[0] = 0x00;
@@ -648,10 +678,14 @@ int FZCD ::Load(int region) {
             }
 
             //通過
-            case 0x0100:  // 1.00 -> 1.01 繋ぎ換えのFFFFを透過に
-            {
+            // pass
+
+            // 1.00 -> 1.01 繋ぎ換えのFFFFを透過に
+            // 1.00 -> 1.01 Make connection FFFF transparent
+            case 0x0100: {
                 for (int icn = 1; icn < 3; icn++) {
                     //そのブロックを補正するか
+                    // Correct that block?
                     for (int ibl = 0; ibl < FZCD_BLOCK_P_MAP_W * FZCD_BLOCK_P_MAP_H;
                          ibl++) {
                         int iba = 0;
@@ -674,6 +708,7 @@ int FZCD ::Load(int region) {
                         }
                         if (iba == -1) continue;
                         //補正
+                        // correction
                         for (iba = 0; iba < FZCD_BAND_P_BLOCK_H; iba++) {
                             int px, py;
                             px = (ibl % 32 * 16 + 0);
@@ -685,10 +720,17 @@ int FZCD ::Load(int region) {
                     }
                 }
             }
+
             //通過
-            case 0x0101:  // 1.01 -> 1.02　分岐開始位置設定
-                    ;     //コンバートの必要なし
-                          //通過
+            // pass
+
+            // 1.01 -> 1.02　分岐開始位置設定
+            //コンバートの必要なし
+            //通過
+            // 1.01 -> 1.02 Branch start position setting
+            // No need to convert
+            // pass
+            case 0x0101:;
         }
     }
     return 0;

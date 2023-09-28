@@ -5,6 +5,7 @@
 
 #ifdef _ORE_SENYOU
 //私はいくつかのソースをライブラリ化しているので……
+// I'm making some sources into libraries, so...
 #ifdef _DEBUG
 #pragma comment(lib, "gl_d.lib")
 #else
@@ -30,8 +31,10 @@
 #include "_65816m.h"
 #endif
 //アプリケーションのウインドウへのドロップを許可するときはコメントアウトを外す
+// Uncomment out to allow dropping onto the application window
 #define MY_DROP_ACCEPT
 //２重起動を（簡易）抑制するときはコメントアウトを外す
+// Uncomment out to suppress double startup (simple)
 #define ENABLE_MULTIPLE_RUN
 
 #define COMMON_CONST_WINDOW_CLASS_NAME "FZE_WCN"
@@ -97,6 +100,7 @@ extern int romsize;
     (ROM(adr) | (ROM(adr + 1) << 8) | (ROM(adr + 2) << 16) | (ROM(adr + 3) << 24))
 
 // 8はなんとなく……
+// 8 is somehow...
 #define SETROM8(adr, val) \
     { ROM(adr) = (BYTE)(val); }
 #define SETROM16(adr, val)              \

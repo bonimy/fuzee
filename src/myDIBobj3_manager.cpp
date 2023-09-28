@@ -6,6 +6,8 @@
 
 //デフォルト……ではないが、とくに描画に特殊な物を指定しないという前提での、
 //描画関数に渡す、描画属性ポインタ
+// It's not the default, but assuming you don't specify anything special for drawing,
+// Drawing attribute pointer to pass to the drawing function
 
 static MDO3Opt MDO3normal_body = {MDO3F_COLORKEY | MDO3F_CLIP, 0xFF, 0};
 MDO3Opt* MDO3normal = &MDO3normal_body;
@@ -16,25 +18,34 @@ BMPD* PAlphaTable = NULL;
 
 //半透明テーブルが、何回参照されているか
 //もっとも、このクラスを２つ以上使うアプリケーションってありえるんだろうか
+// How many times the translucent table is referenced
+// However, is it possible for an application to use more than one of this class?
 static int NOAlphaTableReferenced = 0;
 
 //サーフェイスのHDCを返す。
 //っていうか、これは恒常的に保持していていいものなのだろうか……
+// Return the HDC of the surface.
+// Or rather, is this something that should be kept permanently?
 HDC MyDIBObj3 ::GetHDC(int isfc) {
     if (!SFCCheck(isfc)) return NULL;
     return sfc[isfc].hdc;
 }
 
 //カラーキーをセットする
+// set color key
 void MyDIBObj3 ::SetColorKey(BMPD icolorkey) { colorkey = icolorkey; }
 
 //サーフェイスにクリッパーをセット。
 //セット時に、変な値が指定されていないかをチェック。
 //これとは別に、(x0,y0)-(x1,y1)タイプも作ったほうがいい気がしないでもない。
-
+// Set the clipper on the surface.
+// Check if any strange values ​​are specified when setting.
+// Apart from this, I don't think it would be a good idea to also create a
+// (x0,y0)-(x1,y1) type.
 void MyDIBObj3 ::SetClipper(int isfc, int ix, int iy, int iw, int ih) {
     if (!SFCCheck(isfc)) return;
     //クリッパーのクリッピング
+    // Clipping the clipper
     if (ix < 0) {
         iw += ix;
         ix = 0;
@@ -62,6 +73,9 @@ void MyDIBObj3 ::SetClipper(int isfc, int ix, int iy, int iw, int ih) {
 サーフェイスから、ビットマップへのポインタを取得。
 これを利用して、アプリケーション側でグリグリいじくることも出来るわけ。
 ……もっとも、オーバーライドすればいいのでは、という話もあるけどね。
+Get a pointer to a bitmap from a surface.
+Using this, you can also tinker with the application side.
+...However, there is also talk that it might be a good idea to override it.
 */
 BMPD* MyDIBObj3 ::GetSurfacePointer(int isfc) {
     if (!SFCCheck(isfc)) return NULL;
@@ -69,6 +83,7 @@ BMPD* MyDIBObj3 ::GetSurfacePointer(int isfc) {
 }
 
 //色を取得
+// get color
 BMPD MyDIBObj3 ::Pick(int isfc, int x, int y) {
     if (!SFCCheck(isfc)) return 0xFFFF;
     if (x < 0 || y < 0 || x > sfc[isfc].width_true || y > sfc[isfc].height)
@@ -85,6 +100,14 @@ BMPD MyDIBObj3 ::Pick(int isfc, int x, int y) {
 このほかの関数にしても、失敗しても、落ちないが動かない……というのを理想としている。
 あくまで理想で、関数にマズイ値を食べさせるとあっさり死んだりするけど。
 ついでに、半透明合成に使うテーブルを作成。
+constructor.
+Number of surfaces Back surface width Height Color key
+give.
+If it fails, sfc will be NULL.
+In this state, any other functions will not crash, but they will not work...as expected.
+The ideal is that even if other functions fail, they will not crash, but they will not
+work. It's just an ideal, and if you feed a function a bad value, it will die easily. At
+the same time, create a table to use for translucent composition.
 */
 MyDIBObj3 ::MyDIBObj3(int nosfc, int width, int height, BMPD icolorkey) {
     nosfc++;
@@ -105,6 +128,10 @@ MyDIBObj3 ::MyDIBObj3(int nosfc, int width, int height, BMPD icolorkey) {
         //テーブル酷使も、逆に速度悪化の原因になると聴いたが……
         // lは、ビットマップの最上位ビットが不定なため必要
         //切捨て割り算なため、若干暗くなるが、裏同士（？）を足し算して安全
+        // I heard that overusing the table also causes speed deterioration...
+        // l is necessary because the most significant bit of the bitmap is undefined
+        // It's a little dark because it's a truncated division, but it's safe to add
+        // the tails (?)
         PAlphaTable = (BMPD*)GlobalAlloc(GMEM_FIXED, sizeof(BMPD) * 0x8000 * 16 * 2);
         for (int a = 0; a < 16; a++)
             for (int l = 0; l < 2; l++)
@@ -120,6 +147,8 @@ MyDIBObj3 ::MyDIBObj3(int nosfc, int width, int height, BMPD icolorkey) {
 /*
 デストラクタ。
 なんも解放しなくても、これだけで大丈夫な仕様。
+Destructor.
+Even if you don't release anything, this is all you need.
 */
 MyDIBObj3 ::~MyDIBObj3() {
     Release();
@@ -133,6 +162,9 @@ MyDIBObj3 ::~MyDIBObj3() {
 初期化。
 対象のウインドウハンドルと、インスタンスハンドルを渡す
 ついでに、バックサーフェイスを作成する。
+Initialization.
+Pass the target window handle and instance handle
+At the same time, create the back surface.
 */
 void MyDIBObj3 ::Initialize(HWND hwndpval, HINSTANCE hinstanceval) {
     if (!sfc) return;
@@ -146,6 +178,10 @@ void MyDIBObj3 ::Initialize(HWND hwndpval, HINSTANCE hinstanceval) {
 サーフェイスを作成する。
 こんな関数なのに、失敗しても何も返さないのはどうなのよ？
 作成失敗したサーフェイスを使っても、落ちないけど動かない……という仕様らしい
+Create a surface.
+What's wrong with a function like this that doesn't return anything even if it fails?
+It seems that even if you use a surface that failed to create, it will not fall but it
+will not move...
 */
 void MyDIBObj3 ::CreateSurface(int isfc, int width, int height) {
     if (!sfc) return;
@@ -176,7 +212,9 @@ void MyDIBObj3 ::CreateSurface(int isfc, int width, int height) {
     pbh = &sfc[isfc].info.bmiHeader;
     pbh->biSize = sizeof(BITMAPINFOHEADER);
     pbh->biWidth = width;
-    pbh->biHeight = -height;  //不で天地しない
+    //不で天地しない
+    // Opposite direction
+    pbh->biHeight = -height;
     pbh->biPlanes = 1;
     pbh->biBitCount = 16;
     pbh->biCompression = BI_RGB;
@@ -214,6 +252,9 @@ void MyDIBObj3 ::CreateSurface(int isfc, int width, int height) {
 /*
 サーフェイスを解放する。
 普通自分では呼ぶ必要が無いが、サーフェイスをいったん消して作り直したい場合など。
+Release the surface.
+Normally you don't need to call it yourself, but if you want to erase a surface and
+recreate it.
 */
 void MyDIBObj3 ::ReleaseSurface(int isfc) {
     if (isfc < 0 || isfc >= maxsurface) return;
@@ -226,6 +267,7 @@ void MyDIBObj3 ::ReleaseSurface(int isfc) {
 }
 /*
 解放。デストラクタが呼ぶので、別に自分で呼ぶ必要は無い。
+release. The destructor calls it, so there is no need to call it yourself.
 */
 void MyDIBObj3 ::Release() {
     if (sfc) {
@@ -236,25 +278,34 @@ void MyDIBObj3 ::Release() {
 }
 /*
         ビットマップのロード。
+        Loading bitmap.
 */
 void MyDIBObj3 ::LoadBitmap(int isfc, LPTSTR filename) {
     if (!SFCCheck(isfc)) return;
     //一時作業用のHDCとBITMAPハンドル
+    // HDC and BITMAP handle for temporary work
     HDC mem1;
     HBITMAP hbm, old;
+
     //ビットマップを読み込む
+    // load bitmap
     hbm = (HBITMAP)LoadImage(hinstancep, filename, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
     if (hbm == 0) {
         DEBUG_OUTPUT("ビットマップの読みこみに失敗！\n");
         return;
     }
+
     //ウインドウのＨＤＣと交換性のあるメモリＤＣを作る
+    // Create a memory DC that is interchangeable with the window HDC
     mem1 = CreateCompatibleDC(hdcp);
     //セットして
+    // set
     old = (HBITMAP)SelectObject(mem1, hbm);
     //転送
+    // transfer
     BitBlt(sfc[isfc].hdc, 0, 0, sfc[isfc].width, sfc[isfc].height, mem1, 0, 0, SRCCOPY);
     //全部消す
+    // delete all
     SelectObject(mem1, old);
     DeleteDC(mem1);
     DeleteObject(hbm);
@@ -263,6 +314,9 @@ void MyDIBObj3 ::LoadBitmap(int isfc, LPTSTR filename) {
         ビットマップのセーブ
         ２４ビットbmpを出力
         x以降の引数を全て-1にすると、サーフェイス全体を出力する
+        Save bitmap
+        Output 24 bit bmp
+        If all arguments after x are set to -1, the entire surface will be output.
 */
 void MyDIBObj3 ::SaveBitmap(const char* filename, int isfc, int x, int y, int width,
                             int height) {
@@ -346,6 +400,13 @@ void MyDIBObj3 ::SaveBitmap(const char* filename, int isfc, int x, int y, int wi
         ところで、フリップの意味を間違えているような。
         引数には、フリップのタイプと、あと、タイプによる属性を渡す。
         どんな属性かは、下を見ればすぐわかるかと。
+        Transfer the back surface to the primary surface and display it on the screen.
+        ...Actually, it's getting really heavy here.
+        When the screen is set to 32 bits, it seems that 16bit->32bit transfer with
+        BitBlt is quite slow... It will be faster if the screen is set to 16 bits... By
+        the way, I think you're misunderstanding the meaning of flip. Pass the type of
+        flip and the attributes based on the type as arguments. You can easily tell what
+        kind of attributes it has by looking below.
 */
 void MyDIBObj3 ::Flip(int fliptype, int* argv) {
     switch (fliptype) {
@@ -371,6 +432,7 @@ void MyDIBObj3 ::Flip(int fliptype, int* argv) {
 
 /*
         テキスト描画。
+        text drawing.
 */
 
 void MyDIBObj3 ::Text(int isfc, const char* str, int x, int y, int height, int width,
