@@ -982,7 +982,7 @@ bool TF_mm_kui(TCB* caller) {
 				rad = MYABS( mmkuiarcargx - tx ) ;
 				if( rad < 32 )
 				{
-					MessageBox( hWnd , "半径をもう少し大きく取ってください" , "エラー" , MB_OK ) ;
+					MessageBox( hWnd , L"半径をもう少し大きく取ってください" , L"エラー" , MB_OK ) ;
 				}
 				else
 				{

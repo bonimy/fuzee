@@ -106,19 +106,19 @@ extern int GetSinTableSenv();
 //マルチスレッドでは使えない
 // I didn't know about sscanf or sprintf...really.
 // Cannot be used with multithreading
-extern char* Int2Char(int num, int place = 5, bool issignadd = true, int buf = 0);
-extern char* Int2CharEX(int num, int buf = 0);
-extern char* FZ_CAC(char* str1, char* str2, int buf = -1);
-extern char* CharacterChain(int NOchar, ...);
-extern char* Int2CharE(char* Pbuf, int buflength, int num, int place = 5,
+extern wchar_t* Int2Char(int num, int place = 5, bool issignadd = true, int buf = 0);
+extern wchar_t* Int2CharEX(int num, int buf = 0);
+extern wchar_t* FZ_CAC(wchar_t* str1, wchar_t* str2, int buf = -1);
+extern wchar_t* CharacterChain(int NOchar, ...);
+extern wchar_t* Int2CharE(wchar_t* Pbuf, int buflength, int num, int place = 5,
                        bool issignadd = true);
-extern char* Int2CharEXE(char* Pbuf, int buflength, int num);
-extern char* CACE(char* Pbuf, int buflength, char* str1, char* str2);
-extern char* CharacterChainE(char* Pbuf, int buflength, int NOchar, ...);
+extern wchar_t* Int2CharEXE(wchar_t* Pbuf, int buflength, int num);
+extern wchar_t* CACE(wchar_t* Pbuf, int buflength, wchar_t* str1, wchar_t* str2);
+extern wchar_t* CharacterChainE(wchar_t* Pbuf, int buflength, int NOchar, ...);
 
-extern char* Byte2Hex(unsigned char data, int ub = 0);
-extern char* Int2Hex16(unsigned short data, int ub = 0);
-extern char* Int2Hex32(unsigned int data, int ub = 0);
+extern wchar_t* Byte2Hex(unsigned char data, int ub = 0);
+extern wchar_t* Int2Hex16(unsigned short data, int ub = 0);
+extern wchar_t* Int2Hex32(unsigned int data, int ub = 0);
 
 // atan2を知らなかった頃に作った奴
 // I made this before I knew about atan2

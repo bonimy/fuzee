@@ -12,30 +12,30 @@ static int clipw = 1;
 static int cliph = 1;
 
 #define NO_SUBMODE 2
-#define MODE_TITLE "マップ編集"
-#define SUBMODE_TITLE "直接編集", "壁編集",
+#define MODE_TITLE L"マップ編集"
+#define SUBMODE_TITLE L"直接編集", L"壁編集",
 
 
 static void CWT(TCB* caller) {
-    const char* Pstr[NO_SUBMODE] = {SUBMODE_TITLE};
-    char buf[128];
-    const char* Ptmp;
+    const wchar_t* Pstr[NO_SUBMODE] = {SUBMODE_TITLE};
+    wchar_t buf[128];
+    const wchar_t* Ptmp;
     CWT_common(buf);
-    sprintf(&buf[strlen(buf)], MODE_TITLE);
+    swprintf(&buf[wcslen(buf)], MODE_TITLE);
     for (int i = 0; i < NO_SUBMODE; i++) {
-        Ptmp = "";
+        Ptmp = L"";
         if (submode == i) Ptmp = Pstr[i];
-        sprintf(&buf[strlen(buf)], "【 %s 】", Ptmp);
+        swprintf(&buf[wcslen(buf)], L"【 %s 】", Ptmp);
     }
-    sprintf(&buf[strlen(buf)], "<spaceで切り替え");
+    swprintf(&buf[wcslen(buf)], L"<spaceで切り替え");
 
     ALIAS_MM(caller, mm);
     if (mmcurrentbandsize == -1)
-        sprintf(&buf[strlen(buf)], "   Band \?\?\?\?/%X  CHIP \?\?\?\?/%X",
-                FZCD_BAND_SPACE_LIMIT, FZCD_CHIP_SPACE_LIMIT);
+        swprintf(&buf[wcslen(buf)], L"   Band \?\?\?\?/%X  CHIP \?\?\?\?/%X",
+                 FZCD_BAND_SPACE_LIMIT, FZCD_CHIP_SPACE_LIMIT);
     else
-        sprintf(&buf[strlen(buf)], "   Band %X/%X  CHIP %X/%X", mmcurrentbandsize,
-                FZCD_BAND_SPACE_LIMIT, mmcurrentchipsize, FZCD_CHIP_SPACE_LIMIT);
+        swprintf(&buf[wcslen(buf)], L"   Band %X/%X  CHIP %X/%X", mmcurrentbandsize,
+                 FZCD_BAND_SPACE_LIMIT, mmcurrentchipsize, FZCD_CHIP_SPACE_LIMIT);
     SetWindowText(hWnd, buf);
     ALIAS_END();
 }
@@ -154,7 +154,7 @@ bool TF_mm_set(TCB* caller) {
             }
             if (KeyOn(KC_CTRL)) {
                 FILE* fp;
-                fp = fopen("clipped.fzeeclip", "wb");
+                fp = _wfopen(L"clipped.fzeeclip", L"wb");
                 if (!fp) return false;
                 BYTE buf[16];
                 buf[0] = clipw;
@@ -478,8 +478,8 @@ void TV_mm_set(TCB* caller) {
                  data % 16 * 8, data / 16 * 8, MAP_TILE_SIZE_D, MAP_TILE_SIZE_D);
     }
     {
-        char buf[16];
-        sprintf(buf, "%X", selected);
+        wchar_t buf[16];
+        swprintf(buf, L"%X", selected);
 #define FS 12
         mdo.Text(0, buf, WINWIDTH - SAMPLE_SIZE, WINHEIGHT - SAMPLE_SIZE - FS, FS,
                  FS / 2, RGB(0, 0, 0));
@@ -555,12 +555,12 @@ bool TF_mode_map(TCB* caller) {
 }
 
 
-void LoadFZEECLIP(char* filename) {
+void LoadFZEECLIP(wchar_t* filename) {
     if (Pclip) free(Pclip);
     Pclip = NULL;
 
     FILE* fp;
-    fp = fopen(filename, "rb");
+    fp = _wfopen(filename, L"rb");
     BYTE buf[16];
     fread(buf, 1, 2, fp);
     if (!buf[0] || !buf[1]) return;

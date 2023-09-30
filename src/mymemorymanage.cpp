@@ -48,13 +48,13 @@ static int ret;
         -5 Unable to expand temporary buffer
         -6 Unable to secure buffer to return
 */
-int LoadMemoryFromFile(const char* filename, unsigned char** ptrbuf) {
+int LoadMemoryFromFile(const wchar_t* filename, unsigned char** ptrbuf) {
     //バッファをチェック
     // check buffer
     if (*ptrbuf != NULL) return -1;
 
     FILE* fp;
-    fp = fopen(filename, "r");
+    fp = _wfopen(filename, L"r");
     if (!fp) return -3;
 
     int size;
@@ -80,7 +80,7 @@ int LoadMemoryFromFile(const char* filename, unsigned char** ptrbuf) {
 //ファイルサイズを求める方法を知らなかった？
 //It's old-fashioned, I wonder why it was written so redundantly
 //Don't know how to find the file size?
-int LoadMemoryFromFile(char *filename , unsigned char **ptrbuf)
+int LoadMemoryFromFile(wchar_t *filename , unsigned char **ptrbuf)
 {
 int filehand;
 int tmplength;
@@ -100,7 +100,7 @@ int i;
 
 	//ファイルオープン
     //file open
-	filehand = _open(filename , _O_BINARY | _O_RDONLY);
+	filehand = _wopen(filename , _O_BINARY | _O_RDONLY);
 	if(filehand == -1)ERRRET(ERRMLFF,3);
 
 
@@ -177,10 +177,10 @@ ERRMLFF1:
         -1 File cannot be opened
         -2 Cannot write to file
 */
-int WriteFileFromMemory(const char* filename, unsigned char* data, int length) {
+int WriteFileFromMemory(const wchar_t* filename, unsigned char* data, int length) {
     int filehand;
-    filehand = _open(filename, _O_CREAT | _O_BINARY | _O_TRUNC | _O_WRONLY,
-                     _S_IREAD | _S_IWRITE);
+    filehand = _wopen(filename, _O_CREAT | _O_BINARY | _O_TRUNC | _O_WRONLY,
+                      _S_IREAD | _S_IWRITE);
     if (filehand == -1) ERRRET(ERRWFFM, 1);
     if (_write(filehand, data, length) < length) ERRRET(ERRWFFM, 2);
     ret = 0;
@@ -203,22 +203,22 @@ ERRWFFM1:
         -1..Failed to load
         -2..Failure to secure memory
 */
-int ReadALine(int filehand, char** PPreturnbuf) {
-    char* Pbuffer = NULL;
+int ReadALine(int filehand, wchar_t** PPreturnbuf) {
+    wchar_t* Pbuffer = NULL;
     int buffersize = 0;
     int i;
     for (i = 0;; i++) {
         if (buffersize <= i) {
             if (!Pbuffer) {
-                Pbuffer = (char*)malloc(sizeof(char) * EXPAND_SIZE_AT_ONCE);
+                Pbuffer = (wchar_t*)malloc(sizeof(wchar_t) * EXPAND_SIZE_AT_ONCE);
             } else {
                 if (buffersize >= BUFFER_SIZE_LIMIT) {
-                    Pbuffer[i - 1] = '\0';
+                    Pbuffer[i - 1] = L'\0';
                     *PPreturnbuf = Pbuffer;
                     return -2;
                 }
-                Pbuffer = (char*)realloc(
-                        &Pbuffer, buffersize + sizeof(char) * EXPAND_SIZE_AT_ONCE);
+                Pbuffer = (wchar_t*)realloc(
+                        &Pbuffer, buffersize + sizeof(wchar_t) * EXPAND_SIZE_AT_ONCE);
             }
             if (!Pbuffer) {
                 *PPreturnbuf = NULL;
@@ -228,8 +228,8 @@ int ReadALine(int filehand, char** PPreturnbuf) {
         }
         switch (_read(filehand, &Pbuffer[i], 1)) {
             case 1:
-                if (Pbuffer[i] == '\n') {
-                    Pbuffer[i] = '\0';
+                if (Pbuffer[i] == L'\n') {
+                    Pbuffer[i] = L'\0';
                     *PPreturnbuf = Pbuffer;
                     return 0;
                 }
@@ -240,7 +240,7 @@ int ReadALine(int filehand, char** PPreturnbuf) {
                 return 1;
                 break;
             default:
-                Pbuffer[i] = '\0';
+                Pbuffer[i] = L'\0';
                 *PPreturnbuf = Pbuffer;
                 return 1;
         }
@@ -254,9 +254,9 @@ int ReadALine(int filehand, char** PPreturnbuf) {
         Write one line. It's obvious that it's sloppy compared to Ue's version, so it
         can't be used much.
 */
-int WriteALine(int filehand, char* Pbuffer) {
+int WriteALine(int filehand, wchar_t* Pbuffer) {
     // int rv;
-    _write(filehand, Pbuffer, strlen(Pbuffer));
+    _write(filehand, Pbuffer, wcslen(Pbuffer));
     return 0;
 }
 

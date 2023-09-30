@@ -165,8 +165,8 @@ void RenderMINIMAP() {
             }
         }
         {
-            char str[64];
-            sprintf(str, "minimap%d-%d.bmp", editingre, ic);
+            wchar_t str[64];
+            swprintf(str, L"minimap%d-%d.bmp", editingre, ic);
             mdo.SaveBitmap(str, SFC_MINIMAP);
         }
     }
@@ -175,9 +175,9 @@ void RenderMINIMAP() {
 }
 
 
-void CWT_common(char* Pdest) {
+void CWT_common(wchar_t* Pdest) {
     Pdest[0] = '\0';
-    sprintf(&Pdest[strlen(Pdest)], "地域%d-%d   ", editingre, editingcn);
+    swprintf(&Pdest[wcslen(Pdest)], L"地域%d-%d   ", editingre, editingcn);
 }
 
 #define NO_MAIN_MODE 2
@@ -480,9 +480,9 @@ void TV_main(TCB* caller) {
             by = ty;
             //*
             {
-                char buf[16];
-                sprintf(buf, "%02X", (GETROM8(adr0) >> 4));
-                mdo.Cls(MDO3normal, SFC_BACK, tx, ty, 6 * strlen(buf), 12,
+                wchar_t buf[16];
+                swprintf(buf, L"%02X", (GETROM8(adr0) >> 4));
+                mdo.Cls(MDO3normal, SFC_BACK, tx, ty, 6 * wcslen(buf), 12,
                         myRGB(31, 31, 31));
                 mdo.Text(SFC_BACK, buf, tx, ty, 12, 6);
             }
@@ -705,13 +705,13 @@ bool TF_main(TCB* caller) {
         }
 #endif
     }
-    mdo.Text(SFC_BG, "Ｍ", 0, 96, 8, 4);
-    mdo.Text(SFC_BG, "Ｂ", 8, 96, 8, 4);
-    mdo.Text(SFC_BG, ">>", 0, 80, 8, 4);
-    mdo.Text(SFC_BG, "<<", 8 * 12, 72, 8, 4);
-    mdo.Text(SFC_BG, " ", 8 * 10, 72, 8, 4);
-    mdo.Text(SFC_BG, " ", 0x9 * 8, 0x6 * 8, 8, 4, RGB(255, 255, 255));
-    mdo.Text(SFC_BG, "Ｂ", 0x5 * 8, 0xA * 8, 8, 4, RGB(255, 255, 255));
+    mdo.Text(SFC_BG, L"Ｍ", 0, 96, 8, 4);
+    mdo.Text(SFC_BG, L"Ｂ", 8, 96, 8, 4);
+    mdo.Text(SFC_BG, L">>", 0, 80, 8, 4);
+    mdo.Text(SFC_BG, L"<<", 8 * 12, 72, 8, 4);
+    mdo.Text(SFC_BG, L" ", 8 * 10, 72, 8, 4);
+    mdo.Text(SFC_BG, L" ", 0x9 * 8, 0x6 * 8, 8, 4, RGB(255, 255, 255));
+    mdo.Text(SFC_BG, L"Ｂ", 0x5 * 8, 0xA * 8, 8, 4, RGB(255, 255, 255));
     //暗くコピーしておく
     // copy darkly
     {
@@ -759,15 +759,15 @@ if (KeyPush(KC_F11)) {
     FILE* flog;
     bool onerror = false;
 
-    flog = fopen("cmplog.txt", "wt");
-    fprintf(flog, "梱包ログ\n\n\n");
-    fprintf(flog, "●●メモリ確保●●\n");
+    flog = _wfopen(L"cmplog.txt", L"wt");
+    fwprintf(flog, L"梱包ログ\n\n\n");
+    fwprintf(flog, L"●●メモリ確保●●\n");
     BYTE* Pexprom;
     Pexprom = (BYTE*)malloc(romsize * 2);
     memcpy(Pexprom, Prom, romsize);
     memset(Pexprom + romsize, 0, romsize);
 
-    fprintf(flog, "●●プログラム修正●●\n");
+    fwprintf(flog, L"●●プログラム修正●●\n");
     {
         BYTE buf[32];
         //ＲＯＭ情報中のサイズを補正
@@ -829,7 +829,7 @@ if (KeyPush(KC_F11)) {
     }
 
 
-    fprintf(flog, "●●globalsetting.txt読み込み●●\n");
+    fwprintf(flog, L"●●globalsetting.txt読み込み●●\n");
 
     int gplist[15];
     int gpcclist[15];
@@ -847,98 +847,98 @@ if (KeyPush(KC_F11)) {
         }
         for (;;) {
             FILE* fp;
-            fp = fopen("working\\globalsetting.txt", "rt");
+            fp = _wfopen(L"working\\globalsetting.txt", L"rt");
             if (!fp) {
-                fprintf(flog, "globalsetting.txt未存在・デフォルト使用します\n");
+                fwprintf(flog, L"globalsetting.txt未存在・デフォルト使用します\n");
                 break;
             }
             for (;;) {
-#define ERROR_CONT                                                                \
-    {                                                                             \
-        fprintf(flog, "不自然な記述\n「%s」\nがありますが無視して続行します。\n", \
-                buf);                                                             \
-        continue;                                                                 \
+#define ERROR_CONT                                                                  \
+    {                                                                               \
+        fwprintf(flog, L"不自然な記述\n「%s」\nがありますが無視して続行します。\n", \
+                 buf);                                                              \
+        continue;                                                                   \
     }
-                char buf[512 + 10];
-                char buf2[512 + 10];
+                wchar_t buf[512 + 10];
+                wchar_t buf2[512 + 10];
                 int rpos;
                 rpos = 0;
-                if (!fgets(buf, 512, fp)) {
+                if (!fgetws(buf, 512, fp)) {
                     break;
                 }
-                if (buf[strlen(buf) - 1] == '\n') buf[strlen(buf) - 1] = '\0';
-                if (buf[0] != '\\') continue;
+                if (buf[wcslen(buf) - 1] == L'\n') buf[wcslen(buf) - 1] = L'\0';
+                if (buf[0] != L'\\') continue;
                 rpos++;
-                if (!sscanf(buf + rpos, "%10s", buf2)) ERROR_CONT;
-                rpos += strlen(buf2) + 1;
+                if (!swscanf(buf + rpos, L"%10s", buf2)) ERROR_CONT;
+                rpos += wcslen(buf2) + 1;
 
-                if (!strcmp(buf2, "GP")) {
+                if (!wcscmp(buf2, L"GP")) {
                     int tnum;
-                    if (!sscanf(buf + rpos, "%10s", buf2)) ERROR_CONT;
-                    rpos += strlen(buf2) + 1;
-                    if (!sscanf(buf2, "%d", &tnum)) ERROR_CONT;
+                    if (!swscanf(buf + rpos, L"%10s", buf2)) ERROR_CONT;
+                    rpos += wcslen(buf2) + 1;
+                    if (!swscanf(buf2, L"%d", &tnum)) ERROR_CONT;
 
                     if (tnum <= 0 || tnum >= 4) ERROR_CONT;
 
                     int courseno;
                     courseno = tnum;
 
-                    if (!sscanf(buf + rpos, "%10s", buf2)) ERROR_CONT;
-                    rpos += strlen(buf2) + 1;
-                    if (!sscanf(buf2, "%d", &tnum)) ERROR_CONT;
+                    if (!swscanf(buf + rpos, L"%10s", buf2)) ERROR_CONT;
+                    rpos += wcslen(buf2) + 1;
+                    if (!swscanf(buf2, L"%d", &tnum)) ERROR_CONT;
 
                     if (tnum <= 0 || tnum >= 6) ERROR_CONT;
                     courseno--;
                     courseno *= 5;
                     courseno += (tnum - 1);
 
-                    if (!sscanf(buf + rpos, "%10s", buf2)) ERROR_CONT;
-                    rpos += strlen(buf2) + 1;
-                    if (!sscanf(buf2, "%d", &tnum)) ERROR_CONT;
+                    if (!swscanf(buf + rpos, L"%10s", buf2)) ERROR_CONT;
+                    rpos += wcslen(buf2) + 1;
+                    if (!swscanf(buf2, L"%d", &tnum)) ERROR_CONT;
                     if (tnum < 0 || tnum >= 9) ERROR_CONT;
 
                     gplist[courseno] = tnum;
 
-                    if (!sscanf(buf + rpos, "%10s", buf2)) ERROR_CONT;
-                    rpos += strlen(buf2) + 1;
-                    if (!sscanf(buf2, "%d", &tnum)) ERROR_CONT;
+                    if (!swscanf(buf + rpos, L"%10s", buf2)) ERROR_CONT;
+                    rpos += wcslen(buf2) + 1;
+                    if (!swscanf(buf2, L"%d", &tnum)) ERROR_CONT;
                     if (tnum < 0 || tnum >= 3) ERROR_CONT;
 
                     gpcclist[courseno] = tnum;
-                } else if (!strcmp(buf2, "PR")) {
+                } else if (!wcscmp(buf2, L"PR")) {
                     int tnum;
-                    if (!sscanf(buf + rpos, "%10s", buf2)) ERROR_CONT;
-                    rpos += strlen(buf2) + 1;
-                    if (!sscanf(buf2, "%d", &tnum)) ERROR_CONT;
+                    if (!swscanf(buf + rpos, L"%10s", buf2)) ERROR_CONT;
+                    rpos += wcslen(buf2) + 1;
+                    if (!swscanf(buf2, L"%d", &tnum)) ERROR_CONT;
                     if (tnum <= 0 || tnum >= 8) ERROR_CONT;
                     int prno;
                     prno = tnum;
 
-                    if (!sscanf(buf + rpos, "%10s", buf2)) ERROR_CONT;
-                    rpos += strlen(buf2) + 1;
-                    if (!sscanf(buf2, "%d", &tnum)) ERROR_CONT;
+                    if (!swscanf(buf + rpos, L"%10s", buf2)) ERROR_CONT;
+                    rpos += wcslen(buf2) + 1;
+                    if (!swscanf(buf2, L"%d", &tnum)) ERROR_CONT;
                     if (tnum <= 0 || tnum >= 4) ERROR_CONT;
                     int courseno;
                     courseno = tnum;
 
-                    if (!sscanf(buf + rpos, "%10s", buf2)) ERROR_CONT;
-                    rpos += strlen(buf2) + 1;
-                    if (!sscanf(buf2, "%d", &tnum)) ERROR_CONT;
+                    if (!swscanf(buf + rpos, L"%10s", buf2)) ERROR_CONT;
+                    rpos += wcslen(buf2) + 1;
+                    if (!swscanf(buf2, L"%d", &tnum)) ERROR_CONT;
                     if (tnum <= 0 || tnum >= 6) ERROR_CONT;
                     courseno--;
                     courseno *= 5;
                     courseno += (tnum - 1);
                     prlist[prno - 1] = courseno;
-                } else if (!strcmp(buf2, "MM")) {
+                } else if (!wcscmp(buf2, L"MM")) {
                     int gpno, cono, dx, dy;
-                    char filename[128];
-                    if (sscanf(buf + rpos, "%d %d %x %x %100s", &gpno, &cono, &dx, &dy,
+                    wchar_t filename[128];
+                    if (swscanf(buf + rpos, L"%d %d %x %x %100s", &gpno, &cono, &dx, &dy,
                                filename) != 5)
                         ERROR_CONT;
                     if (gpno <= 0 || gpno >= 4) ERROR_CONT;
                     if (cono <= 0 || cono >= 6) ERROR_CONT;
-                    char filename2[128];
-                    sprintf(filename2, FZCD_WORKING_PATH "%s", filename);
+                    wchar_t filename2[128];
+                    swprintf(filename2, FZCD_WORKING_PATH L"%s", filename);
                     mdo.Cls(MDO3normal, SFC_MINIMAP, 0, 0, 32, 64, myRGB(31, 0, 31));
                     mdo.LoadBitmap(SFC_MINIMAP, filename2);
 
@@ -1007,7 +1007,7 @@ if (KeyPush(KC_F11)) {
             break;
         }
 
-        fprintf(flog, "●●梱包開始●●\n");
+        fwprintf(flog, L"●●梱包開始●●\n");
         int wpos = romsize + 0x8000 + 0x1000;
         int wpose = 0x108100;
         int wposcc = 0;
@@ -1016,34 +1016,34 @@ if (KeyPush(KC_F11)) {
         // I am aware that I am feeling exhausted...
         // It would be better to manage the write position parameters all at once.
         for (int st = 0; st < 9; st++) {
-            fprintf(flog, "地域%dの梱包...\n", st);
+            fwprintf(flog, L"地域%dの梱包...\n", st);
             static FZCD tmpfzcd;
-            char buf[64];
-            sprintf(buf, "梱包　...　%d/%d ", st + 1, 9);
+            wchar_t buf[64];
+            swprintf(buf, L"梱包　...　%d/%d ", st + 1, 9);
             SetWindowText(hWnd, buf);
             tmpfzcd.Clear();
             tmpfzcd.Load(st);
-            const char* Perror;
+            const wchar_t* Perror;
             Perror = tmpfzcd.Write2ROM(Pexprom, romsize * 2, &wpos, &wpose, &wposcc,
                                        arealist + 3 * st);
-            if (Perror[0] != '\0') {
-                fprintf(flog, "エラーが発生！\n");
-                fprintf(flog, "%s\n", Perror);
+            if (Perror[0] != L'\0') {
+                fwprintf(flog, L"エラーが発生！\n");
+                fwprintf(flog, L"%s\n", Perror);
                 onerror = true;
             }
         }
         {
-            fprintf(flog, "★サイズ情報\n");
-            fprintf(flog, "－－マップ　　残り容量 %5X/%5X(%f％使用)\n",
+            fwprintf(flog, L"★サイズ情報\n");
+            fwprintf(flog, L"－－マップ　　残り容量 %5X/%5X(%f％使用)\n",
                     wpos - romsize - 0x8000 - 0x1000, romsize - 0x8000 - 0x1000,
                     (double)(wpos - romsize - 0x8000 - 0x1000) /
                             (romsize - 0x8000 - 0x1000) * 100);
-            fprintf(flog, "－－エリア　　残り容量 %4X/%4X(%f％使用)\n", wpose & 0x7FFF,
+            fwprintf(flog, L"－－エリア　　残り容量 %4X/%4X(%f％使用)\n", wpose & 0x7FFF,
                     0x8000, (double)(wpose & 0x7FFF) / 0x8000 * 100);
-            fprintf(flog, "－－繋ぎ換え　残り容量 %3X/%3X(%f％使用)\n", wposcc, 0x100,
+            fwprintf(flog, L"－－繋ぎ換え　残り容量 %3X/%3X(%f％使用)\n", wposcc, 0x100,
                     (double)wposcc / 0x100 * 100);
         }
-        fprintf(flog, "●●コース情報書き込み●●\n");
+        fwprintf(flog, L"●●コース情報書き込み●●\n");
         {
             int i;
             for (i = 0; i < 15; i++) {
@@ -1065,8 +1065,8 @@ if (KeyPush(KC_F11)) {
                 }
                 int al = arealist[3 * gplist[i] + list];
                 if (al == -1) {
-                    fprintf(flog, "エラー\n");
-                    fprintf(flog, "%d-%d(地域%d-%d) エリア未設定\n", i / 5 + 1,
+                    fwprintf(flog, L"エラー\n");
+                    fwprintf(flog, L"%d-%d(地域%d-%d) エリア未設定\n", i / 5 + 1,
                             i % 5 + 1, gplist[i], list);
                     onerror = true;
                 }
@@ -1083,7 +1083,7 @@ if (KeyPush(KC_F11)) {
         }
     }
     {
-        fprintf(flog, "●●チェックサム矯正●●\n");
+        fwprintf(flog, L"●●チェックサム矯正●●\n");
         unsigned int tmp;
         tmp = 0;
         for (int i = 0; i < romsize * 2; i++) {
@@ -1095,19 +1095,19 @@ if (KeyPush(KC_F11)) {
         tmp &= 0xFFFF;
         SETROME16(Pexprom, romsize * 2, 0x007FDC, tmp);
     }
-    fprintf(flog, "●●書き出し●●\n");
-    WriteFileFromMemory("output.smc", Pexprom, romsize * 2);
+    fwprintf(flog, L"●●書き出し●●\n");
+    WriteFileFromMemory(L"output.smc", Pexprom, romsize * 2);
     free(Pexprom);
 
-    fprintf(flog, "●●梱包終了●●\n");
+    fwprintf(flog, L"●●梱包終了●●\n");
 
     if (onerror) {
-        SetWindowText(hWnd, "梱包エラーが発生　cmplog.txt　を参考にしてください");
-        fprintf(flog,
-                "梱包に際し、１回以上のエラーが発生しました\n複数箇所でエラーが出ている"
-                "ときは、先に出ているものから解決してください\n");
+        SetWindowText(hWnd, L"梱包エラーが発生　cmplog.txt　を参考にしてください");
+        fwprintf(flog,
+                L"梱包に際し、１回以上のエラーが発生しました\n複数箇所でエラーが出ている"
+                L"ときは、先に出ているものから解決してください\n");
     } else {
-        SetWindowText(hWnd, "梱包終了");
+        SetWindowText(hWnd, L"梱包終了");
     }
 
     fclose(flog);

@@ -32,7 +32,7 @@
         -5 Unable to expand temporary buffer
         -6 Unable to secure buffer to return
 */
-extern int LoadMemoryFromFile(const char* filename, unsigned char** ptrbuf);
+extern int LoadMemoryFromFile(const wchar_t* filename, unsigned char** ptrbuf);
 
 /*
         メモリをファイルに書き出す。
@@ -44,7 +44,8 @@ extern int LoadMemoryFromFile(const char* filename, unsigned char** ptrbuf);
         -1 File cannot be opened
         -2 Cannot write to file
 */
-extern int WriteFileFromMemory(const char* filename, unsigned char* data, int length);
+extern int WriteFileFromMemory(const wchar_t* filename, unsigned char* data,
+                               int length);
 
 
 /*
@@ -73,10 +74,10 @@ extern int WriteALine(int filehand, char* Pbuffer);
   I just got fed up with the number of optional headers.
 　Output is CREAT,TRUNC.
 */
-extern int MMMOpenForTextInput(const char* Pname);
-extern int MMMOpenForTextOutput(const char* Pname);
-extern int MMMOpenForBinaryInput(const char* Pname);
-extern int MMMOpenForBinaryOutput(const char* Pname);
+extern int MMMOpenForTextInput(const wchar_t* Pname);
+extern int MMMOpenForTextOutput(const wchar_t* Pname);
+extern int MMMOpenForBinaryInput(const wchar_t* Pname);
+extern int MMMOpenForBinaryOutput(const wchar_t* Pname);
 extern int MMMClose(int filehand);
 
 

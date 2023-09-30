@@ -43,11 +43,11 @@ void MYSWAP(TN* val1, TN* val2) {
 inline bool MyDIBObj3 ::SFCCheck(int num) {
     if (sfc == NULL) return false;
     if (num < 0 || num >= maxsurface) {
-        DEBUG_OUTPUT("SFCCheck()サーフェイス番号異常！\n");
+        DEBUG_OUTPUT(L"SFCCheck()サーフェイス番号異常！\n");
         return false;
     }
     if (sfc[num].data == NULL) {
-        DEBUG_OUTPUT("SFCCheck()サーフェイスが作られる前に使われようとしました。\n");
+        DEBUG_OUTPUT(L"SFCCheck()サーフェイスが作られる前に使われようとしました。\n");
         return false;
     }
     return true;
@@ -100,7 +100,7 @@ inline bool MyDIBObj3 ::ReverseClipping(int srcx, int srcy, int width, int heigh
                                         int src) {
     if (srcx < 0 || srcy < 0 || srcx + width > sfc[src].width ||
         srcy + height > sfc[src].height) {
-        DEBUG_OUTPUT("ソース側クリッピングに引っかかっています\n");
+        DEBUG_OUTPUT(L"ソース側クリッピングに引っかかっています\n");
         return false;
     }
     return true;

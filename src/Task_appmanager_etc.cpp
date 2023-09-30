@@ -1,5 +1,6 @@
-#include "common.h"
+#include <wchar.h>
 
+#include "common.h"
 
 void T_CLS(int sfc, int x, int y, int w, int h, UINT color) {
     mdo.Cls(MDO3normal, sfc, x, y, w, h, color);
@@ -12,7 +13,7 @@ bool TF_app_manager(TCB* caller) {
 
         Prom = NULL;
         if ((romsize = LoadMemoryFromFile(BASE_ROM_NAME, &Prom)) <= 0) {
-            MessageBox(hWnd, BASE_ROM_NAME "\nが開けません", "エラー", MB_OK);
+            MessageBox(hWnd, BASE_ROM_NAME L"\nが開けません", L"エラー", MB_OK);
             return true;
         }
         {
@@ -21,28 +22,28 @@ bool TF_app_manager(TCB* caller) {
                 if (romsize == DEFAULT_ROM_SIZE + 0x200) {
                     MessageBox(hWnd,
                                BASE_ROM_NAME
-                               "にヘッダが付加されていないか確認してください",
-                               "エラー", MB_OK);
+                               L"にヘッダが付加されていないか確認してください",
+                               L"エラー", MB_OK);
                     onerror = true;
                 } else {
-                    MessageBox(hWnd, "ＲＯＭのサイズが異常です", "エラー", MB_OK);
+                    MessageBox(hWnd, L"ＲＯＭのサイズが異常です", L"エラー", MB_OK);
                     onerror = true;
                 }
             } else {
                 unsigned int eh = EHash(Prom, romsize);
                 if (eh != EHASH_OF_AUTHOR) {
-                    char str[256];
-                    sprintf(str,
-                            "このソフト開発者のROMのHash:%06X\n読み込まれたROMのHash:%"
-                            "06X\nROM内容が異なると思われます",
+                    wchar_t str[256];
+                    swprintf(str,
+                            L"このソフト開発者のROMのHash:%06X\n読み込まれたROMのHash:%"
+                            L"06X\nROM内容が異なると思われます",
                             EHASH_OF_AUTHOR, eh);
-                    MessageBox(hWnd, str, "エラー", MB_OK);
+                    MessageBox(hWnd, str, L"エラー", MB_OK);
                     onerror = true;
                 }
             }
             if (onerror) {
                 int ans;
-                ans = MessageBox(hWnd, "それでも続けますか？", "確認", MB_YESNO);
+                ans = MessageBox(hWnd, L"それでも続けますか？", L"確認", MB_YESNO);
                 if (ans == IDNO) return true;
             }
         }

@@ -37,8 +37,8 @@
 // Uncomment out to suppress double startup (simple)
 #define ENABLE_MULTIPLE_RUN
 
-#define COMMON_CONST_WINDOW_CLASS_NAME "FZE_WCN"
-#define COMMON_CONST_DEFAULT_WINDOW_TEXT "ＦＺＥ"
+#define COMMON_CONST_WINDOW_CLASS_NAME L"FZE_WCN"
+#define COMMON_CONST_DEFAULT_WINDOW_TEXT L"ＦＺＥ"
 
 #define WINWIDTH 780
 #define WINHEIGHT 600
@@ -51,7 +51,7 @@
 #define SFC_MINIMAP 2
 
 
-#define BASE_ROM_NAME "fzero.smc"
+#define BASE_ROM_NAME L"fzero.smc"
 #define DEFAULT_ROM_SIZE (1024 * 512)
 #define EHASH_OF_AUTHOR (0x7b35aa)
 
@@ -166,5 +166,5 @@ extern int editingre;
 extern int editingcn;
 
 
-extern void LoadFZEECLIP(char* filename);
-extern void CWT_common(char* Pdest);
+extern void LoadFZEECLIP(wchar_t* filename);
+extern void CWT_common(wchar_t* Pdest);

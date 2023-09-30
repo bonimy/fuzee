@@ -9,9 +9,21 @@ extern LRESULT CALLBACK windowproc(HWND hwnd, UINT message, WPARAM wparam,
 HWND hWnd;
 HINSTANCE hInstance;
 
+/*
+Load resources for a given region.
+
+0x409: English (US)
+0x411: Japanese (J)
+*/
+void InitializeResources(LCID locale, LANGID language) {
+    SetThreadLocale(0x411);
+    SetThreadUILanguage(0x411);
+}
 
 int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hpinstance, LPSTR lpszcmdline,
                    int ncmdshow) {
+    InitializeResources(GetThreadLocale(), GetThreadUILanguage());
+
 #ifndef ENABLE_MULTIPLE_RUN
     HWND tmpwnd;
     //簡易二重起動禁止
@@ -38,7 +50,7 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hpinstance, LPSTR lpszcmdline,
     wc.cbWndExtra = 0;
 
     if (!RegisterClass(&wc)) return 1;
-    if ((hwnd = CreateWindowEx(
+    if ((hwnd = CreateWindowExW(
 #ifdef MY_DROP_ACCEPT
                  WS_EX_ACCEPTFILES
 #else
@@ -55,7 +67,7 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hpinstance, LPSTR lpszcmdline,
     }
     hWnd = hwnd;
     hInstance = hinstance;
-
+    const wchar_t* f = COMMON_CONST_DEFAULT_WINDOW_TEXT;
 
     ShowWindow(hwnd, ncmdshow);
     UpdateWindow(hwnd);

@@ -14,8 +14,8 @@ static int submode = 0;
 static int dragging = 0;
 static int show_area_scope = 0;
 #define NO_SUBMODE 2
-#define MODE_TITLE "エリア編集"
-#define SUBMODE_TITLE "配置", "パラメータ設定",
+#define MODE_TITLE L"エリア編集"
+#define SUBMODE_TITLE L"配置", L"パラメータ設定",
 
 
 #define ALIAS_ME(ptr, str) \
@@ -25,17 +25,17 @@ static int show_area_scope = 0;
         ;
 
 static void CWT(TCB* caller) {
-    const char* Pstr[NO_SUBMODE] = {SUBMODE_TITLE};
-    char buf[128];
-    const char* Ptmp;
+    const wchar_t* Pstr[NO_SUBMODE] = {SUBMODE_TITLE};
+    wchar_t buf[128];
+    const wchar_t* Ptmp;
     CWT_common(buf);
-    sprintf(&buf[strlen(buf)], MODE_TITLE);
+    swprintf(&buf[wcslen(buf)], MODE_TITLE);
     for (int i = 0; i < NO_SUBMODE; i++) {
-        Ptmp = "";
+        Ptmp = L"";
         if (submode == i) Ptmp = Pstr[i];
-        sprintf(&buf[strlen(buf)], "【 %s 】", Ptmp);
+        swprintf(&buf[wcslen(buf)], L"【 %s 】", Ptmp);
     }
-    sprintf(&buf[strlen(buf)], "<spaceで切り替え");
+    swprintf(&buf[wcslen(buf)], L"<spaceで切り替え");
 
     ALIAS_ME(caller, me);
     ALIAS_END();
@@ -76,7 +76,7 @@ static bool TF_me_put(TCB* caller) {
         }
         if (KeyPush(KC_INS)) {
             if (!working.AreaInsertArea(editingcn, selected)) {
-                SetWindowText(hWnd, "エリアはもう配置できません");
+                SetWindowText(hWnd, L"エリアはもう配置できません");
                 return false;
             }
             RequestRedraw();
@@ -157,7 +157,7 @@ static bool TF_me_put(TCB* caller) {
             int index;
             AREA* Pdest = working.AreaAddArea(editingcn, KeyOn(KC_SHIFT), &index);
             if (!Pdest) {
-                SetWindowText(hWnd, "エリアはもう配置できません");
+                SetWindowText(hWnd, L"エリアはもう配置できません");
                 return false;
             }
             Pdest->isexist = true;
@@ -447,16 +447,17 @@ static void TV_me_put(TCB* caller) {
     }
 
     {
-        char str[512] = "";
+        wchar_t str[512] = L"";
         if (selected != -1) {
-            sprintf(&str[strlen(str)],
-                    "Ins:エリア挿入　Del:エリア削除　Tab:エリア範囲表示　");
-            if (selected < 0x1000) sprintf(&str[strlen(str)], "B:分岐開始エリアに設定");
+            swprintf(&str[wcslen(str)],
+                     L"Ins:エリア挿入　Del:エリア削除　Tab:エリア範囲表示　");
+            if (selected < 0x1000)
+                swprintf(&str[wcslen(str)], L"B:分岐開始エリアに設定");
         }
         KAGEMOJI(SFC_BACK, str, 0, WINHEIGHT - 14 * 1, 14, 7);
-        str[0] = '\0';
-        sprintf(&str[strlen(str)],
-                "Ctrl+Click:エリア配置　　Ctrl+Shift+Click:分岐エリア配置");
+        str[0] = L'\0';
+        swprintf(&str[wcslen(str)],
+                L"Ctrl+Click:エリア配置　　Ctrl+Shift+Click:分岐エリア配置");
         KAGEMOJI(SFC_BACK, str, 0, WINHEIGHT - 14 * 2, 14, 7);
     }
     ALIAS_END();

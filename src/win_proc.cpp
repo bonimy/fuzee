@@ -1,8 +1,10 @@
+#include <wchar.h>
+
 #include "common.h"
 
 void DropRoutine(WPARAM wp) {
     HDROP hd;
-    char fn[512];
+    wchar_t fn[512];
     int NOfile;
     //ハンドルを得る
     // get the handle
@@ -11,14 +13,14 @@ void DropRoutine(WPARAM wp) {
     // Get the number of dropped files
     NOfile = DragQueryFile(hd, 0xFFFFFFFF, NULL, 0);
     if (NOfile >= 2) {
-        SetWindowText(hWnd, "ドロップは１つだけでお願いします");
+        SetWindowText(hWnd, L"ドロップは１つだけでお願いします");
         DragFinish(hd);
         return;
     }
     DragQueryFile(hd, 0, fn, sizeof(fn));
     DragFinish(hd);
 
-    if (!strcmp(".fzeeclip", &fn[strlen(fn) - 9])) {
+    if (!wcscmp(L".fzeeclip", &fn[wcslen(fn) - 9])) {
         LoadFZEECLIP(fn);
         return;
     }

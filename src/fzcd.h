@@ -70,7 +70,7 @@
 #define FZCD_MAX_AREA 0xFE
 #define FZCD_NO_AREA_ARG 4
 
-#define FZCD_WORKING_PATH "working\\"
+#define FZCD_WORKING_PATH L"working\\"
 #define FZCD_VERSION 0x0102
 
 typedef struct AREA_tag {
@@ -91,7 +91,7 @@ public:
     int area_sub_org;
 
     void Clear();
-    const char* Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffsete,
+    const wchar_t* Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffsete,
                           int* Poffsetcc, int* Pareaadrlist, bool culcmode = false,
                           int* Psizeofband = NULL, int* Psizeofchip = NULL);
 

@@ -230,7 +230,7 @@ void MyDIBObj3 ::CreateSurface(int isfc, int width, int height) {
     if (sfc[isfc].hbitmap == 0 || !sfc[isfc].data) {
         if (sfc[isfc].hbitmap != 0) DeleteObject(sfc[isfc].hbitmap);
         sfc[isfc].data = NULL;
-        DEBUG_OUTPUT("makesurface() DIBの準備に失敗！\n");
+        DEBUG_OUTPUT(L"makesurface() DIBの準備に失敗！\n");
         return;
     }
 
@@ -238,14 +238,14 @@ void MyDIBObj3 ::CreateSurface(int isfc, int width, int height) {
     if (sfc[isfc].hdc == NULL) {
         DeleteObject(sfc[isfc].hbitmap);
         sfc[isfc].data = NULL;
-        DEBUG_OUTPUT("makesurface() HDCの準備に失敗！\n");
+        DEBUG_OUTPUT(L"makesurface() HDCの準備に失敗！\n");
         return;
     }
     sfc[isfc].holdbitmap = (HBITMAP)SelectObject(sfc[isfc].hdc, sfc[isfc].hbitmap);
     if (sfc[isfc].holdbitmap == NULL) {
         DeleteObject(sfc[isfc].hbitmap);
         sfc[isfc].data = NULL;
-        DEBUG_OUTPUT("makesurface() ビットマップ取り付けに失敗！\n");
+        DEBUG_OUTPUT(L"makesurface() ビットマップ取り付けに失敗！\n");
     }
 }
 
@@ -291,7 +291,7 @@ void MyDIBObj3 ::LoadBitmap(int isfc, LPTSTR filename) {
     // load bitmap
     hbm = (HBITMAP)LoadImage(hinstancep, filename, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
     if (hbm == 0) {
-        DEBUG_OUTPUT("ビットマップの読みこみに失敗！\n");
+        DEBUG_OUTPUT(L"ビットマップの読みこみに失敗！\n");
         return;
     }
 
@@ -318,7 +318,7 @@ void MyDIBObj3 ::LoadBitmap(int isfc, LPTSTR filename) {
         Output 24 bit bmp
         If all arguments after x are set to -1, the entire surface will be output.
 */
-void MyDIBObj3 ::SaveBitmap(const char* filename, int isfc, int x, int y, int width,
+void MyDIBObj3 ::SaveBitmap(const wchar_t* filename, int isfc, int x, int y, int width,
                             int height) {
     if (!SFCCheck(isfc)) return;
     if (x == -1 && y == -1 && width == -1 && height == -1) {
@@ -332,7 +332,7 @@ void MyDIBObj3 ::SaveBitmap(const char* filename, int isfc, int x, int y, int wi
     int WIDTH;
     WIDTH = (width + 3) / 4 * 4;
     FILE* fp;
-    fp = fopen(filename, "wb");
+    fp = _wfopen(filename, L"wb");
     if (!fp) return;
     BYTE buf[256];
     int tmp;
@@ -435,15 +435,15 @@ void MyDIBObj3 ::Flip(int fliptype, int* argv) {
         text drawing.
 */
 
-void MyDIBObj3 ::Text(int isfc, const char* str, int x, int y, int height, int width,
+void MyDIBObj3 ::Text(int isfc, const wchar_t* str, int x, int y, int height, int width,
                       UINT color) {
     if (!SFCCheck(isfc)) return;
     HFONT tmpfont;
     tmpfont = CreateFont(height, width, 0, 0, 0, false, false, false, SHIFTJIS_CHARSET,
                          OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
-                         DEFAULT_PITCH | FF_DONTCARE, "ＭＳ 明朝");
+                         DEFAULT_PITCH | FF_DONTCARE, L"ＭＳ 明朝");
     if (tmpfont == NULL) {
-        DEBUG_OUTPUT("textdraw() フォントの作成に失敗！");
+        DEBUG_OUTPUT(L"textdraw() フォントの作成に失敗！");
         return;
     }
 
@@ -451,7 +451,7 @@ void MyDIBObj3 ::Text(int isfc, const char* str, int x, int y, int height, int w
 
     DeleteObject(tmpfont);
 }
-void MyDIBObj3 ::TextEX(int isfc, const char* str, int x, int y, HFONT hfont,
+void MyDIBObj3 ::TextEX(int isfc, const wchar_t* str, int x, int y, HFONT hfont,
                         UINT color) {
     if (!SFCCheck(isfc)) return;
     HFONT oldfont;
@@ -460,7 +460,7 @@ void MyDIBObj3 ::TextEX(int isfc, const char* str, int x, int y, HFONT hfont,
 
     oldfont = (HFONT)SelectObject(sfc[isfc].hdc, hfont);
 
-    TextOut(sfc[isfc].hdc, x, y, str, strlen(str));
+    TextOut(sfc[isfc].hdc, x, y, str, wcslen(str));
 
     SelectObject(sfc[isfc].hdc, oldfont);
 }

@@ -300,7 +300,7 @@ public:
 
     //ビットマップに書き出す　２４ビットカラー限定
     // Export to bitmap 24-bit color only
-    void SaveBitmap(const char* filename, int isfc, int x = -1, int y = -1,
+    void SaveBitmap(const wchar_t* filename, int isfc, int x = -1, int y = -1,
                     int width = -1, int height = -1);
 
     //サーフェイスのデバイスコンテキストハンドルを取得
@@ -341,9 +341,10 @@ public:
 
     //テキスト描画
     // text drawing
-    void Text(int isfc, const char* str, int x, int y, int height = 12, int width = 6,
-              UINT color = 0);
-    void TextEX(int isfc, const char* str, int x, int y, HFONT hfont, UINT color = 0);
+    void Text(int isfc, const wchar_t* str, int x, int y, int height = 12,
+              int width = 6, UINT color = 0);
+    void TextEX(int isfc, const wchar_t* str, int x, int y, HFONT hfont,
+                UINT color = 0);
 
     //●図形描画
     //線を描画

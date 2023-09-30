@@ -139,8 +139,8 @@ inline static BYTE READB(DataSet* Pd, int adr) {
     tm = TAdr2Mem(adr);
     if (tm != -1 && Pd->Pramc[tm] == 0) {
         static FILE* fp = 0;
-        if (!fp) fp = fopen("memory_test.txt", "wt");
-        fprintf(fp, "%.8X   %.8X\n", tm, (Pd->reg.pb << 16) | Pd->reg.pc);
+        if (!fp) fp = _wfopen(L"memory_test.txt", L"wt");
+        fwprintf(fp, L"%.8X   %.8X\n", tm, (Pd->reg.pb << 16) | Pd->reg.pc);
         Pd->Pramc[tm] = 1;
     }
 #endif

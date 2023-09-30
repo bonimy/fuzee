@@ -63,9 +63,9 @@ void FZCD ::Clear() {
 }
 
 
-const char* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffsete,
-                             int* Poffsetcc, int* Pareaadrlist, bool culcmode,
-                             int* Psizeofband, int* Psizeofchip) {
+const wchar_t* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffsete,
+                                int* Poffsetcc, int* Pareaadrlist, bool culcmode,
+                                int* Psizeofband, int* Psizeofchip) {
     BYTE blbuf[3][FZCD_MAP_SPACE_LIMIT];
     BYTE babuf[FZCD_BAND_SPACE_LIMIT * 2 + 256];
     BYTE chbuf[FZCD_CHIP_SPACE_LIMIT * 2 + 256];
@@ -163,7 +163,7 @@ const char* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffset
                 if (comp == chp) {
                     memcpy(chbuf + comp, tmptile, FZCD_SOA_BAND);
                     chp += FZCD_SOA_BAND;
-                    if (chp >= FZCD_CHIP_SPACE_LIMIT * 2) return "バンド容量オーバー";
+                    if (chp >= FZCD_CHIP_SPACE_LIMIT * 2) return L"バンド容量オーバー";
                 }
                 comp += 0x7000;
                 tmpband[iba * 2 + 0] = comp;
@@ -176,7 +176,7 @@ const char* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffset
             if (comp == bap) {
                 memcpy(babuf + comp, tmpband, FZCD_SOA_BLOCK);
                 bap += FZCD_SOA_BLOCK;
-                if (bap >= FZCD_BAND_SPACE_LIMIT * 2) return "ブロック容量オーバー";
+                if (bap >= FZCD_BAND_SPACE_LIMIT * 2) return L"ブロック容量オーバー";
             }
             blbuf[icn][ibl] = comp / FZCD_SOA_BLOCK;
         }
@@ -187,10 +187,10 @@ const char* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffset
     if (Psizeofchip) {
         (*Psizeofchip) = chp;
     }
-    if (culcmode) return "";
-    if (bap >= FZCD_BAND_SPACE_LIMIT) return "ブロック容量オーバー";
-    if (chp >= FZCD_CHIP_SPACE_LIMIT) return "バンド容量オーバー";
-    if (region_pre < 0) return "ソフトの不具合";
+    if (culcmode) return L"";
+    if (bap >= FZCD_BAND_SPACE_LIMIT) return L"ブロック容量オーバー";
+    if (chp >= FZCD_CHIP_SPACE_LIMIT) return L"バンド容量オーバー";
+    if (region_pre < 0) return L"ソフトの不具合";
 
     //繋ぎ替え
     // Reconnect
@@ -238,7 +238,7 @@ const char* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffset
             }
             SETROME16(Prom, romsize, 0x118100 + (*Poffsetcc), 0xFFFF);
             (*Poffsetcc) += 2;
-            if ((*Poffsetcc) > 256) return "繋ぎ替え情報容量オーバー";
+            if ((*Poffsetcc) > 256) return L"繋ぎ替え情報容量オーバー";
         }
     }
 
@@ -303,7 +303,7 @@ const char* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffset
         // I don't really understand, but if there is a branching path, it seems that
         // one space is created in memory and expanded, so add 1
         if ((noarea + 1) + (noarea_sub + 1) + (noarea_sub != -1) > FZCD_MAX_AREA) {
-            return "エリア・分岐エリアをあわせると、限界数(254個くらい)を越えています";
+            return L"エリア・分岐エリアをあわせると、限界数(254個くらい)を越えています";
         }
         //容量不足
         // Capacity shortage
@@ -321,7 +321,7 @@ const char* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffset
                         // information entity
                         noarea * 6 + (noarea_sub + 1) * 6 >=
                 0x110000)
-            return "エリアを書き込むスペースが足りません";
+            return L"エリアを書き込むスペースが足りません";
         Pareaadrlist[cc] = (*Poffsete);
 
         int adr;
@@ -404,7 +404,7 @@ const char* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffset
                             tmp = (area_sub[cc][q].x - area[cc][area_sub_org].x) / 8;
                     }
                     if (tmp < -0x80 || tmp > 0x7F)
-                        return "遠く離れた２つのエリアがあります。近づけてください。";
+                        return L"遠く離れた２つのエリアがあります。近づけてください。";
                     SETROME8(Prom, romsize, tadr + shift * 0, tmp);
                     //ΔＹ
                     if (!k)
@@ -416,7 +416,7 @@ const char* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffset
                             tmp = (area_sub[cc][q].y - area[cc][area_sub_org].y) / 8;
                     }
                     if (tmp < -0x80 || tmp > 0x7F)
-                        return "遠く離れた２つのエリアがあります。近づけてください。";
+                        return L"遠く離れた２つのエリアがあります。近づけてください。";
                     SETROME8(Prom, romsize, tadr + shift * 1, tmp);
 
                     AREA(*Pdest)[3][FZCD_MAX_AREA];
@@ -464,90 +464,90 @@ const char* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poffset
     }
 
 
-    return "";
+    return L"";
 }
 int FZCD ::Save(int region) {
     region_pre = region;
-    char filename[64];
-    sprintf(filename, FZCD_WORKING_PATH "region%d.txt", region);
+    wchar_t filename[64];
+    swprintf(filename, FZCD_WORKING_PATH L"region%d.txt", region);
     FILE* fp;
-    fp = fopen(filename, "wt");
+    fp = _wfopen(filename, L"wt");
     if (!fp) return -2;
 
-    char buf[128];
-    const char* Pstr;
+    wchar_t buf[128];
+    const wchar_t* Pstr;
 #define ERR_RET     \
     {               \
         fclose(fp); \
         return -1;  \
     }
 
-    Pstr = ";風情　コースファイル\n;ソフト起動中は直に変更しないで下さい\n;#"
-           "から始まる行以外はコメントです\n\n\n";
-    if (fprintf(fp, "%s\n", Pstr) < 0) ERR_RET;
+    Pstr = L";風情　コースファイル\n;ソフト起動中は直に変更しないで下さい\n;#"
+           L"から始まる行以外はコメントです\n\n\n";
+    if (fwprintf(fp, L"%s\n", Pstr) < 0) ERR_RET;
 
 
-#define WRITE_INT16_PARAM(token, val)                    \
-    sprintf(buf, "#%s%04X", token, (unsigned short)val); \
-    if (fprintf(fp, "%s\n", buf) < 0) ERR_RET; /**/
+#define WRITE_INT16_PARAM(token, val)                      \
+    swprintf(buf, L"#%s%04X", token, (unsigned short)val); \
+    if (fwprintf(fp, L"%s\n", buf) < 0) ERR_RET; /**/
 
-    WRITE_INT16_PARAM("FZCD_VERSION ", FZCD_VERSION);
-    WRITE_INT16_PARAM("AREA_BRANCH_ORG ", area_sub_org);
+    WRITE_INT16_PARAM(L"FZCD_VERSION ", FZCD_VERSION);
+    WRITE_INT16_PARAM(L"AREA_BRANCH_ORG ", area_sub_org);
 
-#define WRITE_BLOCK(Pd, size)                               \
-    ;                                                       \
-    buf[0] = '#';                                           \
-    {                                                       \
-        for (int i = 0; i < size; i++) {                    \
-            sprintf(&buf[i % 32 * 2 + 1], "%02X", (Pd)[i]); \
-            if (i % 32 == 31) {                             \
-                if (fprintf(fp, "%s\n", buf) < 0) ERR_RET;  \
-                buf[1] = '\0';                              \
-            }                                               \
-        }                                                   \
-        if (buf[1] != '\0')                                 \
-            if (fprintf(fp, "%s\n", buf) < 0) ERR_RET;      \
+#define WRITE_BLOCK(Pd, size)                                 \
+    ;                                                         \
+    buf[0] = L'#';                                            \
+    {                                                         \
+        for (int i = 0; i < size; i++) {                      \
+            swprintf(&buf[i % 32 * 2 + 1], L"%02X", (Pd)[i]); \
+            if (i % 32 == 31) {                               \
+                if (fwprintf(fp, L"%s\n", buf) < 0) ERR_RET;  \
+                buf[1] = L'\0';                               \
+            }                                                 \
+        }                                                     \
+        if (buf[1] != L'\0')                                  \
+            if (fwprintf(fp, L"%s\n", buf) < 0) ERR_RET;      \
     } /**/
 
-    Pstr = "\n#EXPCHIP";
-    if (fprintf(fp, "%s\n", Pstr) < 0) ERR_RET;
+    Pstr = L"\n#EXPCHIP";
+    if (fwprintf(fp, L"%s\n", Pstr) < 0) ERR_RET;
     WRITE_BLOCK(exptile[0], FZCD_CHIP_P_MAP_W * FZCD_CHIP_P_MAP_H * FZCD_SOE_CHIP);
-    if (fprintf(fp, "%s\n", Pstr) < 0) ERR_RET;
+    if (fwprintf(fp, L"%s\n", Pstr) < 0) ERR_RET;
     WRITE_BLOCK(exptile[1], FZCD_CHIP_P_MAP_W * FZCD_CHIP_P_MAP_H * FZCD_SOE_CHIP);
-    if (fprintf(fp, "%s\n", Pstr) < 0) ERR_RET;
+    if (fwprintf(fp, L"%s\n", Pstr) < 0) ERR_RET;
     WRITE_BLOCK(exptile[2], FZCD_CHIP_P_MAP_W * FZCD_CHIP_P_MAP_H * FZCD_SOE_CHIP);
 
-    Pstr = "\n#AREA";
-    if (fprintf(fp, "%s\n", Pstr) < 0) ERR_RET;
+    Pstr = L"\n#AREA";
+    if (fwprintf(fp, L"%s\n", Pstr) < 0) ERR_RET;
     {
         for (int q = 0; q < 3; q++) {
             for (int i = 0; i < FZCD_MAX_AREA; i++) {
-                if (fprintf(fp, "#%d,%d,%d,%d,", (int)area[q][i].isexist,
-                            (int)area[q][i].x, (int)area[q][i].y,
-                            (int)area[q][i].dir) < 0)
+                if (fwprintf(fp, L"#%d,%d,%d,%d,", (int)area[q][i].isexist,
+                             (int)area[q][i].x, (int)area[q][i].y,
+                             (int)area[q][i].dir) < 0)
                     ERR_RET;
                 for (int k = 0; k < FZCD_NO_AREA_ARG; k++)
-                    if (fprintf(fp, "%d,", (int)area[q][i].arg[k]) < 0) ERR_RET;
-                if (fprintf(fp, "\n") < 0) ERR_RET;
+                    if (fwprintf(fp, L"%d,", (int)area[q][i].arg[k]) < 0) ERR_RET;
+                if (fwprintf(fp, L"\n") < 0) ERR_RET;
             }
-            if (fprintf(fp, "\n") < 0) ERR_RET;
+            if (fwprintf(fp, L"\n") < 0) ERR_RET;
         }
     }
 
-    Pstr = "\n#AREA_SUB";
-    if (fprintf(fp, "%s\n", Pstr) < 0) ERR_RET;
+    Pstr = L"\n#AREA_SUB";
+    if (fwprintf(fp, L"%s\n", Pstr) < 0) ERR_RET;
     {
         for (int q = 0; q < 3; q++) {
             for (int i = 0; i < FZCD_MAX_AREA; i++) {
-                if (fprintf(fp, "#%d,%d,%d,%d,", (int)area_sub[q][i].isexist,
-                            (int)area_sub[q][i].x, (int)area_sub[q][i].y,
-                            (int)area_sub[q][i].dir) < 0)
+                if (fwprintf(fp, L"#%d,%d,%d,%d,", (int)area_sub[q][i].isexist,
+                             (int)area_sub[q][i].x, (int)area_sub[q][i].y,
+                             (int)area_sub[q][i].dir) < 0)
                     ERR_RET;
                 for (int k = 0; k < FZCD_NO_AREA_ARG; k++)
-                    if (fprintf(fp, "%d,", (int)area_sub[q][i].arg[k]) < 0) ERR_RET;
-                if (fprintf(fp, "\n") < 0) ERR_RET;
+                    if (fwprintf(fp, L"%d,", (int)area_sub[q][i].arg[k]) < 0) ERR_RET;
+                if (fwprintf(fp, L"\n") < 0) ERR_RET;
             }
-            if (fprintf(fp, "\n") < 0) ERR_RET;
+            if (fwprintf(fp, L"\n") < 0) ERR_RET;
         }
     }
 #undef INT16_PARAM
@@ -558,11 +558,11 @@ int FZCD ::Save(int region) {
     return 0;
 }
 int FZCD ::Load(int region) {
-    char filename[64];
+    wchar_t filename[64];
     int FZCDversion = 0x0000;
-    sprintf(filename, FZCD_WORKING_PATH "region%d.txt", region);
+    swprintf(filename, FZCD_WORKING_PATH L"region%d.txt", region);
     FILE* fp;
-    char buf[1024];
+    wchar_t buf[1024];
 #define ERR_RET     \
     {               \
         fclose(fp); \
@@ -571,7 +571,7 @@ int FZCD ::Load(int region) {
     Clear();
     region_pre = region;
 
-    fp = fopen(filename, "rt");
+    fp = _wfopen(filename, L"rt");
     if (!fp) return -2;
 
     BYTE* Pwriting;
@@ -583,36 +583,36 @@ int FZCD ::Load(int region) {
     wsizelimit = 0;
     mode = 0;
     for (;;) {
-        if (!fgets(buf, 1024, fp)) break;
-        if (buf[0] != '#') continue;
-        if (buf[strlen(buf) - 1] == '\n') buf[strlen(buf) - 1] = '\0';
-        if (!strcmp(buf, "#EXPCHIP")) {
+        if (!fgetws(buf, 1024, fp)) break;
+        if (buf[0] != L'#') continue;
+        if (buf[wcslen(buf) - 1] == L'\n') buf[wcslen(buf) - 1] = L'\0';
+        if (!wcscmp(buf, L"#EXPCHIP")) {
             Pwriting = exptile[0];
             wsizelimit = FZCD_CHIP_P_MAP_W * FZCD_CHIP_P_MAP_H * FZCD_SOE_CHIP * 3;
             wpos = 0;
             mode = 0;
             continue;
         }
-        if (!strcmp(buf, "#AREA")) {
+        if (!wcscmp(buf, L"#AREA")) {
             wpos = 0;
             mode = 1;
             continue;
         }
-        if (!strcmp(buf, "#AREA_SUB")) {
+        if (!wcscmp(buf, L"#AREA_SUB")) {
             wpos = 0;
             mode = 2;
             continue;
         }
         {
             int tmp;
-#define INT16_PARAM(token, val)                                             \
-    if (!memcmp(buf, token, strlen(token))) {                               \
-        if (sscanf(&buf[strlen(token)], "%x", &tmp) == 1) val = (short)tmp; \
-        continue;                                                           \
+#define INT16_PARAM(token, val)                                               \
+    if (!memcmp(buf, token, wcslen(token))) {                                 \
+        if (swscanf(&buf[wcslen(token)], L"%x", &tmp) == 1) val = (short)tmp; \
+        continue;                                                             \
     }
 
-            INT16_PARAM("#FZCD_VERSION ", FZCDversion);
-            INT16_PARAM("#AREA_BRANCH_ORG ", area_sub_org);
+            INT16_PARAM(L"#FZCD_VERSION ", FZCDversion);
+            INT16_PARAM(L"#AREA_BRANCH_ORG ", area_sub_org);
 
 #undef INT16_PARAM
         }
@@ -620,10 +620,10 @@ int FZCD ::Load(int region) {
             case 0:
                 if (!Pwriting) continue;
                 {
-                    char* Pread;
+                    wchar_t* Pread;
                     for (Pread = &buf[1];; Pread += 2) {
                         int tmp;
-                        if (sscanf(Pread, "%02X", &tmp) < 0) break;
+                        if (swscanf(Pread, L"%02X", &tmp) < 0) break;
                         Pwriting[wpos % wsizelimit] = tmp;
                         wpos++;
                     }
@@ -634,11 +634,11 @@ int FZCD ::Load(int region) {
                 AREA(*Pdest)[3][FZCD_MAX_AREA];
                 Pdest = &area;
                 if (mode == 2) Pdest = &area_sub;
-                char* Pread;
+                wchar_t* Pread;
                 int tmp[10];
                 Pread = &buf[1];
-                if (sscanf(Pread, "%d,%d,%d,%d,%d,%d,%d,%d", &tmp[0], &tmp[1], &tmp[2],
-                           &tmp[3], &tmp[4], &tmp[5], &tmp[6], &tmp[7]) < 8)
+                if (swscanf(Pread, L"%d,%d,%d,%d,%d,%d,%d,%d", &tmp[0], &tmp[1],
+                            &tmp[2], &tmp[3], &tmp[4], &tmp[5], &tmp[6], &tmp[7]) < 8)
                     break;
                 (*Pdest)[wpos / FZCD_MAX_AREA][wpos % FZCD_MAX_AREA].isexist =
                         (tmp[0] != 0);
