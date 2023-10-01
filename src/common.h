@@ -20,6 +20,7 @@
 #include "myeinput.h"
 #include "mymemorymanage.h"
 #include "nnsys.h"
+#include "resource_strings.hxx"
 #include "task0702.h"
 #include "taskfunction.h"
 
@@ -38,7 +39,7 @@
 #define ENABLE_MULTIPLE_RUN
 
 #define COMMON_CONST_WINDOW_CLASS_NAME L"FZE_WCN"
-#define COMMON_CONST_DEFAULT_WINDOW_TEXT L"ＦＺＥ"
+#define COMMON_CONST_DEFAULT_WINDOW_TEXT DEFAULT_WINDOW_TEXT.c_str()
 
 #define WINWIDTH 780
 #define WINHEIGHT 600

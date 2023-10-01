@@ -141,6 +141,8 @@
     <ClInclude Include="..\..\src\mymemorymanage.h" />
     <ClInclude Include="..\..\src\mytimer.h" />
     <ClInclude Include="..\..\src\nnsys.h" />
+    <ClInclude Include="..\..\src\resource.h" />
+    <ClInclude Include="..\..\src\resource_strings.hxx" />
     <ClInclude Include="..\..\src\SNESsys.h" />
     <ClInclude Include="..\..\src\task0702.h" />
     <ClInclude Include="..\..\src\taskfunction.h" />
@@ -169,6 +171,7 @@
     <ClCompile Include="..\..\src\mytimer.cpp" />
     <ClCompile Include="..\..\src\nnsys.cpp" />
     <ClCompile Include="..\..\src\Pandr.cpp" />
+    <ClCompile Include="..\..\src\resource_strings.cxx" />
     <ClCompile Include="..\..\src\SNESsys.cpp" />
     <ClCompile Include="..\..\src\task0702.cpp" />
     <ClCompile Include="..\..\src\Task_appmanager_etc.cpp" />
@@ -181,6 +184,9 @@
     <ClCompile Include="..\..\src\_task_mode_area_param.cpp" />
     <ClCompile Include="..\..\src\_task_mode_map.cpp" />
     <ClCompile Include="..\..\src\_task_mode_map_kui.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\..\src\resources.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

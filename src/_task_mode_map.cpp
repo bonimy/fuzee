@@ -1,4 +1,5 @@
 #include "common.h"
+#include "resource_strings.hxx"
 
 static int submode = 0;
 static int selected = 0;
@@ -12,8 +13,8 @@ static int clipw = 1;
 static int cliph = 1;
 
 #define NO_SUBMODE 2
-#define MODE_TITLE L"マップ編集"
-#define SUBMODE_TITLE L"直接編集", L"壁編集",
+#define MODE_TITLE MAP_EDIT.c_str()
+#define SUBMODE_TITLE EDIT_DIRECT.c_str(), EDIT_BORDERS.c_str(),
 
 
 static void CWT(TCB* caller) {
@@ -25,16 +26,16 @@ static void CWT(TCB* caller) {
     for (int i = 0; i < NO_SUBMODE; i++) {
         Ptmp = L"";
         if (submode == i) Ptmp = Pstr[i];
-        swprintf(&buf[wcslen(buf)], L"【 %s 】", Ptmp);
+        swprintf(&buf[wcslen(buf)], HOLD_PARAM.c_str(), Ptmp);
     }
-    swprintf(&buf[wcslen(buf)], L"<spaceで切り替え");
+    swprintf(&buf[wcslen(buf)], SWITCH_WITH_SPACE.c_str());
 
     ALIAS_MM(caller, mm);
     if (mmcurrentbandsize == -1)
-        swprintf(&buf[wcslen(buf)], L"   Band \?\?\?\?/%X  CHIP \?\?\?\?/%X",
-                 FZCD_BAND_SPACE_LIMIT, FZCD_CHIP_SPACE_LIMIT);
+        swprintf(&buf[wcslen(buf)], STRING154.c_str(), FZCD_BAND_SPACE_LIMIT,
+                 FZCD_CHIP_SPACE_LIMIT);
     else
-        swprintf(&buf[wcslen(buf)], L"   Band %X/%X  CHIP %X/%X", mmcurrentbandsize,
+        swprintf(&buf[wcslen(buf)], STRING155.c_str(), mmcurrentbandsize,
                  FZCD_BAND_SPACE_LIMIT, mmcurrentchipsize, FZCD_CHIP_SPACE_LIMIT);
     SetWindowText(hWnd, buf);
     ALIAS_END();

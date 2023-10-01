@@ -1,6 +1,7 @@
 #include "_task_mode_area.h"
 
 #include "common.h"
+#include "resource_strings.hxx"
 
 
 namespace ModeArea {
@@ -14,8 +15,8 @@ static int submode = 0;
 static int dragging = 0;
 static int show_area_scope = 0;
 #define NO_SUBMODE 2
-#define MODE_TITLE L"エリア編集"
-#define SUBMODE_TITLE L"配置", L"パラメータ設定",
+#define MODE_TITLE EDIT_AREA.c_str()
+#define SUBMODE_TITLE ARRANGEMENT.c_str(), PARAMETER_SETTINGS.c_str(),
 
 
 #define ALIAS_ME(ptr, str) \
@@ -33,9 +34,9 @@ static void CWT(TCB* caller) {
     for (int i = 0; i < NO_SUBMODE; i++) {
         Ptmp = L"";
         if (submode == i) Ptmp = Pstr[i];
-        swprintf(&buf[wcslen(buf)], L"【 %s 】", Ptmp);
+        swprintf(&buf[wcslen(buf)], HOLD_PARAM.c_str(), Ptmp);
     }
-    swprintf(&buf[wcslen(buf)], L"<spaceで切り替え");
+    swprintf(&buf[wcslen(buf)], SWITCH_WITH_SPACE.c_str());
 
     ALIAS_ME(caller, me);
     ALIAS_END();
@@ -76,7 +77,7 @@ static bool TF_me_put(TCB* caller) {
         }
         if (KeyPush(KC_INS)) {
             if (!working.AreaInsertArea(editingcn, selected)) {
-                SetWindowText(hWnd, L"エリアはもう配置できません");
+                SetWindowText(hWnd, AREA_CANNOT_BE_SET.c_str());
                 return false;
             }
             RequestRedraw();
@@ -157,7 +158,7 @@ static bool TF_me_put(TCB* caller) {
             int index;
             AREA* Pdest = working.AreaAddArea(editingcn, KeyOn(KC_SHIFT), &index);
             if (!Pdest) {
-                SetWindowText(hWnd, L"エリアはもう配置できません");
+                SetWindowText(hWnd, AREA_CANNOT_BE_SET.c_str());
                 return false;
             }
             Pdest->isexist = true;
@@ -449,15 +450,12 @@ static void TV_me_put(TCB* caller) {
     {
         wchar_t str[512] = L"";
         if (selected != -1) {
-            swprintf(&str[wcslen(str)],
-                     L"Ins:エリア挿入　Del:エリア削除　Tab:エリア範囲表示　");
-            if (selected < 0x1000)
-                swprintf(&str[wcslen(str)], L"B:分岐開始エリアに設定");
+            swprintf(&str[wcslen(str)], INS_DEL_TAB_HELP.c_str());
+            if (selected < 0x1000) swprintf(&str[wcslen(str)], SET_BRANCH_AREA.c_str());
         }
         KAGEMOJI(SFC_BACK, str, 0, WINHEIGHT - 14 * 1, 14, 7);
         str[0] = L'\0';
-        swprintf(&str[wcslen(str)],
-                L"Ctrl+Click:エリア配置　　Ctrl+Shift+Click:分岐エリア配置");
+        swprintf(&str[wcslen(str)], CTRL_SHIFT_CLICK_HELP.c_str());
         KAGEMOJI(SFC_BACK, str, 0, WINHEIGHT - 14 * 2, 14, 7);
     }
     ALIAS_END();

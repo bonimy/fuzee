@@ -1,6 +1,7 @@
 #include <wchar.h>
 
 #include "common.h"
+#include "resource_strings.hxx"
 
 void T_CLS(int sfc, int x, int y, int w, int h, UINT color) {
     mdo.Cls(MDO3normal, sfc, x, y, w, h, color);
@@ -13,37 +14,33 @@ bool TF_app_manager(TCB* caller) {
 
         Prom = NULL;
         if ((romsize = LoadMemoryFromFile(BASE_ROM_NAME, &Prom)) <= 0) {
-            MessageBox(hWnd, BASE_ROM_NAME L"\nが開けません", L"エラー", MB_OK);
+            MessageBox(hWnd, /*BASE_ROM_NAME*/ STRING171.c_str(), ERROR_TEXT.c_str(),
+                       MB_OK);
             return true;
         }
         {
             bool onerror = false;
             if (romsize != DEFAULT_ROM_SIZE) {
                 if (romsize == DEFAULT_ROM_SIZE + 0x200) {
-                    MessageBox(hWnd,
-                               BASE_ROM_NAME
-                               L"にヘッダが付加されていないか確認してください",
-                               L"エラー", MB_OK);
+                    MessageBox(hWnd, /*BASE_ROM_NAME*/ STRING172.c_str(),
+                               ERROR_TEXT.c_str(), MB_OK);
                     onerror = true;
                 } else {
-                    MessageBox(hWnd, L"ＲＯＭのサイズが異常です", L"エラー", MB_OK);
+                    MessageBox(hWnd, STRING173.c_str(), ERROR_TEXT.c_str(), MB_OK);
                     onerror = true;
                 }
             } else {
                 unsigned int eh = EHash(Prom, romsize);
                 if (eh != EHASH_OF_AUTHOR) {
                     wchar_t str[256];
-                    swprintf(str,
-                            L"このソフト開発者のROMのHash:%06X\n読み込まれたROMのHash:%"
-                            L"06X\nROM内容が異なると思われます",
-                            EHASH_OF_AUTHOR, eh);
-                    MessageBox(hWnd, str, L"エラー", MB_OK);
+                    swprintf(str, STRING174.c_str(), EHASH_OF_AUTHOR, eh);
+                    MessageBox(hWnd, str, ERROR_TEXT.c_str(), MB_OK);
                     onerror = true;
                 }
             }
             if (onerror) {
                 int ans;
-                ans = MessageBox(hWnd, L"それでも続けますか？", L"確認", MB_YESNO);
+                ans = MessageBox(hWnd, STRING175.c_str(), STRING176.c_str(), MB_YESNO);
                 if (ans == IDNO) return true;
             }
         }

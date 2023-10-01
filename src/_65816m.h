@@ -8,10 +8,6 @@ typedef unsigned char BYTE;
 typedef unsigned short WORD;
 #endif
 
-#if 1
-#define inline
-#endif
-
 
 #ifdef _DEBUG
 #define MEMORY_CHECK

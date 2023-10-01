@@ -1,5 +1,7 @@
 #include "fzcd.h"
 
+#include "resource_strings.hxx"
+
 #define ROMADR2OFFSET(adr) ((unsigned int)((((adr) >> 16) * 0x8000) | ((adr)&0x7FFF)))
 
 #define ROME(ptr, size, adr) \
@@ -163,7 +165,8 @@ const wchar_t* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poff
                 if (comp == chp) {
                     memcpy(chbuf + comp, tmptile, FZCD_SOA_BAND);
                     chp += FZCD_SOA_BAND;
-                    if (chp >= FZCD_CHIP_SPACE_LIMIT * 2) return L"バンド容量オーバー";
+                    if (chp >= FZCD_CHIP_SPACE_LIMIT * 2)
+                        return BAND_CAPACITY_EXCEEDED.c_str();
                 }
                 comp += 0x7000;
                 tmpband[iba * 2 + 0] = comp;
@@ -176,7 +179,8 @@ const wchar_t* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poff
             if (comp == bap) {
                 memcpy(babuf + comp, tmpband, FZCD_SOA_BLOCK);
                 bap += FZCD_SOA_BLOCK;
-                if (bap >= FZCD_BAND_SPACE_LIMIT * 2) return L"ブロック容量オーバー";
+                if (bap >= FZCD_BAND_SPACE_LIMIT * 2)
+                    return BLOCK_CAPACITY_EXCEEDED.c_str();
             }
             blbuf[icn][ibl] = comp / FZCD_SOA_BLOCK;
         }
@@ -188,9 +192,9 @@ const wchar_t* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poff
         (*Psizeofchip) = chp;
     }
     if (culcmode) return L"";
-    if (bap >= FZCD_BAND_SPACE_LIMIT) return L"ブロック容量オーバー";
-    if (chp >= FZCD_CHIP_SPACE_LIMIT) return L"バンド容量オーバー";
-    if (region_pre < 0) return L"ソフトの不具合";
+    if (bap >= FZCD_BAND_SPACE_LIMIT) return BLOCK_CAPACITY_EXCEEDED.c_str();
+    if (chp >= FZCD_CHIP_SPACE_LIMIT) return BAND_CAPACITY_EXCEEDED.c_str();
+    if (region_pre < 0) return PROGRAM_ERROR.c_str();
 
     //繋ぎ替え
     // Reconnect
@@ -238,7 +242,7 @@ const wchar_t* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poff
             }
             SETROME16(Prom, romsize, 0x118100 + (*Poffsetcc), 0xFFFF);
             (*Poffsetcc) += 2;
-            if ((*Poffsetcc) > 256) return L"繋ぎ替え情報容量オーバー";
+            if ((*Poffsetcc) > 256) return BLOCK_CAPACITY_EXCEEDED.c_str();
         }
     }
 
@@ -303,7 +307,7 @@ const wchar_t* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poff
         // I don't really understand, but if there is a branching path, it seems that
         // one space is created in memory and expanded, so add 1
         if ((noarea + 1) + (noarea_sub + 1) + (noarea_sub != -1) > FZCD_MAX_AREA) {
-            return L"エリア・分岐エリアをあわせると、限界数(254個くらい)を越えています";
+            return BRANCH_AREA_LIMIT_EXCEEDED.c_str();
         }
         //容量不足
         // Capacity shortage
@@ -321,7 +325,7 @@ const wchar_t* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poff
                         // information entity
                         noarea * 6 + (noarea_sub + 1) * 6 >=
                 0x110000)
-            return L"エリアを書き込むスペースが足りません";
+            return INSUFFICIENT_WRITE_SPACE.c_str();
         Pareaadrlist[cc] = (*Poffsete);
 
         int adr;
@@ -403,8 +407,7 @@ const wchar_t* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poff
                         else
                             tmp = (area_sub[cc][q].x - area[cc][area_sub_org].x) / 8;
                     }
-                    if (tmp < -0x80 || tmp > 0x7F)
-                        return L"遠く離れた２つのエリアがあります。近づけてください。";
+                    if (tmp < -0x80 || tmp > 0x7F) return DISJOINT_AREAS.c_str();
                     SETROME8(Prom, romsize, tadr + shift * 0, tmp);
                     //ΔＹ
                     if (!k)
@@ -415,8 +418,7 @@ const wchar_t* FZCD ::Write2ROM(BYTE* Prom, int romsize, int* Poffset, int* Poff
                         else
                             tmp = (area_sub[cc][q].y - area[cc][area_sub_org].y) / 8;
                     }
-                    if (tmp < -0x80 || tmp > 0x7F)
-                        return L"遠く離れた２つのエリアがあります。近づけてください。";
+                    if (tmp < -0x80 || tmp > 0x7F) return DISJOINT_AREAS.c_str();
                     SETROME8(Prom, romsize, tadr + shift * 1, tmp);
 
                     AREA(*Pdest)[3][FZCD_MAX_AREA];
@@ -482,8 +484,7 @@ int FZCD ::Save(int region) {
         return -1;  \
     }
 
-    Pstr = L";風情　コースファイル\n;ソフト起動中は直に変更しないで下さい\n;#"
-           L"から始まる行以外はコメントです\n\n\n";
+    Pstr = STRING164.c_str();
     if (fwprintf(fp, L"%s\n", Pstr) < 0) ERR_RET;
 
 

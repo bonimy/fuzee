@@ -1,6 +1,8 @@
 #ifndef MYDIBOBJ3_PRIVATE_HEADER_INCLUDED
 #define MYDIBOBJ3_PRIVATE_HEADER_INCLUDED
 
+#include "resource_strings.hxx"
+
 /*
         いろいろ破綻した、ソフトウェアレンダリングルーチン。
         ……の、内部で用いるヘッダファイル。
@@ -43,11 +45,11 @@ void MYSWAP(TN* val1, TN* val2) {
 inline bool MyDIBObj3 ::SFCCheck(int num) {
     if (sfc == NULL) return false;
     if (num < 0 || num >= maxsurface) {
-        DEBUG_OUTPUT(L"SFCCheck()サーフェイス番号異常！\n");
+        DEBUG_OUTPUT(SFC_CHECK_BAD_SURFACE_NUMBER.c_str());
         return false;
     }
     if (sfc[num].data == NULL) {
-        DEBUG_OUTPUT(L"SFCCheck()サーフェイスが作られる前に使われようとしました。\n");
+        DEBUG_OUTPUT(SFC_CHECK_NOT_CREATED_YET.c_str());
         return false;
     }
     return true;
@@ -100,7 +102,7 @@ inline bool MyDIBObj3 ::ReverseClipping(int srcx, int srcy, int width, int heigh
                                         int src) {
     if (srcx < 0 || srcy < 0 || srcx + width > sfc[src].width ||
         srcy + height > sfc[src].height) {
-        DEBUG_OUTPUT(L"ソース側クリッピングに引っかかっています\n");
+        DEBUG_OUTPUT(DEBUG_OUTPUT_CLIPPING.c_str());
         return false;
     }
     return true;

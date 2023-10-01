@@ -1,6 +1,6 @@
 #include "common.h"
 #include "mytimer.h"
-
+#include "resource_strings.hxx"
 
 extern LRESULT CALLBACK windowproc(HWND hwnd, UINT message, WPARAM wparam,
                                    LPARAM lparam);
@@ -16,8 +16,10 @@ Load resources for a given region.
 0x411: Japanese (J)
 */
 void InitializeResources(LCID locale, LANGID language) {
-    SetThreadLocale(0x411);
-    SetThreadUILanguage(0x411);
+    SetThreadLocale(locale);
+    SetThreadUILanguage(language);
+
+    InitializeResourceStrings();
 }
 
 int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hpinstance, LPSTR lpszcmdline,

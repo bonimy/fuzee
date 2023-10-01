@@ -166,7 +166,7 @@ void RenderMINIMAP() {
         }
         {
             wchar_t str[64];
-            swprintf(str, L"minimap%d-%d.bmp", editingre, ic);
+            swprintf(str, MINIMAP.c_str(), editingre, ic);
             mdo.SaveBitmap(str, SFC_MINIMAP);
         }
     }
@@ -177,7 +177,7 @@ void RenderMINIMAP() {
 
 void CWT_common(wchar_t* Pdest) {
     Pdest[0] = '\0';
-    swprintf(&Pdest[wcslen(Pdest)], L"地域%d-%d   ", editingre, editingcn);
+    swprintf(&Pdest[wcslen(Pdest)], REGION.c_str(), editingre, editingcn);
 }
 
 #define NO_MAIN_MODE 2
@@ -705,6 +705,7 @@ bool TF_main(TCB* caller) {
         }
 #endif
     }
+    // TODO(nrg)
     mdo.Text(SFC_BG, L"Ｍ", 0, 96, 8, 4);
     mdo.Text(SFC_BG, L"Ｂ", 8, 96, 8, 4);
     mdo.Text(SFC_BG, L">>", 0, 80, 8, 4);
@@ -760,14 +761,14 @@ if (KeyPush(KC_F11)) {
     bool onerror = false;
 
     flog = _wfopen(L"cmplog.txt", L"wt");
-    fwprintf(flog, L"梱包ログ\n\n\n");
-    fwprintf(flog, L"●●メモリ確保●●\n");
+    fwprintf(flog, PACKING_LOG.c_str());
+    fwprintf(flog, MEMORY_RESERVATION.c_str());
     BYTE* Pexprom;
     Pexprom = (BYTE*)malloc(romsize * 2);
     memcpy(Pexprom, Prom, romsize);
     memset(Pexprom + romsize, 0, romsize);
 
-    fwprintf(flog, L"●●プログラム修正●●\n");
+    fwprintf(flog, PROGRAM_CORRECTION.c_str());
     {
         BYTE buf[32];
         //ＲＯＭ情報中のサイズを補正
@@ -829,7 +830,7 @@ if (KeyPush(KC_F11)) {
     }
 
 
-    fwprintf(flog, L"●●globalsetting.txt読み込み●●\n");
+    fwprintf(flog, LOAD_GLOBAL_SETTINGS.c_str());
 
     int gplist[15];
     int gpcclist[15];
@@ -849,15 +850,14 @@ if (KeyPush(KC_F11)) {
             FILE* fp;
             fp = _wfopen(L"working\\globalsetting.txt", L"rt");
             if (!fp) {
-                fwprintf(flog, L"globalsetting.txt未存在・デフォルト使用します\n");
+                fwprintf(flog, GLOBAL_SETTINGS_NOT_FOUND.c_str());
                 break;
             }
             for (;;) {
-#define ERROR_CONT                                                                  \
-    {                                                                               \
-        fwprintf(flog, L"不自然な記述\n「%s」\nがありますが無視して続行します。\n", \
-                 buf);                                                              \
-        continue;                                                                   \
+#define ERROR_CONT                                    \
+    {                                                 \
+        fwprintf(flog, INVALID_SETTING.c_str(), buf); \
+        continue;                                     \
     }
                 wchar_t buf[512 + 10];
                 wchar_t buf2[512 + 10];
@@ -932,8 +932,8 @@ if (KeyPush(KC_F11)) {
                 } else if (!wcscmp(buf2, L"MM")) {
                     int gpno, cono, dx, dy;
                     wchar_t filename[128];
-                    if (swscanf(buf + rpos, L"%d %d %x %x %100s", &gpno, &cono, &dx, &dy,
-                               filename) != 5)
+                    if (swscanf(buf + rpos, L"%d %d %x %x %100s", &gpno, &cono, &dx,
+                                &dy, filename) != 5)
                         ERROR_CONT;
                     if (gpno <= 0 || gpno >= 4) ERROR_CONT;
                     if (cono <= 0 || cono >= 6) ERROR_CONT;
@@ -1007,7 +1007,7 @@ if (KeyPush(KC_F11)) {
             break;
         }
 
-        fwprintf(flog, L"●●梱包開始●●\n");
+        fwprintf(flog, START_PACKING.c_str());
         int wpos = romsize + 0x8000 + 0x1000;
         int wpose = 0x108100;
         int wposcc = 0;
@@ -1016,10 +1016,10 @@ if (KeyPush(KC_F11)) {
         // I am aware that I am feeling exhausted...
         // It would be better to manage the write position parameters all at once.
         for (int st = 0; st < 9; st++) {
-            fwprintf(flog, L"地域%dの梱包...\n", st);
+            fwprintf(flog, PACKING_FOR_REGION.c_str(), st);
             static FZCD tmpfzcd;
             wchar_t buf[64];
-            swprintf(buf, L"梱包　...　%d/%d ", st + 1, 9);
+            swprintf(buf, PACKAGING.c_str(), st + 1, 9);
             SetWindowText(hWnd, buf);
             tmpfzcd.Clear();
             tmpfzcd.Load(st);
@@ -1027,23 +1027,23 @@ if (KeyPush(KC_F11)) {
             Perror = tmpfzcd.Write2ROM(Pexprom, romsize * 2, &wpos, &wpose, &wposcc,
                                        arealist + 3 * st);
             if (Perror[0] != L'\0') {
-                fwprintf(flog, L"エラーが発生！\n");
+                fwprintf(flog, ERROR_OCCURRED.c_str());
                 fwprintf(flog, L"%s\n", Perror);
                 onerror = true;
             }
         }
         {
-            fwprintf(flog, L"★サイズ情報\n");
-            fwprintf(flog, L"－－マップ　　残り容量 %5X/%5X(%f％使用)\n",
-                    wpos - romsize - 0x8000 - 0x1000, romsize - 0x8000 - 0x1000,
-                    (double)(wpos - romsize - 0x8000 - 0x1000) /
-                            (romsize - 0x8000 - 0x1000) * 100);
-            fwprintf(flog, L"－－エリア　　残り容量 %4X/%4X(%f％使用)\n", wpose & 0x7FFF,
-                    0x8000, (double)(wpose & 0x7FFF) / 0x8000 * 100);
-            fwprintf(flog, L"－－繋ぎ換え　残り容量 %3X/%3X(%f％使用)\n", wposcc, 0x100,
-                    (double)wposcc / 0x100 * 100);
+            fwprintf(flog, SIZE_INFORMATION.c_str());
+            fwprintf(flog, MAP_REMAINING_CAPACITY.c_str(),
+                     wpos - romsize - 0x8000 - 0x1000, romsize - 0x8000 - 0x1000,
+                     (double)(wpos - romsize - 0x8000 - 0x1000) /
+                             (romsize - 0x8000 - 0x1000) * 100);
+            fwprintf(flog, AREA_REMAINING_CAPACITY.c_str(), wpose & 0x7FFF, 0x8000,
+                     (double)(wpose & 0x7FFF) / 0x8000 * 100);
+            fwprintf(flog, CONNECTION_REMAINING_CAPACITY.c_str(), wposcc, 0x100,
+                     (double)wposcc / 0x100 * 100);
         }
-        fwprintf(flog, L"●●コース情報書き込み●●\n");
+        fwprintf(flog, WRITING_COURSE_INFO.c_str());
         {
             int i;
             for (i = 0; i < 15; i++) {
@@ -1065,9 +1065,9 @@ if (KeyPush(KC_F11)) {
                 }
                 int al = arealist[3 * gplist[i] + list];
                 if (al == -1) {
-                    fwprintf(flog, L"エラー\n");
-                    fwprintf(flog, L"%d-%d(地域%d-%d) エリア未設定\n", i / 5 + 1,
-                            i % 5 + 1, gplist[i], list);
+                    fwprintf(flog, L"%s\n", ERROR_TEXT.c_str());
+                    fwprintf(flog, AREA_NOT_SET.c_str(), i / 5 + 1, i % 5 + 1,
+                             gplist[i], list);
                     onerror = true;
                 }
 
@@ -1083,7 +1083,7 @@ if (KeyPush(KC_F11)) {
         }
     }
     {
-        fwprintf(flog, L"●●チェックサム矯正●●\n");
+        fwprintf(flog, CHECKSUM_CORRECTION.c_str());
         unsigned int tmp;
         tmp = 0;
         for (int i = 0; i < romsize * 2; i++) {
@@ -1095,19 +1095,17 @@ if (KeyPush(KC_F11)) {
         tmp &= 0xFFFF;
         SETROME16(Pexprom, romsize * 2, 0x007FDC, tmp);
     }
-    fwprintf(flog, L"●●書き出し●●\n");
+    fwprintf(flog, START_WRITING.c_str());
     WriteFileFromMemory(L"output.smc", Pexprom, romsize * 2);
     free(Pexprom);
 
-    fwprintf(flog, L"●●梱包終了●●\n");
+    fwprintf(flog, PACKING_COMPLETE.c_str());
 
     if (onerror) {
-        SetWindowText(hWnd, L"梱包エラーが発生　cmplog.txt　を参考にしてください");
-        fwprintf(flog,
-                L"梱包に際し、１回以上のエラーが発生しました\n複数箇所でエラーが出ている"
-                L"ときは、先に出ているものから解決してください\n");
+        SetWindowText(hWnd, PACKING_ERROR.c_str());
+        fwprintf(flog, PACKING_ERROR_FINAL_NOTE.c_str());
     } else {
-        SetWindowText(hWnd, L"梱包終了");
+        SetWindowText(hWnd, PACKING_COMPLETED_FINAL_NOTICE.c_str());
     }
 
     fclose(flog);

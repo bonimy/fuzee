@@ -230,7 +230,7 @@ void MyDIBObj3 ::CreateSurface(int isfc, int width, int height) {
     if (sfc[isfc].hbitmap == 0 || !sfc[isfc].data) {
         if (sfc[isfc].hbitmap != 0) DeleteObject(sfc[isfc].hbitmap);
         sfc[isfc].data = NULL;
-        DEBUG_OUTPUT(L"makesurface() DIBの準備に失敗！\n");
+        DEBUG_OUTPUT(STRING165.c_str());
         return;
     }
 
@@ -238,14 +238,14 @@ void MyDIBObj3 ::CreateSurface(int isfc, int width, int height) {
     if (sfc[isfc].hdc == NULL) {
         DeleteObject(sfc[isfc].hbitmap);
         sfc[isfc].data = NULL;
-        DEBUG_OUTPUT(L"makesurface() HDCの準備に失敗！\n");
+        DEBUG_OUTPUT(STRING166.c_str());
         return;
     }
     sfc[isfc].holdbitmap = (HBITMAP)SelectObject(sfc[isfc].hdc, sfc[isfc].hbitmap);
     if (sfc[isfc].holdbitmap == NULL) {
         DeleteObject(sfc[isfc].hbitmap);
         sfc[isfc].data = NULL;
-        DEBUG_OUTPUT(L"makesurface() ビットマップ取り付けに失敗！\n");
+        DEBUG_OUTPUT(STRING167.c_str());
     }
 }
 
@@ -291,7 +291,7 @@ void MyDIBObj3 ::LoadBitmap(int isfc, LPTSTR filename) {
     // load bitmap
     hbm = (HBITMAP)LoadImage(hinstancep, filename, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
     if (hbm == 0) {
-        DEBUG_OUTPUT(L"ビットマップの読みこみに失敗！\n");
+        DEBUG_OUTPUT(STRING168.c_str());
         return;
     }
 
@@ -441,9 +441,9 @@ void MyDIBObj3 ::Text(int isfc, const wchar_t* str, int x, int y, int height, in
     HFONT tmpfont;
     tmpfont = CreateFont(height, width, 0, 0, 0, false, false, false, SHIFTJIS_CHARSET,
                          OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY,
-                         DEFAULT_PITCH | FF_DONTCARE, L"ＭＳ 明朝");
+                         DEFAULT_PITCH | FF_DONTCARE, TMP_FONT_NAME.c_str());
     if (tmpfont == NULL) {
-        DEBUG_OUTPUT(L"textdraw() フォントの作成に失敗！");
+        DEBUG_OUTPUT(STRING170.c_str());
         return;
     }
 

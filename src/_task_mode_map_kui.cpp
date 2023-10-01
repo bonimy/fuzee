@@ -1,4 +1,5 @@
 #include "common.h"
+#include "resource_strings.hxx"
 
 
 #define ALIAS_MM_KUI(ptr, str)                                \
@@ -982,7 +983,7 @@ bool TF_mm_kui(TCB* caller) {
 				rad = MYABS( mmkuiarcargx - tx ) ;
 				if( rad < 32 )
 				{
-					MessageBox( hWnd , L"半径をもう少し大きく取ってください" , L"エラー" , MB_OK ) ;
+					MessageBox( hWnd , RADIUS_SIZE_SUGGEST.c_str() , ERROR_TEXT.c_str() , MB_OK ) ;
 				}
 				else
 				{

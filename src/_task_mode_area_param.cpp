@@ -142,37 +142,36 @@ void TV_mode_area_param(TCB* caller) {
     AREA* Pdest = working.AreaGetSelectedArea(editingcn, selected);
     DrawArea(mainx, mainy);
     if (selected != -1) {
-        KAGEMOJI(SFC_BACK, L"種別　　 速さ 旋回性能　キー操作", 12, WINHEIGHT - 16 * (4),
-                 16, 8);
+        KAGEMOJI(SFC_BACK, STRING139.c_str(), 12, WINHEIGHT - 16 * (4), 16, 8);
         for (int i = 0; i < 3; i++) {
             const wchar_t* Pstr[3] = {
-                    L"名有り",
-                    L"紫など",
-                    L"緑など",
+                    STRING140.c_str(),
+                    STRING141.c_str(),
+                    STRING142.c_str(),
             };
             const wchar_t* Pstr2[3] = {
-                    L"RT YU IO",
-                    L"FG HJ KL",
-                    L"VB NM ,.",
+                    STRING143.c_str(),
+                    STRING144.c_str(),
+                    STRING145.c_str(),
             };
             wchar_t buf[128];
             int tmp = Pdest->arg[1 + i];
             swprintf(buf, L"%s：　%d　　　%d　　　%s", Pstr[i], tmp & 3, (tmp >> 4) & 3,
-                    Pstr2[i]);
+                     Pstr2[i]);
             KAGEMOJI(SFC_BACK, buf, 12, WINHEIGHT - 16 * (3 - i), 16, 8);
             DrawMachineToken(6, WINHEIGHT - 16 * (3 - i) + 8, i);
         }
         {
             wchar_t buf[128];
-            const wchar_t* onoff[2] = {L"ON", L"OFF"};
-            const wchar_t* offon[2] = {L"OFF", L"ON"};
-            swprintf(buf, L"1:マシン毎ずれた位置を走行/%s　2:好成績者がワープ/%s",
-                    onoff[!!(Pdest->arg[0] & 0x40)], onoff[!!(Pdest->arg[0] & 0x80)]);
+            const wchar_t* onoff[2] = {ON.c_str(), OFF.c_str()};
+            const wchar_t* offon[2] = {OFF.c_str(), ON.c_str()};
+            swprintf(buf, STRING148.c_str(), onoff[!!(Pdest->arg[0] & 0x40)],
+                     onoff[!!(Pdest->arg[0] & 0x80)]);
             KAGEMOJI(SFC_BACK, buf, 300, WINHEIGHT - 16 * 3, 16, 8);
-            swprintf(buf, L"3:スタート直後には直進/%s", offon[!!(Pdest->arg[0] & 0x10)]);
+            swprintf(buf, STRING149.c_str(), offon[!!(Pdest->arg[0] & 0x10)]);
             KAGEMOJI(SFC_BACK, buf, 300, WINHEIGHT - 16 * 2, 16, 8);
         }
-        KAGEMOJI(SFC_BACK, L"C:設定コピー　X:設定貼り付け", 300, WINHEIGHT - 16, 16, 8);
+        KAGEMOJI(SFC_BACK, STRING150.c_str(), 300, WINHEIGHT - 16, 16, 8);
     }
     ALIAS_END();
 }

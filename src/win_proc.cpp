@@ -1,6 +1,7 @@
 #include <wchar.h>
 
 #include "common.h"
+#include "resource_strings.hxx"
 
 void DropRoutine(WPARAM wp) {
     HDROP hd;
@@ -13,7 +14,7 @@ void DropRoutine(WPARAM wp) {
     // Get the number of dropped files
     NOfile = DragQueryFile(hd, 0xFFFFFFFF, NULL, 0);
     if (NOfile >= 2) {
-        SetWindowText(hWnd, L"ドロップは１つだけでお願いします");
+        SetWindowText(hWnd, STRING177.c_str());
         DragFinish(hd);
         return;
     }
